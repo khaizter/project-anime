@@ -1,12 +1,13 @@
 import Thumbnail from "@/components/thumbnail";
+import Wrapper from "@/components/wrapper";
 import { getPopularAnimes, getTrendingAnimes } from "@/lib/utils";
 import React, { useState } from "react";
 
 const HomePage = (props: any) => {
   const { popularAnimes, trendingAnimes } = props;
   return (
-    <main>
-      <h1>Home Page</h1>
+    <Wrapper>
+      <div>SLIDE SHOW</div>
       <h2>Popular</h2>
       <div className="grid grid-cols-6 gap-4">
         {popularAnimes.map((anime: any) => {
@@ -33,7 +34,7 @@ const HomePage = (props: any) => {
           );
         })}
       </div>
-    </main>
+    </Wrapper>
   );
 };
 

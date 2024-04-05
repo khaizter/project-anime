@@ -6,7 +6,7 @@ export default function Home(props: any) {
   console.log(props.data);
   return (
     <main>
-      <h1>INDEX PAGE</h1>
+      <div>SEARCH BAR</div>
       <Link href="/home">
         <Button>Go to Home</Button>
       </Link>
