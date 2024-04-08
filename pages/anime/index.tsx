@@ -4,11 +4,10 @@ import { getAnimes } from "@/lib/utils";
 import React from "react";
 
 import { useRouter } from "next/router";
-import Link from "next/link";
 import CustomPagination from "@/components/custom-pagination";
 
 const AnimePage = (props: any) => {
-  const { animes, currentPage, hasNextPage, lastPage } = props;
+  const { animes, currentPage, lastPage } = props;
   const router = useRouter();
 
   const pageChangedHandler = (page: number) => {
@@ -47,13 +46,13 @@ const AnimePage = (props: any) => {
 };
 
 export const getServerSideProps = async (context: any) => {
-  const animeList = await getAnimes();
-  const lastPage = 20;
+  const currentPage = context.query?.page || 1;
+  const { pageInfo, animeList } = await getAnimes(currentPage, 20);
+  const { lastPage } = pageInfo;
   return {
     props: {
       animes: animeList,
-      currentPage: context.query?.page,
-      hasNextPage: context.query?.page && context.query?.page < lastPage,
+      currentPage: currentPage,
       lastPage: lastPage,
     },
   };

@@ -25,7 +25,7 @@ export const queryAnilist = async (query: String, variables: any) => {
 };
 
 // sort by romaji name
-export const getAnimes = async () => {
+export const getAnimes = async (page: number = 1, perPage: number = 20) => {
   var query = `
   query ($page : Int, $perPage : Int){
     Page (page: $page, perPage: $perPage) {
@@ -54,13 +54,23 @@ export const getAnimes = async () => {
   }
 `;
   var variables = {
-    page: 1,
-    perPage: 20,
+    page: page,
+    perPage: perPage,
   };
 
   const data = await queryAnilist(query, variables);
   const animeList = data.Page.media;
-  return animeList;
+  const pageInfo = data.Page.pageInfo;
+  return {
+    pageInfo: {
+      total: pageInfo.total,
+      currentPage: pageInfo.currentPage,
+      lastPage: pageInfo.lastPage,
+      hasNextPage: pageInfo.hasNextPage,
+      perPage: pageInfo.perPage,
+    },
+    animeList,
+  };
 };
 
 export const getPopularAnimes = async () => {
