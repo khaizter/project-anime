@@ -24,6 +24,45 @@ export const queryAnilist = async (query: String, variables: any) => {
   return json.data;
 };
 
+// sort by romaji name
+export const getAnimes = async () => {
+  var query = `
+  query ($page : Int, $perPage : Int){
+    Page (page: $page, perPage: $perPage) {
+      pageInfo {
+        total
+        currentPage
+        lastPage
+        hasNextPage
+        perPage
+      }
+
+			media(type:ANIME, sort : TITLE_ROMAJI) {
+        id
+        title {
+          romaji
+          english
+         }
+      coverImage {
+          extraLarge
+          large
+          medium
+          color
+        }
+      }    	
+    }
+  }
+`;
+  var variables = {
+    page: 1,
+    perPage: 20,
+  };
+
+  const data = await queryAnilist(query, variables);
+  const animeList = data.Page.media;
+  return animeList;
+};
+
 export const getPopularAnimes = async () => {
   var query = `
     query ($page : Int, $perPage : Int){

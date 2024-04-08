@@ -14,16 +14,15 @@ const Thumbnail = (props: ComponentProps) => {
   // on click thumbnail go to animeid page
 
   return (
-    <Link href={`/anime/${id}`}>
-      <div>
-        <Image
-          src={coverImage}
-          alt={`${title} cover image`}
-          width={178}
-          height={250}
-        />
-        <p>{title}</p>
-      </div>
+    <Link className="flex flex-col" href={`/anime/${id}`}>
+      <Image
+        className="grow"
+        src={coverImage}
+        alt={`${title} cover image`}
+        width={178}
+        height={250}
+      />
+      <p className="overflow-hidden text-ellipsis whitespace-nowrap">{title}</p>
     </Link>
   );
 };

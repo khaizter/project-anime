@@ -1,6 +1,7 @@
 import Thumbnail from "@/components/thumbnail";
 import Wrapper from "@/components/wrapper";
 import { getPopularAnimes, getTrendingAnimes } from "@/lib/utils";
+import Link from "next/link";
 import React, { useState } from "react";
 
 const HomePage = (props: any) => {
@@ -34,6 +35,7 @@ const HomePage = (props: any) => {
           );
         })}
       </div>
+      <Link href={"/anime"}>VIEW MORE</Link>
     </Wrapper>
   );
 };
