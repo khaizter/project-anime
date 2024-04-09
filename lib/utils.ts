@@ -1,6 +1,11 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+type FilterType = {
+  keyword?: string;
+  genres?: Array<string>;
+};
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -73,7 +78,10 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
   };
 };
 
-export const getPopularAnimes = async () => {
+export const getPopularAnimes = async (
+  page: number = 1,
+  perPage: number = 20
+) => {
   var query = `
     query ($page : Int, $perPage : Int){
       Page (page: $page, perPage: $perPage) {
@@ -103,17 +111,29 @@ export const getPopularAnimes = async () => {
     }
 `;
   var variables = {
-    page: 1,
-    perPage: 6,
+    page: page,
+    perPage: perPage,
   };
 
   const data = await queryAnilist(query, variables);
   const animeList = data.Page.media;
-
-  return animeList;
+  const pageInfo = data.Page.pageInfo;
+  return {
+    pageInfo: {
+      total: pageInfo.total,
+      currentPage: pageInfo.currentPage,
+      lastPage: pageInfo.lastPage,
+      hasNextPage: pageInfo.hasNextPage,
+      perPage: pageInfo.perPage,
+    },
+    animeList,
+  };
 };
 
-export const getTrendingAnimes = async () => {
+export const getTrendingAnimes = async (
+  page: number = 1,
+  perPage: number = 20
+) => {
   var query = `
   query ($page : Int, $perPage : Int){
     Page (page: $page, perPage: $perPage) {
@@ -143,14 +163,77 @@ export const getTrendingAnimes = async () => {
   }
 `;
   var variables = {
-    page: 1,
-    perPage: 6,
+    page: page,
+    perPage: perPage,
   };
 
   const data = await queryAnilist(query, variables);
   const animeList = data.Page.media;
+  const pageInfo = data.Page.pageInfo;
+  return {
+    pageInfo: {
+      total: pageInfo.total,
+      currentPage: pageInfo.currentPage,
+      lastPage: pageInfo.lastPage,
+      hasNextPage: pageInfo.hasNextPage,
+      perPage: pageInfo.perPage,
+    },
+    animeList,
+  };
+};
 
-  return animeList;
+export const getAnimesWithFilter = async (
+  page: number = 1,
+  perPage: number = 20,
+  filter: FilterType = {
+    keyword: "",
+    genres: [],
+  }
+) => {
+  var query = ` query($page :Int, $perPage:Int,$keyword :String){
+    Page (page: $page, perPage: $perPage) {
+      pageInfo {
+        total
+        currentPage
+        lastPage
+        hasNextPage
+        perPage
+      }
+      media (type : ANIME, sort : START_DATE_DESC, search : $keyword ){
+        id
+        title {
+         romaji
+         english
+        
+        }
+       coverImage {
+         extraLarge
+         large
+         medium
+         color
+       }
+       bannerImage
+      }
+    }
+  }`;
+  var variables = {
+    page: page,
+    perPage: perPage,
+    keyword: filter.keyword,
+  };
+  const data = await queryAnilist(query, variables);
+  const animeList = data.Page.media;
+  const pageInfo = data.Page.pageInfo;
+  return {
+    pageInfo: {
+      total: pageInfo.total,
+      currentPage: pageInfo.currentPage,
+      lastPage: pageInfo.lastPage,
+      hasNextPage: pageInfo.hasNextPage,
+      perPage: pageInfo.perPage,
+    },
+    animeList,
+  };
 };
 
 export const getAnimeDetails = async (animeId: number) => {

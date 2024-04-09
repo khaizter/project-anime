@@ -47,7 +47,7 @@ const AnimePage = (props: any) => {
 
 export const getServerSideProps = async (context: any) => {
   const currentPage = context.query?.page || 1;
-  const { pageInfo, animeList } = await getAnimes(currentPage, 20);
+  const { pageInfo, animeList } = await getAnimes(currentPage, 24);
   const { lastPage } = pageInfo;
   return {
     props: {

@@ -7,6 +7,7 @@ const MainHeader = () => {
     <header className="bg-slate-900 text-slate-100">
       <Wrapper className="py-4">
         <Link href={"/home"}>Home</Link>
+        <Link href={"/anime"}>Anime</Link>
       </Wrapper>
     </header>
   );

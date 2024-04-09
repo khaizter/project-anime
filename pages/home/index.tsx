@@ -41,8 +41,8 @@ const HomePage = (props: any) => {
 };
 
 export const getStaticProps = async (context: any) => {
-  const popularAnimeList = await getPopularAnimes();
-  const trendingAnimeList = await getTrendingAnimes();
+  const { animeList: popularAnimeList } = await getPopularAnimes(1, 6);
+  const { animeList: trendingAnimeList } = await getTrendingAnimes(1, 6);
   return {
     props: {
       popularAnimes: popularAnimeList,
