@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 type FilterType = {
-  keyword?: string;
+  keyword?: string | null;
   genres?: Array<string>;
 };
 
@@ -11,22 +11,25 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const queryAnilist = async (query: String, variables: any) => {
-  var url = "https://graphql.anilist.co",
-    options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        query: query,
-        variables: variables,
-      }),
-    };
-  const response = await fetch(url, options);
-  const json = await response.json();
-
-  return json.data;
+  try {
+    var url = "https://graphql.anilist.co",
+      options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          query: query,
+          variables: variables,
+        }),
+      };
+    const response = await fetch(url, options);
+    const json = await response.json();
+    return json.data;
+  } catch (err) {
+    throw err;
+  }
 };
 
 // sort by romaji name
@@ -62,20 +65,23 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
     page: page,
     perPage: perPage,
   };
-
-  const data = await queryAnilist(query, variables);
-  const animeList = data.Page.media;
-  const pageInfo = data.Page.pageInfo;
-  return {
-    pageInfo: {
-      total: pageInfo.total,
-      currentPage: pageInfo.currentPage,
-      lastPage: pageInfo.lastPage,
-      hasNextPage: pageInfo.hasNextPage,
-      perPage: pageInfo.perPage,
-    },
-    animeList,
-  };
+  try {
+    const data = await queryAnilist(query, variables);
+    const animeList = data.Page.media;
+    const pageInfo = data.Page.pageInfo;
+    return {
+      pageInfo: {
+        total: pageInfo.total,
+        currentPage: pageInfo.currentPage,
+        lastPage: pageInfo.lastPage,
+        hasNextPage: pageInfo.hasNextPage,
+        perPage: pageInfo.perPage,
+      },
+      animeList,
+    };
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const getPopularAnimes = async (
@@ -114,20 +120,23 @@ export const getPopularAnimes = async (
     page: page,
     perPage: perPage,
   };
-
-  const data = await queryAnilist(query, variables);
-  const animeList = data.Page.media;
-  const pageInfo = data.Page.pageInfo;
-  return {
-    pageInfo: {
-      total: pageInfo.total,
-      currentPage: pageInfo.currentPage,
-      lastPage: pageInfo.lastPage,
-      hasNextPage: pageInfo.hasNextPage,
-      perPage: pageInfo.perPage,
-    },
-    animeList,
-  };
+  try {
+    const data = await queryAnilist(query, variables);
+    const animeList = data.Page.media;
+    const pageInfo = data.Page.pageInfo;
+    return {
+      pageInfo: {
+        total: pageInfo.total,
+        currentPage: pageInfo.currentPage,
+        lastPage: pageInfo.lastPage,
+        hasNextPage: pageInfo.hasNextPage,
+        perPage: pageInfo.perPage,
+      },
+      animeList,
+    };
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const getTrendingAnimes = async (
@@ -166,27 +175,30 @@ export const getTrendingAnimes = async (
     page: page,
     perPage: perPage,
   };
-
-  const data = await queryAnilist(query, variables);
-  const animeList = data.Page.media;
-  const pageInfo = data.Page.pageInfo;
-  return {
-    pageInfo: {
-      total: pageInfo.total,
-      currentPage: pageInfo.currentPage,
-      lastPage: pageInfo.lastPage,
-      hasNextPage: pageInfo.hasNextPage,
-      perPage: pageInfo.perPage,
-    },
-    animeList,
-  };
+  try {
+    const data = await queryAnilist(query, variables);
+    const animeList = data.Page.media;
+    const pageInfo = data.Page.pageInfo;
+    return {
+      pageInfo: {
+        total: pageInfo.total,
+        currentPage: pageInfo.currentPage,
+        lastPage: pageInfo.lastPage,
+        hasNextPage: pageInfo.hasNextPage,
+        perPage: pageInfo.perPage,
+      },
+      animeList,
+    };
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const getAnimesWithFilter = async (
   page: number = 1,
   perPage: number = 20,
   filter: FilterType = {
-    keyword: "",
+    keyword: null,
     genres: [],
   }
 ) => {
@@ -221,19 +233,23 @@ export const getAnimesWithFilter = async (
     perPage: perPage,
     keyword: filter.keyword,
   };
-  const data = await queryAnilist(query, variables);
-  const animeList = data.Page.media;
-  const pageInfo = data.Page.pageInfo;
-  return {
-    pageInfo: {
-      total: pageInfo.total,
-      currentPage: pageInfo.currentPage,
-      lastPage: pageInfo.lastPage,
-      hasNextPage: pageInfo.hasNextPage,
-      perPage: pageInfo.perPage,
-    },
-    animeList,
-  };
+  try {
+    const data = await queryAnilist(query, variables);
+    const animeList = data.Page.media;
+    const pageInfo = data.Page.pageInfo;
+    return {
+      pageInfo: {
+        total: pageInfo.total,
+        currentPage: pageInfo.currentPage,
+        lastPage: pageInfo.lastPage,
+        hasNextPage: pageInfo.hasNextPage,
+        perPage: pageInfo.perPage,
+      },
+      animeList,
+    };
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const getAnimeDetails = async (animeId: number) => {

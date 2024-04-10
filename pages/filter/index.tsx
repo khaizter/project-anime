@@ -1,12 +1,11 @@
+import CustomPagination from "@/components/custom-pagination";
 import Thumbnail from "@/components/thumbnail";
 import Wrapper from "@/components/wrapper";
-import { getAnimes } from "@/lib/utils";
+import { getAnimes, getAnimesWithFilter } from "@/lib/utils";
+import { useRouter } from "next/router";
 import React from "react";
 
-import { useRouter } from "next/router";
-import CustomPagination from "@/components/custom-pagination";
-
-const AnimePage = (props: any) => {
+const FilterPage = (props: any) => {
   const { animes, currentPage, lastPage } = props;
   const router = useRouter();
 
@@ -18,7 +17,6 @@ const AnimePage = (props: any) => {
       },
     });
   };
-
   return (
     <Wrapper>
       <div>SEARCH</div>
@@ -48,7 +46,10 @@ const AnimePage = (props: any) => {
 export const getServerSideProps = async (context: any) => {
   try {
     const currentPage = context.query?.page || 1;
-    const { pageInfo, animeList } = await getAnimes(currentPage, 24);
+    const keyword = context.query?.keyword || null;
+    const { pageInfo, animeList } = await getAnimesWithFilter(currentPage, 24, {
+      keyword: keyword,
+    });
     const { lastPage } = pageInfo;
     return {
       props: {
@@ -58,10 +59,11 @@ export const getServerSideProps = async (context: any) => {
       },
     };
   } catch (err) {
+    console.log(err);
     return {
       notFound: true,
     };
   }
 };
 
-export default AnimePage;
+export default FilterPage;
