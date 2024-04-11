@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 type FilterType = {
   keyword?: string | null;
-  genres?: Array<string>;
+  genres?: Array<string> | null;
 };
 
 export function cn(...inputs: ClassValue[]) {
@@ -12,7 +12,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const queryAnilist = async (query: String, variables: any) => {
   try {
-    var url = "https://graphql.anilist.co",
+    const url = "https://graphql.anilist.co",
       options = {
         method: "POST",
         headers: {
@@ -34,7 +34,7 @@ export const queryAnilist = async (query: String, variables: any) => {
 
 // sort by romaji name
 export const getAnimes = async (page: number = 1, perPage: number = 20) => {
-  var query = `
+  const query = `
   query ($page : Int, $perPage : Int){
     Page (page: $page, perPage: $perPage) {
       pageInfo {
@@ -61,7 +61,7 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
     }
   }
 `;
-  var variables = {
+  const variables = {
     page: page,
     perPage: perPage,
   };
@@ -88,7 +88,7 @@ export const getPopularAnimes = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  var query = `
+  const query = `
     query ($page : Int, $perPage : Int){
       Page (page: $page, perPage: $perPage) {
         pageInfo {
@@ -116,7 +116,7 @@ export const getPopularAnimes = async (
       }
     }
 `;
-  var variables = {
+  const variables = {
     page: page,
     perPage: perPage,
   };
@@ -143,7 +143,7 @@ export const getTrendingAnimes = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  var query = `
+  const query = `
   query ($page : Int, $perPage : Int){
     Page (page: $page, perPage: $perPage) {
       pageInfo {
@@ -171,7 +171,7 @@ export const getTrendingAnimes = async (
     }
   }
 `;
-  var variables = {
+  const variables = {
     page: page,
     perPage: perPage,
   };
@@ -199,10 +199,10 @@ export const getAnimesWithFilter = async (
   perPage: number = 20,
   filter: FilterType = {
     keyword: null,
-    genres: [],
+    genres: null,
   }
 ) => {
-  var query = ` query($page :Int, $perPage:Int,$keyword :String){
+  const query = ` query($page :Int, $perPage:Int,$keyword :String, $genres : [String]){
     Page (page: $page, perPage: $perPage) {
       pageInfo {
         total
@@ -211,7 +211,7 @@ export const getAnimesWithFilter = async (
         hasNextPage
         perPage
       }
-      media (type : ANIME, sort : START_DATE_DESC, search : $keyword ){
+      media (type : ANIME, sort : TITLE_ROMAJI, search : $keyword, genre_in : $genres ){
         id
         title {
          romaji
@@ -228,11 +228,13 @@ export const getAnimesWithFilter = async (
       }
     }
   }`;
-  var variables = {
+  const variables = {
     page: page,
     perPage: perPage,
     keyword: filter.keyword,
+    genres: filter.genres,
   };
+  console.log("var: ", variables);
   try {
     const data = await queryAnilist(query, variables);
     const animeList = data.Page.media;
@@ -253,7 +255,7 @@ export const getAnimesWithFilter = async (
 };
 
 export const getAnimeDetails = async (animeId: number) => {
-  var query = `
+  const query = `
   query($id: Int){
     Media (id: $id) {
 			title {
@@ -302,9 +304,18 @@ export const getAnimeDetails = async (animeId: number) => {
     }
   }
 `;
-  var variables = {
+  const variables = {
     id: animeId,
   };
   const data = await queryAnilist(query, variables);
   return data.Media;
+};
+
+export const getGenres = async () => {
+  const query = `query {
+    GenreCollection
+  }`;
+  const variables = {};
+  const data = await queryAnilist(query, variables);
+  return data.GenreCollection;
 };
