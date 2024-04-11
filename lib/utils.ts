@@ -273,6 +273,8 @@ export const getAnimeDetails = async (animeId: number) => {
       }
       trailer {
         id
+        site
+        thumbnail
       }
       coverImage {
         extraLarge
@@ -290,6 +292,13 @@ export const getAnimeDetails = async (animeId: number) => {
           id
         }
       }
+      streamingEpisodes{
+        title
+        thumbnail
+        url
+        site
+      }
+      siteUrl
     }
   }
 `;

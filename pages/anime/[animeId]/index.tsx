@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Wrapper from "@/components/wrapper";
 import { getAnimeDetails } from "@/lib/utils";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 
 const AnimeDetailPage = (props: any) => {
   const { animeDetails } = props;
+  const router = useRouter();
 
   console.log(animeDetails);
 
@@ -19,6 +22,7 @@ const AnimeDetailPage = (props: any) => {
           className="object-cover"
           alt={`${animeDetails.title.romaji} banner image`}
         />
+        <div className="absolute w-full h-full bg-gradient-to-t from-black to-transparent"></div>
       </div>
       <Wrapper>
         <div className="flex items-start">
@@ -57,7 +61,45 @@ const AnimeDetailPage = (props: any) => {
                 return <Button key={index}>{genre}</Button>;
               })}
             </ul>
-            <div>TRAILER</div>
+            {animeDetails?.trailer?.id && (
+              <>
+                <div>TRAILER</div>
+                <iframe
+                  width="560"
+                  height="315"
+                  src={`https://www.youtube.com/embed/${animeDetails.trailer.id}`}
+                  title="Anime trailer"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                  allowFullScreen
+                ></iframe>
+              </>
+            )}
+            <ScrollArea className="h-72 rounded-md border p-1">
+              <div className="grid grid-cols-3 gap-4">
+                {animeDetails?.streamingEpisodes?.map(
+                  (episode: any, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className="relative h-24"
+                        onClick={() => router.push(episode.url)}
+                      >
+                        <Image
+                          src={episode.thumbnail}
+                          alt={`thumb nail`}
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
+                          {episode.title}
+                        </div>
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+            </ScrollArea>
           </div>
         </div>
         <div>LIST OF EPISODES</div>
