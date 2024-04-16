@@ -158,8 +158,8 @@ export const getTrendingAnimes = async (
         title {
         romaji
         english
-        
         }
+        description(asHtml : true)
       coverImage {
         extraLarge
         large

@@ -22,7 +22,6 @@ const Thumbnail = (props: ComponentProps) => {
         width={178}
         height={250}
       />
-      <p className="overflow-hidden text-ellipsis whitespace-nowrap">{title}</p>
     </Link>
   );
 };
