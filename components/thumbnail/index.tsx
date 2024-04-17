@@ -11,8 +11,6 @@ interface ComponentProps {
 const Thumbnail = (props: ComponentProps) => {
   const { id, title, coverImage } = props;
 
-  // on click thumbnail go to animeid page
-
   return (
     <Link className="flex flex-col" href={`/anime/${id}`}>
       <Image
@@ -22,6 +20,7 @@ const Thumbnail = (props: ComponentProps) => {
         width={178}
         height={250}
       />
+      <div className="truncate">{title}</div>
     </Link>
   );
 };

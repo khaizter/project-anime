@@ -1,51 +1,65 @@
 import CustomPagination from "@/components/custom-pagination";
 import Thumbnail from "@/components/thumbnail";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ToggleGroupItem } from "@/components/ui/toggle-group";
 import Wrapper from "@/components/wrapper";
-import { getAnimes, getAnimesWithFilter, getGenres } from "@/lib/utils";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { getAnimesWithFilter, getGenres } from "@/lib/utils";
+import { ToggleGroup } from "@radix-ui/react-toggle-group";
+import React, { useEffect, useState } from "react";
 
-const FilterPage = (props: any) => {
-  const {
-    animes,
-    currentPage,
-    lastPage,
-    genres,
-    genresSelected: initialGenresSelected,
-    keyword: initialKeyword,
-  } = props;
-  const router = useRouter();
-  const [genresSelected, setGenresSelected] = useState(initialGenresSelected);
-  const [keyword, setKeyword] = useState(initialKeyword);
+type FilterType = {
+  keyword?: string | null;
+  genres?: Array<string> | null;
+};
+
+const Filter2Page = (props: any) => {
+  const { genres } = props;
+  const [title, setTitle] = useState("MY TITLE");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [lastPage, setLastPage] = useState<number>(20);
+  const [keyword, setKeyword] = useState<string>("");
+  const [genresSelected, setGenresSelected] = useState<Array<string>>([]);
+  const [animes, setAnimes] = useState<Array<any>>([]);
+  const [loadingAnimes, setLoadingAnimes] = useState<boolean>(false);
+
+  const fetchData = async (filter: FilterType, page: number) => {
+    console.log("fetch Data", filter);
+    console.log("on page", page);
+    setLoadingAnimes(true);
+    const { pageInfo, animeList } = await getAnimesWithFilter(page, 24, filter);
+    setLastPage(pageInfo.lastPage);
+    setAnimes(animeList);
+    setLoadingAnimes(false);
+  };
 
   const genresChangedHandler = (values: any) => {
-    setGenresSelected(values);
+    setGenresSelected((_) => {
+      fetchData({ keyword, genres: values }, 1);
+      setCurrentPage(1);
+      return values;
+    });
   };
 
   const pageChangedHandler = (page: number) => {
-    router.push({
-      pathname: "/filter",
-      query: {
-        keyword: keyword,
-        page: page,
-        genres: genresSelected,
-      },
+    setCurrentPage((_) => {
+      fetchData({ keyword, genres: genresSelected }, page);
+      return page;
     });
   };
 
-  const filterButtonHandler = () => {
-    router.push({
-      pathname: "/filter",
-      query: {
-        keyword: keyword,
-        page: currentPage,
-        genres: genresSelected,
-      },
-    });
-  };
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      fetchData(
+        {
+          keyword,
+          genres: genresSelected,
+        },
+        1
+      );
+      setCurrentPage(1);
+    }, 300);
+    return () => clearTimeout(timeOutId);
+  }, [keyword]);
 
   return (
     <Wrapper>
@@ -56,66 +70,56 @@ const FilterPage = (props: any) => {
           onChange={(e: any) => setKeyword(e.target.value)}
         />
       </div>
-      <ToggleGroup
-        className="flex flex-wrap"
-        type="multiple"
-        defaultValue={initialGenresSelected || []}
-        onValueChange={genresChangedHandler}
-      >
-        {genres.map((genre: any) => {
-          return (
-            <ToggleGroupItem key={genre} value={genre}>
-              {genre}
-            </ToggleGroupItem>
-          );
-        })}
-      </ToggleGroup>
-      <Button type="button" onClick={filterButtonHandler}>
-        Filter
-      </Button>
-      <ul className="grid grid-cols-6 gap-4">
-        {animes.map((anime: any, index: number) => {
-          return (
-            <Thumbnail
-              key={anime.id}
-              id={anime.id}
-              title={anime.title.romaji}
-              coverImage={anime.coverImage.large}
-            />
-          );
-        })}
-      </ul>
 
+      {genres ? (
+        <ToggleGroup
+          className="flex flex-wrap"
+          type="multiple"
+          value={genresSelected}
+          onValueChange={genresChangedHandler}
+        >
+          {genres.map((genre: any) => {
+            return (
+              <ToggleGroupItem key={genre} value={genre}>
+                {genre}
+              </ToggleGroupItem>
+            );
+          })}
+        </ToggleGroup>
+      ) : (
+        <div>Loading genres...</div>
+      )}
+      {!loadingAnimes ? (
+        <ul className="grid grid-cols-6 gap-4">
+          {animes.map((anime: any) => {
+            return (
+              <Thumbnail
+                key={anime.id}
+                id={anime.id}
+                title={anime.title.romaji}
+                coverImage={anime.coverImage.large}
+              />
+            );
+          })}
+        </ul>
+      ) : (
+        <div>Loading animes...</div>
+      )}
       <CustomPagination
-        currentPage={parseInt(currentPage)}
-        lastPage={parseInt(lastPage)}
+        currentPage={+currentPage}
+        lastPage={+lastPage}
         onPageChanged={pageChangedHandler}
       />
     </Wrapper>
   );
 };
 
-export const getServerSideProps = async (context: any) => {
+export const getStaticProps = async (context: any) => {
   try {
-    const currentPage = context.query?.page || 1;
-    const genresSelected = context.query?.genres || null;
-    const keyword = context.query?.keyword || null;
-    const { pageInfo, animeList } = await getAnimesWithFilter(currentPage, 24, {
-      keyword: keyword,
-      genres: genresSelected,
-    });
-    const { lastPage } = pageInfo;
-
     const genres = await getGenres();
-
     return {
       props: {
-        animes: animeList,
-        currentPage: currentPage,
-        lastPage: lastPage,
         genres: genres,
-        genresSelected: genresSelected,
-        keyword: keyword,
       },
     };
   } catch (err) {
@@ -126,4 +130,4 @@ export const getServerSideProps = async (context: any) => {
   }
 };
 
-export default FilterPage;
+export default Filter2Page;

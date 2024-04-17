@@ -1,10 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-type FilterType = {
-  keyword?: string | null;
-  genres?: Array<string> | null;
-};
+import { FilterType } from "@/lib/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -231,10 +228,9 @@ export const getAnimesWithFilter = async (
   const variables = {
     page: page,
     perPage: perPage,
-    keyword: filter.keyword,
-    genres: filter.genres,
+    keyword: filter.keyword || null,
+    genres: filter.genres?.length ? filter.genres : null,
   };
-  console.log("var: ", variables);
   try {
     const data = await queryAnilist(query, variables);
     const animeList = data.Page.media;

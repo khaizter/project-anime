@@ -19,7 +19,6 @@ const HomePage = (props: any) => {
       <Carousel className="w-full">
         <CarouselContent>
           {trendingAnimes?.map((anime: any, index: number) => {
-            console.log(anime);
             return (
               <CarouselItem key={index}>
                 <div className="relative w-full h-[36rem]">
