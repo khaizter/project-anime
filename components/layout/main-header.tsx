@@ -24,6 +24,7 @@ const MainHeader = () => {
       <Wrapper className="py-4 flex">
         <Link href={"/home"}>Home</Link>
         <Link href={"/anime"}>Anime</Link>
+        <Link href={"/filter"}>Filter</Link>
         <Input type="text" ref={inputRef} />
         <Button type="button" onClick={searchHandler}>
           Search

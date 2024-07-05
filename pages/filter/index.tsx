@@ -14,7 +14,6 @@ type FilterType = {
 
 const Filter2Page = (props: any) => {
   const { genres } = props;
-  const [title, setTitle] = useState("MY TITLE");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [lastPage, setLastPage] = useState<number>(20);
   const [keyword, setKeyword] = useState<string>("");
@@ -116,6 +115,8 @@ const Filter2Page = (props: any) => {
 
 export const getStaticProps = async (context: any) => {
   try {
+    const genresSelected = context.query?.genres || null;
+    const keyword = context.query?.keyword || null;
     const genres = await getGenres();
     return {
       props: {
