@@ -21,7 +21,7 @@ const MainHeader = () => {
   };
   return (
     <header className="bg-slate-900 text-slate-100">
-      <Wrapper className="py-4 flex">
+      <Wrapper className="py-4 flex space-x-4">
         <Link href={"/home"}>Home</Link>
         <Link href={"/anime"}>Anime</Link>
         <Link href={"/filter"}>Filter</Link>
@@ -29,6 +29,8 @@ const MainHeader = () => {
         <Button type="button" onClick={searchHandler}>
           Search
         </Button>
+        <Link href={"/profile"}>USERNAME</Link>
+        <Link href={"/auth"}>Sign In</Link>
       </Wrapper>
     </header>
   );
