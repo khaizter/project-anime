@@ -4,7 +4,7 @@ import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   jwt: {
     maxAge: 60 * 60 * 24 * 7,
   },
@@ -29,7 +29,6 @@ const authOptions: NextAuthOptions = {
         if (!existingUser) {
           client.close();
           throw new Error("No user found!");
-          return null;
         }
 
         // check if password is match
@@ -37,7 +36,6 @@ const authOptions: NextAuthOptions = {
         if (!isValid) {
           client.close();
           throw new Error("Invalid password!");
-          return null;
         }
 
         client.close();

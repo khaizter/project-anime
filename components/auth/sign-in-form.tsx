@@ -68,7 +68,7 @@ const SignInForm = () => {
         <CardTitle>Sign In</CardTitle>
         <CardDescription>Log in to your Account</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(submitHandler)}
