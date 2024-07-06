@@ -43,7 +43,7 @@ const authOptions: NextAuthOptions = {
         client.close();
         return {
           id: existingUser._id.toString(),
-          username: existingUser.username,
+          name: existingUser.username,
         };
       },
     }),

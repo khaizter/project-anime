@@ -3,6 +3,8 @@ import Wrapper from "@/components/wrapper";
 import React, { useState } from "react";
 import SignInForm from "@/components/auth/sign-in-form";
 import SignUpForm from "@/components/auth/sign-up-form";
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
 
 const AuthPage = () => {
   const [currentTab, setCurrentTab] = useState<"signin" | "signup">("signin");
@@ -26,6 +28,21 @@ const AuthPage = () => {
       </Tabs>
     </Wrapper>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (session) {
+    return {
+      redirect: {
+        destination: "/home",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default AuthPage;
