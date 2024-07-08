@@ -51,6 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const result = await db.collection("users").insertOne({
     username: username,
     password: hashedPassword,
+    favorites: [],
   });
 
   client.close();

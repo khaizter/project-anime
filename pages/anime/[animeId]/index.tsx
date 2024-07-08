@@ -4,13 +4,43 @@ import Wrapper from "@/components/wrapper";
 import { getAnimeDetails } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+import { Heart } from "lucide-react";
+
+const addFavorite = async (animeId: string, remove: boolean = false) => {
+  const response = await fetch("/api/user/favorite", {
+    method: "PATCH",
+    body: JSON.stringify({ animeId, remove }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong!");
+  }
+
+  return data;
+};
 
 const AnimeDetailPage = (props: any) => {
   const { animeDetails } = props;
   const router = useRouter();
+  const [isFavorite, setIsFavorite] = useState(true);
 
-  console.log(animeDetails);
+  const favoriteHandler = async () => {
+    try {
+      const animeId = animeDetails.id;
+      const result = await addFavorite(animeId, isFavorite);
+      console.log(result);
+    } catch (err) {
+      console.log(err);
+    }
+
+    setIsFavorite((prevState) => !prevState);
+  };
 
   return (
     <>
@@ -35,6 +65,14 @@ const AnimeDetailPage = (props: any) => {
               sizes="100vw"
               className="w-full h-auto"
             />
+            <Button onClick={favoriteHandler}>
+              <Heart
+                className="mr-2 h-4 w-4"
+                color={isFavorite ? "#ff0000" : undefined}
+                fill={isFavorite ? "#ff0000" : undefined}
+              />
+              Add to Favorites
+            </Button>
           </div>
           <div className="p-4">
             <h1>{animeDetails.title.romaji}</h1>

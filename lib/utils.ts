@@ -254,6 +254,7 @@ export const getAnimeDetails = async (animeId: number) => {
   const query = `
   query($id: Int){
     Media (id: $id) {
+      id
 			title {
         romaji
         english
