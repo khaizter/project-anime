@@ -7,8 +7,29 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { Button } from "@/components/ui/button";
 
+const unfavorite = async (
+  animeId: string | number,
+  remove: boolean = false
+) => {
+  const response = await fetch("/api/user/favorite", {
+    method: "PATCH",
+    body: JSON.stringify({ animeId, remove }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong!");
+  }
+
+  return data;
+};
+
 const ProfilePage = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [favorites, setFavorites] = useState<Array<number>>([]);
 
   useEffect(() => {
@@ -31,8 +52,16 @@ const ProfilePage = () => {
     fetchFavorites();
   }, []);
 
-  const unfavoriteHandler = (animeId: number) => {
-    console.log("unfavorite: ", animeId);
+  const unfavoriteHandler = async (animeId: number) => {
+    try {
+      const result = await unfavorite(animeId, true);
+      console.log(result);
+      setFavorites((prevState: Array<number>) => {
+        return prevState.filter((item: number) => item !== animeId);
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

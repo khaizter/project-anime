@@ -4,10 +4,13 @@ import Wrapper from "@/components/wrapper";
 import { getAnimeDetails } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 
-const addFavorite = async (animeId: string, remove: boolean = false) => {
+const addFavorite = async (
+  animeId: string | number,
+  remove: boolean = false
+) => {
   const response = await fetch("/api/user/favorite", {
     method: "PATCH",
     body: JSON.stringify({ animeId, remove }),
@@ -27,16 +30,42 @@ const addFavorite = async (animeId: string, remove: boolean = false) => {
 
 const AnimeDetailPage = (props: any) => {
   const { animeDetails } = props;
+  const animeId = animeDetails.id;
   const router = useRouter();
-  const [isFavorite, setIsFavorite] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const response = await fetch("/api/user/favorite", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Something went wrong!");
+      }
+
+      const favorites = result.data;
+      setIsFavorite(favorites.find((item: number) => item === animeId));
+      setIsLoading(false);
+    };
+    fetchFavorites();
+  }, [animeId]);
 
   const favoriteHandler = async () => {
     try {
-      const animeId = animeDetails.id;
+      setIsLoading(true);
       const result = await addFavorite(animeId, isFavorite);
       console.log(result);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
     }
 
     setIsFavorite((prevState) => !prevState);
@@ -65,7 +94,7 @@ const AnimeDetailPage = (props: any) => {
               sizes="100vw"
               className="w-full h-auto"
             />
-            <Button onClick={favoriteHandler}>
+            <Button onClick={favoriteHandler} disabled={isLoading}>
               <Heart
                 className="mr-2 h-4 w-4"
                 color={isFavorite ? "#ff0000" : undefined}
