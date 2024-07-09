@@ -1,7 +1,8 @@
 import ChangePasswordForm from "@/components/auth/change-password-form";
 import Wrapper from "@/components/wrapper";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import React from "react";
 
 const ChangePasswordPage = () => {
@@ -13,8 +14,8 @@ const ChangePasswordPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
     return {

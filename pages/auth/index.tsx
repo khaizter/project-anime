@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import SignInForm from "@/components/auth/sign-in-form";
 import SignUpForm from "@/components/auth/sign-up-form";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 const AuthPage = () => {
   const [currentTab, setCurrentTab] = useState<"signin" | "signup">("signin");
@@ -30,8 +31,8 @@ const AuthPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions);
   if (session) {
     return {
       redirect: {

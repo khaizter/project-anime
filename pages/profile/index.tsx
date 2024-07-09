@@ -1,8 +1,10 @@
 import Wrapper from "@/components/wrapper";
 import { GetServerSideProps } from "next";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 const ProfilePage = () => {
   const { data: session, status } = useSession();
@@ -22,8 +24,10 @@ const ProfilePage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions);
+
+  console.log("MY SESSIOn", session);
 
   if (!session) {
     return {
