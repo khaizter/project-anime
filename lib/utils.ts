@@ -316,3 +316,65 @@ export const getGenres = async () => {
   const data = await queryAnilist(query, variables);
   return data.GenreCollection;
 };
+
+export const getAnimeByIds = async (animeIds: Array<number>) => {
+  const query = `
+  query($page :Int, $perPage:Int,$ids: [Int]){
+  Page (page: $page, perPage: $perPage) {
+    Media (id_in: $ids) {
+      id
+			title {
+        romaji
+        english
+      }
+      description(asHtml : true)
+      startDate {
+        year
+        month
+        day
+      }
+      endDate {
+        year
+        month
+        day
+      }
+      trailer {
+        id
+        site
+        thumbnail
+      }
+      coverImage {
+        extraLarge
+        large
+        medium
+        color
+      }
+      bannerImage
+      genres
+      tags {
+        id
+      }
+      studios(sort : FAVOURITES_DESC ,isMain : true) {
+        edges {
+          id
+        }
+      }
+      streamingEpisodes{
+        title
+        thumbnail
+        url
+        site
+      }
+      siteUrl
+    }
+}
+  }
+`;
+  const variables = {
+    page: 1,
+    perPage: 24,
+    ids: animeIds,
+  };
+  const data = await queryAnilist(query, variables);
+  return data.Media;
+};
