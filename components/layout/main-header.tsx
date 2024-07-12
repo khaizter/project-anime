@@ -11,6 +11,8 @@ const MainHeader = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
+  console.log(router.pathname);
+
   const searchHandler = () => {
     if (!inputRef || !inputRef.current) {
       throw Error("no input ref");
@@ -34,10 +36,15 @@ const MainHeader = () => {
         <Link href={"/home"}>Home</Link>
         <Link href={"/anime"}>Anime</Link>
         <Link href={"/filter"}>Filter</Link>
-        <Input type="text" ref={inputRef} />
-        <Button type="button" onClick={searchHandler}>
-          Search
-        </Button>
+
+        {router.pathname !== "/" && (
+          <>
+            <Input type="text" ref={inputRef} />
+            <Button type="button" onClick={searchHandler}>
+              Search
+            </Button>
+          </>
+        )}
         {status === "authenticated" && (
           <Link href={"/profile"}>{session?.user!.name}</Link>
         )}
