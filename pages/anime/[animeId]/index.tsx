@@ -135,7 +135,21 @@ const AnimeDetailPage = (props: any) => {
             <div>Genres</div>
             <ul className="flex gap-2">
               {animeDetails.genres.map((genre: any, index: number) => {
-                return <Button key={index}>{genre}</Button>;
+                return (
+                  <Button
+                    key={index}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/filter",
+                        query: {
+                          genres: [genre],
+                        },
+                      });
+                    }}
+                  >
+                    {genre}
+                  </Button>
+                );
               })}
             </ul>
             {animeDetails?.trailer?.id && (

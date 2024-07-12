@@ -5,7 +5,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
-import { Button } from "@/components/ui/button";
 import { getAnimeByIds } from "@/lib/utils";
 import CustomPagination from "@/components/custom-pagination";
 import FavoriteThumbnail from "@/components/favorite-thumbnail";
@@ -62,7 +61,6 @@ const ProfilePage = () => {
         throw new Error(result.message || "Something went wrong!");
       }
 
-      // fetch anime details
       setFavorites((_: Array<number>) => {
         fetchAnimes(result.data, 1);
         return result.data;
@@ -102,14 +100,6 @@ const ProfilePage = () => {
       <Link href={"/profile/change-password"}>Change Password</Link>
       <div>
         <div>My Favorites</div>
-        <div>SHOW GRID OF FAVORITES</div>
-        {/* {favorites.map((item: number) => {
-          return (
-            <Button key={item} onClick={unfavoriteHandler.bind(null, item)}>
-              {item}
-            </Button>
-          );
-        })} */}
         {!loadingAnimes ? (
           <ul className="grid grid-cols-6 gap-4">
             {animes.map((anime: any) => {
