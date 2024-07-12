@@ -35,7 +35,7 @@ const ProfilePage = () => {
   const { data: session } = useSession();
   const [favorites, setFavorites] = useState<Array<number>>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [lastPage, setLastPage] = useState<number>(20);
+  const [lastPage, setLastPage] = useState<number>(1);
   const [animes, setAnimes] = useState<Array<any>>([]);
   const [loadingAnimes, setLoadingAnimes] = useState<boolean>(false);
 
@@ -63,8 +63,10 @@ const ProfilePage = () => {
       }
 
       // fetch anime details
-      setFavorites(result.data);
-      fetchAnimes(result.data, currentPage);
+      setFavorites((_: Array<number>) => {
+        fetchAnimes(result.data, 1);
+        return result.data;
+      });
     };
     fetchFavorites();
   }, []);
@@ -78,12 +80,13 @@ const ProfilePage = () => {
 
   const unfavoriteHandler = async (animeId: number) => {
     console.log(animeId);
-    return;
     try {
       const result = await unfavorite(animeId, true);
       console.log(result);
       setFavorites((prevState: Array<number>) => {
-        return prevState.filter((item: number) => item !== animeId);
+        const result = prevState.filter((item: number) => item !== animeId);
+        fetchAnimes(result, 1);
+        return result;
       });
     } catch (err) {
       console.log(err);
