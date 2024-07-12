@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const addFavorite = async (
   animeId: string | number,
@@ -32,11 +33,13 @@ const AnimeDetailPage = (props: any) => {
   const { animeDetails } = props;
   const animeId = animeDetails.id;
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const { status } = useSession();
 
   useEffect(() => {
     const fetchFavorites = async () => {
+      setIsLoading(true);
       const response = await fetch("/api/user/favorite", {
         method: "GET",
         headers: {
@@ -54,10 +57,14 @@ const AnimeDetailPage = (props: any) => {
       setIsFavorite(favorites.find((item: number) => item === animeId));
       setIsLoading(false);
     };
-    fetchFavorites();
-  }, [animeId]);
+    if (status === "authenticated") fetchFavorites();
+  }, [animeId, status]);
 
-  const favoriteHandler = async () => {
+  const favoriteHandler: React.MouseEventHandler = async (e) => {
+    if (status === "unauthenticated") {
+      e.preventDefault();
+      router.push("/auth");
+    }
     try {
       setIsLoading(true);
       const result = await addFavorite(animeId, isFavorite);
@@ -94,7 +101,10 @@ const AnimeDetailPage = (props: any) => {
               sizes="100vw"
               className="w-full h-auto"
             />
-            <Button onClick={favoriteHandler} disabled={isLoading}>
+            <Button
+              onClick={favoriteHandler}
+              disabled={isLoading || status === "loading"}
+            >
               <Heart
                 className="mr-2 h-4 w-4"
                 color={isFavorite ? "#ff0000" : undefined}

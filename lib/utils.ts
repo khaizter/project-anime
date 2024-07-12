@@ -384,7 +384,7 @@ export const getAnimeByIds = async (
   const variables = {
     page: 1,
     perPage: 24,
-    ids: animeIds,
+    ids: animeIds!,
   };
   try {
     const data = await queryAnilist(query, variables);
