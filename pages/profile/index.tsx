@@ -8,7 +8,7 @@ import { getServerSession } from "next-auth";
 import { Button } from "@/components/ui/button";
 import { getAnimeByIds } from "@/lib/utils";
 import CustomPagination from "@/components/custom-pagination";
-import Thumbnail from "@/components/thumbnail";
+import FavoriteThumbnail from "@/components/favorite-thumbnail";
 
 const unfavorite = async (
   animeId: string | number,
@@ -41,7 +41,7 @@ const ProfilePage = () => {
 
   const fetchAnimes = async (ids: Array<number>, page: number) => {
     setLoadingAnimes(true);
-    const { pageInfo, animeList } = await getAnimeByIds(ids);
+    const { pageInfo, animeList } = await getAnimeByIds(page, 24, ids);
     setLastPage(pageInfo.lastPage);
     setAnimes(animeList);
     setLoadingAnimes(false);
@@ -77,6 +77,8 @@ const ProfilePage = () => {
   };
 
   const unfavoriteHandler = async (animeId: number) => {
+    console.log(animeId);
+    return;
     try {
       const result = await unfavorite(animeId, true);
       console.log(result);
@@ -109,11 +111,12 @@ const ProfilePage = () => {
           <ul className="grid grid-cols-6 gap-4">
             {animes.map((anime: any) => {
               return (
-                <Thumbnail
+                <FavoriteThumbnail
                   key={anime.id}
                   id={anime.id}
                   title={anime.title.romaji}
                   coverImage={anime.coverImage.large}
+                  onUnfavorite={unfavoriteHandler}
                 />
               );
             })}

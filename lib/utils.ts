@@ -317,8 +317,11 @@ export const getGenres = async () => {
   return data.GenreCollection;
 };
 
-export const getAnimeByIds = async (animeIds: Array<number>) => {
-  console.log(animeIds);
+export const getAnimeByIds = async (
+  page: number = 1,
+  perPage: number = 20,
+  animeIds: Array<number>
+) => {
   const query = `
   query($page :Int, $perPage:Int,$ids: [Int]){
   Page (page: $page, perPage: $perPage) {
@@ -385,7 +388,6 @@ export const getAnimeByIds = async (animeIds: Array<number>) => {
   };
   try {
     const data = await queryAnilist(query, variables);
-    console.log(data);
     const animeList = data.Page.media;
     const pageInfo = data.Page.pageInfo;
     return {

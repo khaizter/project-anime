@@ -2,13 +2,13 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-interface ComponentProps {
+interface ThumbnailProps {
   id: number;
   title: string;
   coverImage: string;
 }
 
-const Thumbnail = (props: ComponentProps) => {
+const Thumbnail: React.FC<ThumbnailProps> = (props) => {
   const { id, title, coverImage } = props;
 
   return (
