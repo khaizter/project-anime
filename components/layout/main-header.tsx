@@ -31,16 +31,22 @@ const MainHeader = () => {
   };
 
   return (
-    <header className="bg-slate-900 text-slate-100">
+    <header className=" bg-kingfisher-daisy text-slate-100">
       <Wrapper className="py-4 flex items-center space-x-4">
-        <Link href={"/home"}>Home</Link>
+        <Link className="font-major-mono-display" href={"/home"}>
+          Project Anime
+        </Link>
         <Link href={"/anime"}>Anime</Link>
         <Link href={"/filter"}>Filter</Link>
 
         {router.pathname !== "/" && (
           <>
             <Input type="text" ref={inputRef} />
-            <Button type="button" onClick={searchHandler}>
+            <Button
+              type="button"
+              onClick={searchHandler}
+              className="bg-lavender-rose"
+            >
               Search
             </Button>
           </>

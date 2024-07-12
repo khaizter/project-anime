@@ -1,12 +1,16 @@
 import React, { Fragment } from "react";
 import MainHeader from "@/components/layout/main-header";
 
+import { spaceGrotesk, rajdhani, majorMonoDisplay } from "@/lib/fonts";
+
 const Layout = (props: any) => {
   return (
-    <Fragment>
+    <div className={`${spaceGrotesk} ${rajdhani} ${majorMonoDisplay}`}>
       <MainHeader />
-      <main className="bg-slate-800 text-slate-100">{props.children}</main>
-    </Fragment>
+      <main className="text-slate-100 bg-gradient-to-b from-kingfisher-daisy to-black">
+        {props.children}
+      </main>
+    </div>
   );
 };
 

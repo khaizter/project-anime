@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -52,6 +52,11 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "kingfisher-daisy": "#340181",
+        "kingfisher-daisy-900": "#4E08AA",
+        "kingfisher-daisy-800": "#5E07D0",
+        "lavender-rose": "#FD80DB",
+        "red-ribbon": "#F6014E",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -72,9 +77,14 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        "space-grotesk": ["var(--font-space-grotesk)"],
+        rajdhani: ["var(--font-rajdhani)"],
+        "major-mono-display": ["var(--font-major-mono-display)"],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;
