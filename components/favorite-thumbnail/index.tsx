@@ -47,7 +47,7 @@ const FavoriteThumbnail: React.FC<FavoriteThumbnailProps> = (props) => {
           </Button>
         </div>
       </Link>
-      <div className="truncate">{title}</div>
+      <div className="truncate font-space-grotesk">{title}</div>
     </div>
   );
 };

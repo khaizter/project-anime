@@ -7,7 +7,7 @@ const Layout = (props: any) => {
   return (
     <div className={`${spaceGrotesk} ${rajdhani} ${majorMonoDisplay}`}>
       <MainHeader />
-      <main className="text-slate-100 bg-gradient-to-b from-kingfisher-daisy to-black">
+      <main className="font-rajdhani text-slate-100 bg-gradient-to-b from-kingfisher-daisy to-black">
         {props.children}
       </main>
     </div>

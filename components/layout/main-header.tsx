@@ -5,6 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useRef } from "react";
+import { Menu, Search } from "lucide-react";
 
 const MainHeader = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -32,35 +33,54 @@ const MainHeader = () => {
 
   return (
     <header className=" bg-kingfisher-daisy text-slate-100">
-      <Wrapper className="py-4 flex items-center space-x-4">
-        <Link className="font-major-mono-display" href={"/home"}>
-          Project Anime
-        </Link>
-        <Link href={"/anime"}>Anime</Link>
-        <Link href={"/filter"}>Filter</Link>
-
-        {router.pathname !== "/" && (
-          <>
-            <Input type="text" ref={inputRef} />
-            <Button
-              type="button"
-              onClick={searchHandler}
-              className="bg-lavender-rose"
-            >
-              Search
-            </Button>
-          </>
-        )}
-        {status === "authenticated" && (
-          <Link href={"/profile"}>{session?.user!.name}</Link>
-        )}
-        {status === "unauthenticated" && <Link href={"/auth"}>Sign In</Link>}
-
-        {status === "authenticated" && (
-          <Button type="button" onClick={logoutHandler}>
-            Log out
+      <Wrapper className="py-4 flex items-center justify-between">
+        <div className="flex items-center space-x-6">
+          <Button variant="ghost" size="icon">
+            <Menu className="h-8 w-8" />
           </Button>
-        )}
+          <Link className="font-major-mono-display text-3xl" href={"/home"}>
+            Project<span className="text-lavender-rose">Anime</span>
+          </Link>
+          {router.pathname !== "/" && (
+            <div className="flex items-stretch bg-white p-1">
+              <input
+                className="text-kingfisher-daisy-800 focus:outline-none pl-3"
+                type="text"
+                ref={inputRef}
+              />
+              <button
+                className="bg-transparent py-2 px-4 font-space-grotesk"
+                onClick={searchHandler}
+              >
+                <Search className="h-4 w-4" color="#340181" />
+              </button>
+              <Button size="sm">Filter</Button>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center space-x-6">
+          {status === "unauthenticated" && (
+            <Link href={"/auth"}>
+              <Button className="font-space-grotesk bg-lavender-rose">
+                Sign In
+              </Button>
+            </Link>
+          )}
+          {status === "authenticated" && (
+            <>
+              <Link className="font-space-grotesk" href={"/profile"}>
+                {session?.user!.name}
+              </Link>
+              <Button
+                className="font-space-grotesk bg-lavender-rose"
+                type="button"
+                onClick={logoutHandler}
+              >
+                Log out
+              </Button>
+            </>
+          )}
+        </div>
       </Wrapper>
     </header>
   );

@@ -20,7 +20,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
         width={178}
         height={250}
       />
-      <div className="truncate">{title}</div>
+      <div className="truncate font-space-grotesk">{title}</div>
     </Link>
   );
 };
