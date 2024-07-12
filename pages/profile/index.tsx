@@ -6,6 +6,9 @@ import React, { useEffect, useState } from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { Button } from "@/components/ui/button";
+import { getAnimeByIds } from "@/lib/utils";
+import CustomPagination from "@/components/custom-pagination";
+import Thumbnail from "@/components/thumbnail";
 
 const unfavorite = async (
   animeId: string | number,
@@ -31,6 +34,18 @@ const unfavorite = async (
 const ProfilePage = () => {
   const { data: session } = useSession();
   const [favorites, setFavorites] = useState<Array<number>>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [lastPage, setLastPage] = useState<number>(20);
+  const [animes, setAnimes] = useState<Array<any>>([]);
+  const [loadingAnimes, setLoadingAnimes] = useState<boolean>(false);
+
+  const fetchAnimes = async (ids: Array<number>, page: number) => {
+    setLoadingAnimes(true);
+    const { pageInfo, animeList } = await getAnimeByIds(ids);
+    setLastPage(pageInfo.lastPage);
+    setAnimes(animeList);
+    setLoadingAnimes(false);
+  };
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -47,10 +62,19 @@ const ProfilePage = () => {
         throw new Error(result.message || "Something went wrong!");
       }
 
+      // fetch anime details
       setFavorites(result.data);
+      fetchAnimes(result.data, currentPage);
     };
     fetchFavorites();
   }, []);
+
+  const pageChangedHandler = (page: number) => {
+    setCurrentPage((_) => {
+      fetchAnimes(favorites, page);
+      return page;
+    });
+  };
 
   const unfavoriteHandler = async (animeId: number) => {
     try {
@@ -74,13 +98,34 @@ const ProfilePage = () => {
       <div>
         <div>My Favorites</div>
         <div>SHOW GRID OF FAVORITES</div>
-        {favorites.map((item: number) => {
+        {/* {favorites.map((item: number) => {
           return (
             <Button key={item} onClick={unfavoriteHandler.bind(null, item)}>
               {item}
             </Button>
           );
-        })}
+        })} */}
+        {!loadingAnimes ? (
+          <ul className="grid grid-cols-6 gap-4">
+            {animes.map((anime: any) => {
+              return (
+                <Thumbnail
+                  key={anime.id}
+                  id={anime.id}
+                  title={anime.title.romaji}
+                  coverImage={anime.coverImage.large}
+                />
+              );
+            })}
+          </ul>
+        ) : (
+          <div>Loading animes...</div>
+        )}
+        <CustomPagination
+          currentPage={+currentPage}
+          lastPage={+lastPage}
+          onPageChanged={pageChangedHandler}
+        />
       </div>
     </Wrapper>
   );

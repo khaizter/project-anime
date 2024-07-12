@@ -318,10 +318,18 @@ export const getGenres = async () => {
 };
 
 export const getAnimeByIds = async (animeIds: Array<number>) => {
+  console.log(animeIds);
   const query = `
   query($page :Int, $perPage:Int,$ids: [Int]){
   Page (page: $page, perPage: $perPage) {
-    Media (id_in: $ids) {
+  pageInfo {
+        total
+        currentPage
+        lastPage
+        hasNextPage
+        perPage
+      }
+    media (id_in: $ids) {
       id
 			title {
         romaji
@@ -375,6 +383,22 @@ export const getAnimeByIds = async (animeIds: Array<number>) => {
     perPage: 24,
     ids: animeIds,
   };
-  const data = await queryAnilist(query, variables);
-  return data.Media;
+  try {
+    const data = await queryAnilist(query, variables);
+    console.log(data);
+    const animeList = data.Page.media;
+    const pageInfo = data.Page.pageInfo;
+    return {
+      pageInfo: {
+        total: pageInfo.total,
+        currentPage: pageInfo.currentPage,
+        lastPage: pageInfo.lastPage,
+        hasNextPage: pageInfo.hasNextPage,
+        perPage: pageInfo.perPage,
+      },
+      animeList,
+    };
+  } catch (err) {
+    throw err;
+  }
 };
