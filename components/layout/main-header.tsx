@@ -24,7 +24,6 @@ const MainHeader = () => {
     const fetchGenres = async () => {
       try {
         const genres = await getGenres();
-        console.log(genres);
         setGenres(genres);
       } catch (err) {
         console.log(err);
@@ -130,7 +129,7 @@ const MainHeader = () => {
         <div className="flex items-center space-x-6">
           {status === "unauthenticated" && (
             <Link href={"/auth"}>
-              <Button className="font-space-grotesk bg-lavender-rose">
+              <Button className="font-space-grotesk bg-medium-red-violet">
                 Sign In
               </Button>
             </Link>
@@ -141,7 +140,7 @@ const MainHeader = () => {
                 {session?.user!.name}
               </Link>
               <Button
-                className="font-space-grotesk bg-lavender-rose"
+                className="font-space-grotesk bg-medium-red-violet"
                 type="button"
                 onClick={logoutHandler}
               >
