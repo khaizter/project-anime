@@ -89,6 +89,7 @@ const HomePage = (props: any) => {
                 id={anime.id}
                 title={anime.title.romaji}
                 coverImage={anime.coverImage.large}
+                description={anime.description}
               />
             );
           })}
@@ -102,6 +103,7 @@ const HomePage = (props: any) => {
                 id={anime.id}
                 title={anime.title.romaji}
                 coverImage={anime.coverImage.large}
+                description={anime.description}
               />
             );
           })}
