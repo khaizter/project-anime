@@ -11,7 +11,7 @@ interface ThumbnailProps {
 
 const Thumbnail: React.FC<ThumbnailProps> = (props) => {
   const { id, title, coverImage, description } = props;
-  console.log(description);
+
   return (
     <Link
       className="group flex flex-col bg-jacaranda relative overflow-hidden"

@@ -12,7 +12,7 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { getGenres } from "@/lib/utils";
+import { getGenres } from "@/lib/anilist";
 
 const MainHeader = () => {
   const inputRef = useRef<HTMLInputElement>(null);

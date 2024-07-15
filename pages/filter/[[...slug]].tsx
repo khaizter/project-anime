@@ -3,7 +3,7 @@ import Thumbnail from "@/components/thumbnail";
 import { Input } from "@/components/ui/input";
 import { ToggleGroupItem } from "@/components/ui/toggle-group";
 import Wrapper from "@/components/wrapper";
-import { getAnimesWithFilter, getGenres } from "@/lib/utils";
+import { getAnimesWithFilter, getGenres } from "@/lib/anilist";
 import { ToggleGroup } from "@radix-ui/react-toggle-group";
 import React, { useEffect, useState } from "react";
 
@@ -99,6 +99,7 @@ const FilterPage = (props: any) => {
                 id={anime.id}
                 title={anime.title.romaji}
                 coverImage={anime.coverImage.large}
+                description={anime.description}
               />
             );
           })}

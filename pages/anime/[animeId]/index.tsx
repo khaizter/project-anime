@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Wrapper from "@/components/wrapper";
-import { getAnimeDetails } from "@/lib/utils";
+import { getAnimeDetails } from "@/lib/anilist";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";

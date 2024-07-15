@@ -1,6 +1,6 @@
 import Thumbnail from "@/components/thumbnail";
 import Wrapper from "@/components/wrapper";
-import { getAnimes } from "@/lib/utils";
+import { getAnimes } from "@/lib/anilist";
 import React from "react";
 
 import { useRouter } from "next/router";
@@ -31,6 +31,7 @@ const AnimePage = (props: any) => {
               id={anime.id}
               title={anime.title.romaji}
               coverImage={anime.coverImage.large}
+              description={anime.description}
             />
           );
         })}

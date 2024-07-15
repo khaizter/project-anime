@@ -4,9 +4,6 @@ import MainHeader from "@/components/layout/main-header";
 import { spaceGrotesk, rajdhani, majorMonoDisplay } from "@/lib/fonts";
 
 const Layout = (props: any) => {
-  useEffect(() => {
-    console.log("layout");
-  }, []);
   return (
     <div className={`${spaceGrotesk} ${rajdhani} ${majorMonoDisplay}`}>
       <MainHeader />

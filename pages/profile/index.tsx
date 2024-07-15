@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
-import { getAnimeByIds } from "@/lib/utils";
+import { getAnimeByIds } from "@/lib/anilist";
 import CustomPagination from "@/components/custom-pagination";
 import FavoriteThumbnail from "@/components/favorite-thumbnail";
 

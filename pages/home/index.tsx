@@ -6,13 +6,25 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Wrapper from "@/components/wrapper";
-import { getPopularAnimes, getTrendingAnimes } from "@/lib/utils";
+import {
+  getPopularAnimes,
+  getPopularAnimesThisSeason,
+  getPopularAnimesNextSeason,
+  getTrendingAnimes,
+} from "@/lib/anilist";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Circle, Play } from "lucide-react";
 const HomePage = (props: any) => {
-  const { popularAnimes, trendingAnimes } = props;
+  const {
+    popularAnimes,
+    trendingAnimes,
+    popularAnimesThisSeason,
+    popularAnimesNextSeason,
+  } = props;
+  console.log(popularAnimesThisSeason);
+  console.log(popularAnimesNextSeason);
   return (
     <>
       <Carousel
@@ -80,7 +92,7 @@ const HomePage = (props: any) => {
       </Carousel>
 
       <Wrapper>
-        <h2>Popular</h2>
+        <h2>All Time Popular</h2>
         <div className="grid grid-cols-6 gap-4">
           {popularAnimes.map((anime: any) => {
             return (
@@ -108,6 +120,34 @@ const HomePage = (props: any) => {
             );
           })}
         </div>
+        <h2>Popular This Season</h2>
+        <div className="grid grid-cols-6 gap-4">
+          {popularAnimesThisSeason.map((anime: any) => {
+            return (
+              <Thumbnail
+                key={anime.id}
+                id={anime.id}
+                title={anime.title.romaji}
+                coverImage={anime.coverImage.large}
+                description={anime.description}
+              />
+            );
+          })}
+        </div>
+        <h2>Upcoming Next Season</h2>
+        <div className="grid grid-cols-6 gap-4">
+          {popularAnimesNextSeason.map((anime: any) => {
+            return (
+              <Thumbnail
+                key={anime.id}
+                id={anime.id}
+                title={anime.title.romaji}
+                coverImage={anime.coverImage.large}
+                description={anime.description}
+              />
+            );
+          })}
+        </div>
         <Link href={"/anime"}>VIEW MORE</Link>
       </Wrapper>
     </>
@@ -116,11 +156,17 @@ const HomePage = (props: any) => {
 
 export const getStaticProps = async (context: any) => {
   const { animeList: popularAnimeList } = await getPopularAnimes(1, 6);
+  const { animeList: popularAnimeThisSeasonList } =
+    await getPopularAnimesThisSeason(1, 6);
+  const { animeList: popularAnimeNextSeasonList } =
+    await getPopularAnimesNextSeason(1, 6);
   const { animeList: trendingAnimeList } = await getTrendingAnimes(1, 6);
   return {
     props: {
       popularAnimes: popularAnimeList,
       trendingAnimes: trendingAnimeList,
+      popularAnimesThisSeason: popularAnimeThisSeasonList,
+      popularAnimesNextSeason: popularAnimeNextSeasonList,
     },
   };
 };

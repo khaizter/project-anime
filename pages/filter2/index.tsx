@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Wrapper from "@/components/wrapper";
-import { getAnimes, getAnimesWithFilter, getGenres } from "@/lib/utils";
+import { getAnimes, getAnimesWithFilter, getGenres } from "@/lib/anilist";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
@@ -81,6 +81,7 @@ const FilterPage = (props: any) => {
               id={anime.id}
               title={anime.title.romaji}
               coverImage={anime.coverImage.large}
+              description={anime.description}
             />
           );
         })}
