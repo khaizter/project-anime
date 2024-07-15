@@ -23,8 +23,7 @@ const HomePage = (props: any) => {
     popularAnimesThisSeason,
     popularAnimesNextSeason,
   } = props;
-  console.log(popularAnimesThisSeason);
-  console.log(popularAnimesNextSeason);
+  console.log(popularAnimes);
   return (
     <>
       <Carousel

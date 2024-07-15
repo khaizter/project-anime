@@ -130,6 +130,7 @@ export const getPopularAnimes = async (
           english
           
           }
+          description
         coverImage {
           extraLarge
           large
