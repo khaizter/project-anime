@@ -39,7 +39,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
         <div className="line-clamp-2 font-space-grotesk min-h-12">{title}</div>
       </div>
       {showDetails && (
-        <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-kingfisher-daisy z-10">
+        <div className="absolute top-1/2 left-1/2 w-60 h-fit bg-kingfisher-daisy z-10">
           <div>{title}</div>
           <div
             className="line-clamp-3"
