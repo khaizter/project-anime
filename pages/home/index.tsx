@@ -16,7 +16,6 @@ const HomePage = (props: any) => {
     popularAnimesThisSeason,
     popularAnimesNextSeason,
   } = props;
-  console.log(popularAnimesThisSeason);
   return (
     <>
       <HeroCarousel animes={trendingAnimes} />

@@ -74,33 +74,43 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
             dangerouslySetInnerHTML={{ __html: description }}
           />
           <div>
-            <div>
-              <span className="mr-2">Japanese:</span>
-              <span className="text-white/60">{title.native}</span>
-            </div>
-            <div>
-              <span className="mr-2">Synonyms:</span>
-              <span className="text-white/60">{synonyms?.[0]}</span>
-            </div>
-            <div>
-              <span className="mr-2">Aired:</span>
-              <span className="text-white/60">{aired}</span>
-            </div>
-            <div>
-              <span className="mr-2">Status:</span>
-              <span className="text-white/60">{status}</span>
-            </div>
-            <div className="text-wrap break-words">
-              <span className="mr-2">Genres: </span>
-              {genres.map((genre: string, index: number) => {
-                return (
-                  <span key={index}>
-                    <span>{genre}</span>
-                    <span>, </span>
-                  </span>
-                );
-              })}
-            </div>
+            {title.native && (
+              <div>
+                <span className="mr-2">Japanese:</span>
+                <span className="text-white/60">{title.native}</span>
+              </div>
+            )}
+            {synonyms?.[0] && (
+              <div>
+                <span className="mr-2">Synonyms:</span>
+                <span className="text-white/60">{synonyms?.[0]}</span>
+              </div>
+            )}
+            {aired && (
+              <div>
+                <span className="mr-2">Aired:</span>
+                <span className="text-white/60">{aired}</span>
+              </div>
+            )}
+            {status && (
+              <div>
+                <span className="mr-2">Status:</span>
+                <span className="text-white/60">{status}</span>
+              </div>
+            )}
+            {genres && (
+              <div className="text-wrap break-words">
+                <span className="mr-2">Genres: </span>
+                {genres?.map((genre: string, index: number) => {
+                  return (
+                    <span key={index}>
+                      <span>{genre}</span>
+                      <span>, </span>
+                    </span>
+                  );
+                })}
+              </div>
+            )}
           </div>
           <Button
             variant="destructive"
