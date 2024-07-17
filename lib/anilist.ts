@@ -51,10 +51,14 @@ export const queryAnilist = async (query: String, variables: any) => {
         }),
       };
     const response = await fetch(url, options);
+
     const json = await response.json();
+    if (!response.ok) {
+      throw new Error(json.errors[0].message);
+    }
     return json.data;
   } catch (err) {
-    throw err;
+    console.log("ANILIST ERROR:", err);
   }
 };
 
@@ -75,13 +79,24 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
         title {
           romaji
           english
+          native
          }
-      coverImage {
+      	synonyms
+        coverImage {
           extraLarge
           large
           medium
           color
         }
+        description
+        status
+      	startDate {
+            year
+            month
+            day
+          }
+      	episodes
+      	genres
       }    	
     }
   }
@@ -126,18 +141,27 @@ export const getPopularAnimes = async (
         media (type : ANIME, sort : POPULARITY_DESC ){
           id
           title {
-          romaji
-          english
-          
+            romaji
+            english
+            native
+          }
+          synonyms
+          coverImage {
+            extraLarge
+            large
+            medium
+            color
           }
           description
-        coverImage {
-          extraLarge
-          large
-          medium
-          color
-        }
-        bannerImage
+          status
+          startDate {
+            year
+            month
+            day
+          }
+          episodes
+          genres
+          bannerImage
         }
       }
     }
@@ -185,17 +209,27 @@ export const getPopularAnimesThisSeason = async (
         media (type : ANIME, sort : POPULARITY_DESC, startDate_greater : $startingDate, season : $currentSeason){
           id
           title {
-          romaji
-          english
-          
+            romaji
+            english
+            native
           }
-        coverImage {
-          extraLarge
-          large
-          medium
-          color
-        }
-        bannerImage
+          synonyms
+          coverImage {
+            extraLarge
+            large
+            medium
+            color
+          }
+          description
+          status
+          startDate {
+            year
+            month
+            day
+          }
+          episodes
+          genres
+          bannerImage
         }
       }
     }
@@ -249,17 +283,27 @@ export const getPopularAnimesNextSeason = async (
         media (type : ANIME, sort : POPULARITY_DESC, startDate_greater : $startingDate, season : $nextSeason){
           id
           title {
-          romaji
-          english
-          
+            romaji
+            english
+            native
           }
-        coverImage {
-          extraLarge
-          large
-          medium
-          color
-        }
-        bannerImage
+          synonyms
+          coverImage {
+            extraLarge
+            large
+            medium
+            color
+          }
+          description
+          status
+          startDate {
+            year
+            month
+            day
+          }
+          episodes
+          genres
+          bannerImage
         }
       }
     }
@@ -306,17 +350,27 @@ export const getTrendingAnimes = async (
       media (type : ANIME, sort : TRENDING_DESC ){
         id
         title {
-        romaji
-        english
+          romaji
+          english
+          native
         }
-        description(asHtml : true)
-      coverImage {
-        extraLarge
-        large
-        medium
-        color
-      }
-      bannerImage
+        synonyms
+        coverImage {
+          extraLarge
+          large
+          medium
+          color
+        }
+        description
+        status
+        startDate {
+            year
+            month
+            day
+          }
+        episodes
+        genres
+        bannerImage
       }
     }
   }
@@ -535,8 +589,8 @@ export const getAnimeByIds = async (
   }
 `;
   const variables = {
-    page: 1,
-    perPage: 24,
+    page: page,
+    perPage: perPage,
     ids: animeIds!,
   };
   try {
