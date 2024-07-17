@@ -55,7 +55,11 @@ const MainHeader = () => {
         <div className="flex items-center space-x-6">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button
+                className="hover:text-kingfisher-daisy"
+                variant="ghost"
+                size="icon"
+              >
                 <Menu className="h-8 w-8" />
               </Button>
             </SheetTrigger>
@@ -122,16 +126,16 @@ const MainHeader = () => {
               >
                 <Search className="h-4 w-4" color="#3B0086" />
               </button>
-              <Button size="sm">Filter</Button>
+              <div className="bg-kingfisher-daisy rounded-md">
+                <Button size="sm">Filter</Button>
+              </div>
             </div>
           )}
         </div>
         <div className="flex items-center space-x-6">
           {status === "unauthenticated" && (
             <Link href={"/auth"}>
-              <Button className="font-space-grotesk bg-medium-red-violet">
-                Sign In
-              </Button>
+              <Button>Sign In</Button>
             </Link>
           )}
           {status === "authenticated" && (
@@ -139,11 +143,7 @@ const MainHeader = () => {
               <Link className="font-space-grotesk" href={"/profile"}>
                 {session?.user!.name}
               </Link>
-              <Button
-                className="font-space-grotesk bg-medium-red-violet"
-                type="button"
-                onClick={logoutHandler}
-              >
+              <Button type="button" onClick={logoutHandler}>
                 Log out
               </Button>
             </>

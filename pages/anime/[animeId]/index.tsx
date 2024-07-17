@@ -107,8 +107,8 @@ const AnimeDetailPage = (props: any) => {
             >
               <Heart
                 className="mr-2 h-4 w-4"
-                color={isFavorite ? "#ff0000" : undefined}
-                fill={isFavorite ? "#ff0000" : undefined}
+                color={isFavorite ? "#ff0000" : "#ff0000"}
+                fill={isFavorite ? "#ff0000" : "transparent"}
               />
               Add to Favorites
             </Button>
