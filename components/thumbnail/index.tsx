@@ -1,10 +1,33 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 import HoverDetails from "@/components/thumbnail/hover-details";
 import { getAnimeDetails } from "@/lib/anilist";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+
+const addFavorite = async (
+  animeId: string | number,
+  remove: boolean = false
+) => {
+  const response = await fetch("/api/user/favorite", {
+    method: "PATCH",
+    body: JSON.stringify({ animeId, remove }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong!");
+  }
+
+  return data;
+};
+
 interface ThumbnailProps {
   anime: any;
 }
@@ -14,6 +37,10 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
   const [showDetails, setShowDetails] = useState(false);
   const [isFetchingDetails, setIsFetchingDetails] = useState(false);
   const [isFetchedAlready, setIsFetchedAlready] = useState(false);
+  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const router = useRouter();
+  const { status } = useSession();
 
   const {
     id,
@@ -42,13 +69,54 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
       setIsFetchingDetails(false);
     };
 
+    const fetchFavorites = async () => {
+      setIsLoadingFavorite(true);
+      const response = await fetch("/api/user/favorite", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Something went wrong!");
+      }
+
+      const favorites = result.data;
+      setIsFavorite(favorites.find((item: number) => item === anime.id));
+      setIsLoadingFavorite(false);
+      console.log("done");
+    };
+
     const timeOutId = setTimeout(() => {
       if (showDetails && !isFetchedAlready) {
         fetchMoreDetails();
+        if (status === "authenticated") {
+          fetchFavorites();
+        }
       }
     }, 150);
     return () => clearTimeout(timeOutId);
-  }, [showDetails, isFetchedAlready]);
+  }, [showDetails, isFetchedAlready, anime.id]);
+
+  const favoriteHandler: React.MouseEventHandler = async (e) => {
+    if (status === "unauthenticated") {
+      e.preventDefault();
+      router.push("/auth");
+    }
+    try {
+      setIsLoadingFavorite(true);
+      const result = await addFavorite(anime.id, isFavorite);
+      console.log(result);
+      setIsLoadingFavorite(false);
+    } catch (err) {
+      console.log(err);
+      setIsLoadingFavorite(false);
+    }
+    setIsFavorite((prevState) => !prevState);
+  };
 
   return (
     <div
@@ -77,7 +145,13 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
         </div>
       </div>
       {showDetails && (
-        <HoverDetails anime={anime} isFetchingDetails={isFetchingDetails} />
+        <HoverDetails
+          anime={anime}
+          isFetchingDetails={isFetchingDetails}
+          isFavorite={isFavorite}
+          isLoadingFavorite={isLoadingFavorite}
+          favoriteHandler={favoriteHandler}
+        />
       )}
     </div>
   );

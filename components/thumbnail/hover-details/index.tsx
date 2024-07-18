@@ -6,6 +6,9 @@ import Link from "next/link";
 interface HoverDetailsProps {
   anime: any;
   isFetchingDetails: boolean;
+  isFavorite: boolean;
+  isLoadingFavorite: boolean;
+  favoriteHandler: React.MouseEventHandler;
 }
 
 const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
@@ -35,9 +38,9 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
     genres: Array<string>;
   } = props.anime;
 
-  const { isFetchingDetails } = props;
+  const { isFetchingDetails, isFavorite, isLoadingFavorite, favoriteHandler } =
+    props;
 
-  const [isFavorite, setIsFavorite] = useState(false);
   const aired = startDate
     ? new Date(
         startDate.year,
@@ -109,7 +112,8 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
           <Button
             variant="destructive"
             className="w-full"
-            onClick={() => setIsFavorite((prevState) => !prevState)}
+            onClick={favoriteHandler}
+            disabled={isLoadingFavorite}
           >
             <Heart
               className="mr-2 h-4 w-4"
