@@ -1,23 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import HoverDetails from "@/components/thumbnail/hover-details";
+import { getAnimeDetails } from "@/lib/anilist";
 interface ThumbnailProps {
   anime: any;
 }
 
 const Thumbnail: React.FC<ThumbnailProps> = (props) => {
+  const [anime, setAnime] = useState<any>(props.anime);
+  const [showDetails, setShowDetails] = useState(false);
+  const [isFetchingDetails, setIsFetchingDetails] = useState(false);
+  const [isFetchedAlready, setIsFetchedAlready] = useState(false);
+
   const {
     id,
     title,
     coverImage,
-    description,
-    nativeTitle,
-    synonyms,
-    startDate,
-    status,
-    genres,
   }: {
     id: number;
     title: { romaji: string; english?: string; native?: string };
@@ -27,18 +28,27 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
       medium?: string;
       color?: string;
     };
-    description: string;
-    nativeTitle?: string;
-    synonyms?: Array<string>;
-    startDate: { year: number; month: number; day?: number };
-    status: string;
-    genres: Array<string>;
-  } = props.anime;
+  } = anime;
 
-  const aired = "Jan 2, 2024";
+  useEffect(() => {
+    if (showDetails && !isFetchedAlready) setIsFetchingDetails(true);
 
-  const [showDetails, setShowDetails] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+    const fetchMoreDetails = async () => {
+      console.log("fetch more details");
+      setIsFetchingDetails(true);
+      const fetchedAnime = await getAnimeDetails(anime.id);
+      setAnime(fetchedAnime);
+      setIsFetchedAlready(true);
+      setIsFetchingDetails(false);
+    };
+
+    const timeOutId = setTimeout(() => {
+      if (showDetails && !isFetchedAlready) {
+        fetchMoreDetails();
+      }
+    }, 150);
+    return () => clearTimeout(timeOutId);
+  }, [showDetails, isFetchedAlready]);
 
   return (
     <div
@@ -67,64 +77,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
         </div>
       </div>
       {showDetails && (
-        <div className="absolute top-1/2 left-1/2 group-last:left-auto group-last:right-1/2 w-64 h-fit bg-jacaranda z-10 p-4 rounded-md shadow-lg shadow-lavender-magenta/25 space-y-4">
-          <div className="font-space-grotesk">{title.romaji}</div>
-          <div
-            className="line-clamp-3 text-white/60"
-            dangerouslySetInnerHTML={{ __html: description }}
-          />
-          <div>
-            {title.native && (
-              <div>
-                <span className="mr-2">Japanese:</span>
-                <span className="text-white/60">{title.native}</span>
-              </div>
-            )}
-            {synonyms?.[0] && (
-              <div>
-                <span className="mr-2">Synonyms:</span>
-                <span className="text-white/60">{synonyms?.[0]}</span>
-              </div>
-            )}
-            {aired && (
-              <div>
-                <span className="mr-2">Aired:</span>
-                <span className="text-white/60">{aired}</span>
-              </div>
-            )}
-            {status && (
-              <div>
-                <span className="mr-2">Status:</span>
-                <span className="text-white/60">{status}</span>
-              </div>
-            )}
-            {genres && (
-              <div className="text-wrap break-words">
-                <span className="mr-2">Genres: </span>
-                {genres?.map((genre: string, index: number) => {
-                  return (
-                    <span key={index}>
-                      <span>{genre}</span>
-                      <span>, </span>
-                    </span>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-          <Button
-            variant="destructive"
-            className="w-full"
-            onClick={() => setIsFavorite((prevState) => !prevState)}
-          >
-            <Heart
-              className="mr-2 h-4 w-4"
-              color={isFavorite ? "white" : "white"}
-              fill={isFavorite ? "white" : "transparent"}
-            />
-            {isFavorite ? "Added to Favorites" : "Add to Favorites"}
-          </Button>
-        </div>
+        <HoverDetails anime={anime} isFetchingDetails={isFetchingDetails} />
       )}
     </div>
   );

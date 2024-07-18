@@ -19,33 +19,46 @@ const HomePage = (props: any) => {
   return (
     <>
       <HeroCarousel animes={trendingAnimes} />
-      <Wrapper>
-        <h2>Popular This Season</h2>
-        <div className="grid grid-cols-6 gap-4">
-          {popularAnimesThisSeason.map((anime: any) => {
-            return <Thumbnail key={anime.id} anime={anime} />;
-          })}
+      <Wrapper className="space-y-10 py-10">
+        <div className="space-y-4">
+          <h2 className="font-space-grotesk text-2xl">Popular This Season</h2>
+          <div className="grid grid-cols-6 gap-4">
+            {popularAnimesThisSeason.map((anime: any) => {
+              return <Thumbnail key={anime.id} anime={anime} />;
+            })}
+          </div>
         </div>
-        <h2>Trending</h2>
-        <div className="grid grid-cols-6 gap-4">
-          {trendingAnimes.map((anime: any) => {
-            return <Thumbnail key={anime.id} anime={anime} />;
-          })}
+        <div className="space-y-4">
+          <h2 className="font-space-grotesk text-2xl">Trending</h2>
+          <div className="grid grid-cols-6 gap-4">
+            {trendingAnimes.map((anime: any) => {
+              return <Thumbnail key={anime.id} anime={anime} />;
+            })}
+          </div>
         </div>
 
-        <h2>All Time Popular</h2>
-        <div className="grid grid-cols-6 gap-4">
-          {popularAnimes.map((anime: any) => {
-            return <Thumbnail key={anime.id} anime={anime} />;
-          })}
+        <div className="space-y-4">
+          <h2 className="font-space-grotesk text-2xl">All Time Popular</h2>
+          <div className="grid grid-cols-6 gap-4">
+            {popularAnimes.map((anime: any) => {
+              return <Thumbnail key={anime.id} anime={anime} />;
+            })}
+          </div>
         </div>
-        <h2>Upcoming Next Season</h2>
-        <div className="grid grid-cols-6 gap-4">
-          {popularAnimesNextSeason.map((anime: any) => {
-            return <Thumbnail key={anime.id} anime={anime} />;
-          })}
+        <div className="space-y-4">
+          <h2 className="font-space-grotesk text-2xl">Upcoming Next Season</h2>
+          <div className="grid grid-cols-6 gap-4">
+            {popularAnimesNextSeason.map((anime: any) => {
+              return <Thumbnail key={anime.id} anime={anime} />;
+            })}
+          </div>
         </div>
-        <Link href={"/anime"}>VIEW MORE</Link>
+        <Link
+          className="block text-center text-2xl font-space-grotesk"
+          href={"/anime"}
+        >
+          VIEW MORE
+        </Link>
       </Wrapper>
     </>
   );

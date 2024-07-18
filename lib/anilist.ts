@@ -81,22 +81,14 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
           english
           native
          }
-      	synonyms
         coverImage {
           extraLarge
           large
           medium
           color
         }
+        bannerImage
         description
-        status
-      	startDate {
-            year
-            month
-            day
-          }
-      	episodes
-      	genres
       }    	
     }
   }
@@ -145,23 +137,14 @@ export const getPopularAnimes = async (
             english
             native
           }
-          synonyms
           coverImage {
             extraLarge
             large
             medium
             color
           }
-          description
-          status
-          startDate {
-            year
-            month
-            day
-          }
-          episodes
-          genres
           bannerImage
+          description
         }
       }
     }
@@ -213,23 +196,14 @@ export const getPopularAnimesThisSeason = async (
             english
             native
           }
-          synonyms
           coverImage {
             extraLarge
             large
             medium
             color
           }
-          description
-          status
-          startDate {
-            year
-            month
-            day
-          }
-          episodes
-          genres
           bannerImage
+          description
         }
       }
     }
@@ -465,8 +439,11 @@ export const getAnimeDetails = async (animeId: number) => {
 			title {
         romaji
         english
+        native
       }
-      description(asHtml : true)
+      synonyms
+      description(asHtml : false)
+      status
       startDate {
         year
         month
@@ -505,6 +482,7 @@ export const getAnimeDetails = async (animeId: number) => {
         site
       }
       siteUrl
+      episodes
     }
   }
 `;

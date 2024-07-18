@@ -87,12 +87,13 @@ const MainHeader = () => {
               <div className="font-space-grotesk text-2xl p-3 text-lavender-magenta">
                 Genre
               </div>
-              <ul className="grid grid-cols-2 gap-2 text-xl p-3">
+              <ul className="grid grid-cols-2 gap-2 text-lg p-3">
                 {genres.map((item: string, index: number) => {
                   return (
                     <li key={index}>
                       <SheetClose asChild>
                         <Link
+                          className="font-rajdhani hover:text-medium-red-violet"
                           href={{
                             pathname: "/filter",
                             query: {
