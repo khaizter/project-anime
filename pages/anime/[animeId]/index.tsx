@@ -50,9 +50,10 @@ const AnimeDetailPage = (props: any) => {
   }: AnimeType = props.animeDetails;
 
   const router = useRouter();
+  const { status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const { status } = useSession();
+  const [currentTab, setCurrentTab] = useState("overview");
 
   const mainStudios = studios.edges.filter((studio) => studio.isMain);
   const producers = studios.edges.filter((studio) => !studio.isMain);
@@ -208,45 +209,67 @@ const AnimeDetailPage = (props: any) => {
             </div>
           </div>
           <div className="p-4">
-            <h1>{title.romaji}</h1>
-            <div dangerouslySetInnerHTML={{ __html: description }} />
-            {trailer?.id && (
+            <div className="flex items-center">
+              <Button onClick={() => setCurrentTab("overview")}>
+                Overview
+              </Button>
+              <Button onClick={() => setCurrentTab("episodes")}>
+                Episodes
+              </Button>
+              <Button onClick={() => setCurrentTab("characters")}>
+                Characters
+              </Button>
+              <Button onClick={() => setCurrentTab("staff")}>Staff</Button>
+              <Button onClick={() => setCurrentTab("Reviews")}>Reviews</Button>
+            </div>
+            {currentTab === "overview" && (
               <>
-                <div>TRAILER</div>
-                <iframe
-                  width="560"
-                  height="315"
-                  src={`https://www.youtube.com/embed/${trailer.id}`}
-                  title="Anime trailer"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                  allowFullScreen
-                ></iframe>
+                <h1>{title.romaji}</h1>
+                <div dangerouslySetInnerHTML={{ __html: description }} />
+                {trailer?.id && (
+                  <>
+                    <div>TRAILER</div>
+                    <iframe
+                      width="560"
+                      height="315"
+                      src={`https://www.youtube.com/embed/${trailer.id}`}
+                      title="Anime trailer"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                      allowFullScreen
+                    ></iframe>
+                  </>
+                )}
               </>
             )}
-            <ScrollArea className="h-72 rounded-md border p-1">
-              <div className="grid grid-cols-3 gap-4">
-                {streamingEpisodes?.map((episode: any, index: number) => {
-                  return (
-                    <div
-                      key={index}
-                      className="relative h-24"
-                      onClick={() => router.push(episode.url)}
-                    >
-                      <Image
-                        src={episode.thumbnail}
-                        alt={`thumb nail`}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
-                        {episode.title}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </ScrollArea>
+
+            {currentTab === "episodes" && (
+              <>
+                <ScrollArea className="h-72 rounded-md border p-1">
+                  <div className="grid grid-cols-3 gap-4">
+                    {streamingEpisodes?.map((episode: any, index: number) => {
+                      return (
+                        <div
+                          key={index}
+                          className="relative h-24"
+                          onClick={() => router.push(episode.url)}
+                        >
+                          <Image
+                            src={episode.thumbnail}
+                            alt={`thumb nail`}
+                            fill
+                            className="object-cover"
+                          />
+                          <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
+                            {episode.title}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </ScrollArea>
+              </>
+            )}
           </div>
         </div>
       </Wrapper>
