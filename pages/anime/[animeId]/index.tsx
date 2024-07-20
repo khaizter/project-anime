@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { AnimeType } from "@/lib/types";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const addFavorite = async (
   animeId: string | number,
@@ -208,20 +209,18 @@ const AnimeDetailPage = (props: any) => {
               })}
             </div>
           </div>
-          <div className="p-4">
-            <div className="flex items-center">
-              <Button onClick={() => setCurrentTab("overview")}>
-                Overview
-              </Button>
-              <Button onClick={() => setCurrentTab("episodes")}>
-                Episodes
-              </Button>
-              <Button onClick={() => setCurrentTab("characters")}>
-                Characters
-              </Button>
-              <Button onClick={() => setCurrentTab("staff")}>Staff</Button>
-              <Button onClick={() => setCurrentTab("Reviews")}>Reviews</Button>
-            </div>
+          <div className="p-4 grow">
+            <ToggleGroup
+              type="single"
+              defaultValue="overview"
+              onValueChange={(value) => setCurrentTab(value)}
+            >
+              <ToggleGroupItem value="overview">Overview</ToggleGroupItem>
+              <ToggleGroupItem value="episodes">Episodes</ToggleGroupItem>
+              <ToggleGroupItem value="characters">Characters</ToggleGroupItem>
+              <ToggleGroupItem value="staff">Staff</ToggleGroupItem>
+              <ToggleGroupItem value="reviews">Reviews</ToggleGroupItem>
+            </ToggleGroup>
             {currentTab === "overview" && (
               <>
                 <h1>{title.romaji}</h1>
@@ -240,34 +239,35 @@ const AnimeDetailPage = (props: any) => {
                     ></iframe>
                   </>
                 )}
+                <div className="text-green-500">RECOMMENDATIONS</div>
               </>
             )}
 
             {currentTab === "episodes" && (
               <>
-                <ScrollArea className="h-72 rounded-md border p-1">
-                  <div className="grid grid-cols-3 gap-4">
-                    {streamingEpisodes?.map((episode: any, index: number) => {
-                      return (
-                        <div
-                          key={index}
-                          className="relative h-24"
-                          onClick={() => router.push(episode.url)}
-                        >
-                          <Image
-                            src={episode.thumbnail}
-                            alt={`thumb nail`}
-                            fill
-                            className="object-cover"
-                          />
-                          <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
-                            {episode.title}
-                          </div>
+                {/* <ScrollArea className="h-72 rounded-md border p-1"> */}
+                <div className="grid grid-cols-3 gap-4">
+                  {streamingEpisodes?.map((episode: any, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className="relative h-24"
+                        onClick={() => router.push(episode.url)}
+                      >
+                        <Image
+                          src={episode.thumbnail}
+                          alt={`thumb nail`}
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
+                          {episode.title}
                         </div>
-                      );
-                    })}
-                  </div>
-                </ScrollArea>
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* </ScrollArea> */}
               </>
             )}
           </div>
