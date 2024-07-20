@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import React, { useState } from "react";
 import Link from "next/link";
+import { AnimeType } from "@/lib/types";
 
 interface HoverDetailsProps {
   anime: any;
@@ -21,22 +22,7 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
     startDate,
     status,
     genres,
-  }: {
-    id: number;
-    title: { romaji: string; english?: string; native?: string };
-    coverImage: {
-      extraLarge?: string;
-      large?: string;
-      medium?: string;
-      color?: string;
-    };
-    description: string;
-    nativeTitle?: string;
-    synonyms?: Array<string>;
-    startDate: { year: number; month: number; day: number };
-    status: string;
-    genres: Array<string>;
-  } = props.anime;
+  }: AnimeType = props.anime;
 
   const { isFetchingDetails, isFavorite, isLoadingFavorite, favoriteHandler } =
     props;

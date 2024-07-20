@@ -78,16 +78,10 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
         id
         title {
           romaji
-          english
-          native
          }
         coverImage {
-          extraLarge
           large
-          medium
-          color
         }
-        bannerImage
         description
       }    	
     }
@@ -134,16 +128,10 @@ export const getPopularAnimes = async (
           id
           title {
             romaji
-            english
-            native
           }
           coverImage {
-            extraLarge
             large
-            medium
-            color
           }
-          bannerImage
           description
         }
       }
@@ -193,16 +181,10 @@ export const getPopularAnimesThisSeason = async (
           id
           title {
             romaji
-            english
-            native
           }
           coverImage {
-            extraLarge
             large
-            medium
-            color
           }
-          bannerImage
           description
         }
       }
@@ -258,26 +240,11 @@ export const getPopularAnimesNextSeason = async (
           id
           title {
             romaji
-            english
-            native
           }
-          synonyms
           coverImage {
-            extraLarge
             large
-            medium
-            color
           }
           description
-          status
-          startDate {
-            year
-            month
-            day
-          }
-          episodes
-          genres
-          bannerImage
         }
       }
     }
@@ -325,25 +292,11 @@ export const getTrendingAnimes = async (
         id
         title {
           romaji
-          english
-          native
         }
-        synonyms
         coverImage {
-          extraLarge
           large
-          medium
-          color
         }
         description
-        status
-        startDate {
-            year
-            month
-            day
-          }
-        episodes
-        genres
         bannerImage
       }
     }
@@ -449,11 +402,6 @@ export const getAnimeDetails = async (animeId: number) => {
         month
         day
       }
-      endDate {
-        year
-        month
-        day
-      }
       trailer {
         id
         site
@@ -467,12 +415,13 @@ export const getAnimeDetails = async (animeId: number) => {
       }
       bannerImage
       genres
-      tags {
-        id
-      }
-      studios(sort : FAVOURITES_DESC ,isMain : true) {
-        edges {
-          id
+      studios(sort : FAVOURITES_DESC) {
+        edges{
+          node{
+            id
+            name
+          }
+          isMain
         }
       }
       streamingEpisodes{
@@ -481,8 +430,40 @@ export const getAnimeDetails = async (animeId: number) => {
         url
         site
       }
-      siteUrl
       episodes
+      season
+      seasonYear
+    }
+  }
+`;
+  const variables = {
+    id: animeId,
+  };
+  const data = await queryAnilist(query, variables);
+  return data.Media;
+};
+
+export const getAnimeHoverDetails = async (animeId: number) => {
+  const query = `
+  query($id: Int){
+    Media (id: $id) {
+      id
+			title {
+        romaji
+        native
+      }
+      synonyms
+      description(asHtml : false)
+      status
+      startDate {
+        year
+        month
+        day
+      }
+      coverImage {
+        large
+      }
+      genres
     }
   }
 `;
@@ -551,8 +532,9 @@ export const getAnimeByIds = async (
         id
       }
       studios(sort : FAVOURITES_DESC ,isMain : true) {
-        edges {
+        nodes : {
           id
+          name
         }
       }
       streamingEpisodes{

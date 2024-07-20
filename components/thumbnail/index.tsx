@@ -3,9 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import HoverDetails from "@/components/thumbnail/hover-details";
-import { getAnimeDetails } from "@/lib/anilist";
+import { getAnimeHoverDetails } from "@/lib/anilist";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { AnimeType } from "@/lib/types";
 
 const addFavorite = async (
   animeId: string | number,
@@ -42,20 +43,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
   const router = useRouter();
   const { status } = useSession();
 
-  const {
-    id,
-    title,
-    coverImage,
-  }: {
-    id: number;
-    title: { romaji: string; english?: string; native?: string };
-    coverImage: {
-      extraLarge?: string;
-      large?: string;
-      medium?: string;
-      color?: string;
-    };
-  } = anime;
+  const { id, title, coverImage }: AnimeType = anime;
 
   useEffect(() => {
     if (showDetails && !isFetchedAlready) setIsFetchingDetails(true);
@@ -63,7 +51,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
     const fetchMoreDetails = async () => {
       console.log("fetch more details");
       setIsFetchingDetails(true);
-      const fetchedAnime = await getAnimeDetails(anime.id);
+      const fetchedAnime = await getAnimeHoverDetails(anime.id);
       setAnime(fetchedAnime);
       setIsFetchedAlready(true);
       setIsFetchingDetails(false);
@@ -87,7 +75,6 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
       const favorites = result.data;
       setIsFavorite(favorites.find((item: number) => item === anime.id));
       setIsLoadingFavorite(false);
-      console.log("done");
     };
 
     const timeOutId = setTimeout(() => {
@@ -99,7 +86,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
       }
     }, 150);
     return () => clearTimeout(timeOutId);
-  }, [showDetails, isFetchedAlready, anime.id]);
+  }, [showDetails, isFetchedAlready, anime.id, status]);
 
   const favoriteHandler: React.MouseEventHandler = async (e) => {
     if (status === "unauthenticated") {

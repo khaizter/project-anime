@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { AnimeType } from "@/lib/types";
 
 const addFavorite = async (
   animeId: string | number,
@@ -30,12 +31,31 @@ const addFavorite = async (
 };
 
 const AnimeDetailPage = (props: any) => {
-  const { animeDetails } = props;
-  const animeId = animeDetails.id;
+  const {
+    id: animeId,
+    title,
+    synonyms,
+    description,
+    status: animeStatus,
+    startDate,
+    trailer,
+    coverImage,
+    bannerImage,
+    genres,
+    studios,
+    streamingEpisodes,
+    episodes,
+    season,
+    seasonYear,
+  }: AnimeType = props.animeDetails;
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const { status } = useSession();
+
+  const mainStudios = studios.edges.filter((studio) => studio.isMain);
+  const producers = studios.edges.filter((studio) => !studio.isMain);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -82,11 +102,11 @@ const AnimeDetailPage = (props: any) => {
     <>
       <div className="relative w-full h-96">
         <Image
-          src={animeDetails.bannerImage}
+          src={bannerImage}
           fill
           priority
           className="object-cover"
-          alt={`${animeDetails.title.romaji} banner image`}
+          alt={`${title.romaji} banner image`}
         />
         <div className="absolute w-full h-full bg-gradient-to-t from-black to-transparent"></div>
       </div>
@@ -94,8 +114,8 @@ const AnimeDetailPage = (props: any) => {
         <div className="flex items-start">
           <div className="relative m-4 min-w-52">
             <Image
-              src={animeDetails.coverImage.large}
-              alt={`${animeDetails.title.romaji} cover image`}
+              src={coverImage.large || ""}
+              alt={`${title.romaji} cover image`}
               width={0}
               height={0}
               sizes="100vw"
@@ -112,53 +132,91 @@ const AnimeDetailPage = (props: any) => {
               />
               Add to Favorites
             </Button>
-          </div>
-          <div className="p-4">
-            <h1>{animeDetails.title.romaji}</h1>
-            <div
-              dangerouslySetInnerHTML={{ __html: animeDetails.description }}
-            />
-            <div className="flex">
-              <div className="mr-2">Aired in</div>
-              <span>
-                {animeDetails.startDate.month},{animeDetails.startDate.day},
-                {animeDetails.startDate.year}
-              </span>
-              <span> - </span>
-              <span>
-                {animeDetails.endDate.month},{animeDetails.endDate.day},
-                {animeDetails.endDate.year}
+            <div>
+              <span>Episodes:</span>
+              <span className="text-white/60">{episodes}</span>
+            </div>
+            <div>
+              <span>Status:</span>
+              <span className="text-white/60">{animeStatus}</span>
+            </div>
+            <div>
+              <span>Aired:</span>
+              <span className="text-white/60">
+                {new Date(
+                  startDate.year,
+                  startDate.month,
+                  startDate.day
+                ).toLocaleDateString()}
               </span>
             </div>
-            <div>STUDIOS</div>
-            <div>TAGS</div>
-            <div>Genres</div>
-            <ul className="flex gap-2">
-              {animeDetails.genres.map((genre: any, index: number) => {
+            <div>
+              <span>Season:</span>
+              <span className="text-white/60">{`${season} ${seasonYear}`}</span>
+            </div>
+            <div>
+              <span>Studios:</span>
+              {mainStudios.map((studio) => {
                 return (
-                  <Button
-                    key={index}
-                    onClick={() => {
-                      router.push({
-                        pathname: "/filter",
-                        query: {
-                          genres: [genre],
-                        },
-                      });
-                    }}
-                  >
-                    {genre}
-                  </Button>
+                  <div className="text-white/60" key={studio.node.id}>
+                    {studio.node.name},
+                  </div>
                 );
               })}
-            </ul>
-            {animeDetails?.trailer?.id && (
+            </div>
+            <div>
+              <span>Producers:</span>
+              {producers.map((studio) => {
+                return (
+                  <div className="text-white/60" key={studio.node.id}>
+                    {studio.node.name},
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              <span>Genre:</span>
+              {genres.map((genre, index) => {
+                return (
+                  <div className="text-white/60" key={index}>
+                    {genre},
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              <span>Romaji:</span>
+              <span className="text-white/60">{title.romaji}</span>
+            </div>
+            <div>
+              <span>English:</span>
+              <span className="text-white/60">{title.english}</span>
+            </div>
+            <div>
+              <span>Native:</span>
+              <span className="text-white/60">{title.native}</span>
+            </div>
+            <div>
+              <span>Synonyms:</span>
+              {synonyms?.map((synonym, index) => {
+                return (
+                  <div className="text-white/60" key={index}>
+                    {synonym},
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="p-4">
+            <h1>{title.romaji}</h1>
+            <div dangerouslySetInnerHTML={{ __html: description }} />
+            {trailer?.id && (
               <>
                 <div>TRAILER</div>
                 <iframe
                   width="560"
                   height="315"
-                  src={`https://www.youtube.com/embed/${animeDetails.trailer.id}`}
+                  src={`https://www.youtube.com/embed/${trailer.id}`}
                   title="Anime trailer"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
@@ -168,32 +226,29 @@ const AnimeDetailPage = (props: any) => {
             )}
             <ScrollArea className="h-72 rounded-md border p-1">
               <div className="grid grid-cols-3 gap-4">
-                {animeDetails?.streamingEpisodes?.map(
-                  (episode: any, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className="relative h-24"
-                        onClick={() => router.push(episode.url)}
-                      >
-                        <Image
-                          src={episode.thumbnail}
-                          alt={`thumb nail`}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
-                          {episode.title}
-                        </div>
+                {streamingEpisodes?.map((episode: any, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative h-24"
+                      onClick={() => router.push(episode.url)}
+                    >
+                      <Image
+                        src={episode.thumbnail}
+                        alt={`thumb nail`}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
+                        {episode.title}
                       </div>
-                    );
-                  }
-                )}
+                    </div>
+                  );
+                })}
               </div>
             </ScrollArea>
           </div>
         </div>
-        <div>LIST OF EPISODES</div>
       </Wrapper>
     </>
   );
