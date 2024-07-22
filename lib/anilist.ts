@@ -433,6 +433,51 @@ export const getAnimeDetails = async (animeId: number) => {
       episodes
       season
       seasonYear
+      recommendations(sort:RATING_DESC , page:1, perPage:20 ){
+        nodes{
+          mediaRecommendation{
+            id
+            title {
+              romaji
+            }
+            coverImage {
+              large
+            }
+          }
+        }
+        pageInfo {
+          total
+          currentPage
+          lastPage
+          hasNextPage
+          perPage
+        }
+      }
+      characters(sort: FAVOURITES_DESC, page:1, perPage:20 ) {
+      	edges{
+          id
+          node {
+            id
+            name {
+              full
+            }
+            image {
+              medium
+            }
+          }
+          role
+          voiceActors(language :JAPANESE, sort : RELEVANCE){
+            id
+            name {
+              full
+            }
+            languageV2
+            image{
+              medium
+            }
+          }
+        }
+    	}
     }
   }
 `;

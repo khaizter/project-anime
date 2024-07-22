@@ -48,5 +48,50 @@ export type AnimeType = {
   episodes: number;
   season: string;
   seasonYear: number;
+  recommendations: {
+    nodes: Array<{
+      mediaRecommendation: {
+        id: number;
+        title: {
+          romaji: string;
+        };
+        coverImage: {
+          large: string;
+        };
+      };
+    }>;
+    pageInfo: {
+      currentPage: number;
+      hasNextPage: number;
+      lastPage: number;
+      perPage: number;
+      total: number;
+    };
+  };
+  characters: {
+    edges: Array<{
+      id: number;
+      node: {
+        id: number;
+        name: {
+          full: string;
+        };
+        image: {
+          medium: string;
+        };
+      };
+      role: string;
+      voiceActors: Array<{
+        id: number;
+        name: {
+          full: string;
+        };
+        languageV2: string;
+        image: {
+          medium: string;
+        };
+      }>;
+    }>;
+  };
 };
 // detailed Media type

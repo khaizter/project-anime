@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { AnimeType } from "@/lib/types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Link from "next/link";
+import Thumbnail from "@/components/thumbnail";
 
 const addFavorite = async (
   animeId: string | number,
@@ -49,8 +50,10 @@ const AnimeDetailPage = (props: any) => {
     episodes,
     season,
     seasonYear,
+    recommendations,
+    characters,
   }: AnimeType = props.animeDetails;
-
+  console.log(props.animeDetails);
   const router = useRouter();
   const { status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -114,8 +117,8 @@ const AnimeDetailPage = (props: any) => {
         <div className="absolute w-full h-full bg-gradient-to-t from-black to-transparent"></div>
       </div>
       <Wrapper>
-        <div className="flex items-start">
-          <div className="relative m-4 min-w-52 space-y-6">
+        <div className="flex">
+          <div className="w-1/4 max-w-52 space-y-6 py-4">
             <div className="space-y-4">
               <Image
                 src={coverImage.large || ""}
@@ -246,7 +249,7 @@ const AnimeDetailPage = (props: any) => {
               )}
             </div>
           </div>
-          <div className="p-4 grow">
+          <div className="p-4 w-3/4 grow">
             <ToggleGroup
               type="single"
               defaultValue="overview"
@@ -283,6 +286,15 @@ const AnimeDetailPage = (props: any) => {
                   </>
                 )}
                 <div className="text-green-500">RECOMMENDATIONS</div>
+                <div className="grid grid-cols-5 gap-4">
+                  {recommendations.nodes.map((recommendation) => {
+                    return (
+                      <>
+                        <Thumbnail anime={recommendation.mediaRecommendation} />
+                      </>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
@@ -294,7 +306,7 @@ const AnimeDetailPage = (props: any) => {
                     return (
                       <div
                         key={index}
-                        className="relative h-24"
+                        className="relative h-24 rounded-sm overflow-hidden"
                         onClick={() => router.push(episode.url)}
                       >
                         <Image
@@ -311,6 +323,61 @@ const AnimeDetailPage = (props: any) => {
                   })}
                 </div>
                 {/* </ScrollArea> */}
+              </>
+            )}
+
+            {currentTab === "characters" && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  {characters.edges.map((character) => {
+                    return (
+                      <>
+                        {character.voiceActors.map((voiceActor) => {
+                          return (
+                            <div
+                              className="flex justify-between font-rajdhani"
+                              key={character.id}
+                            >
+                              <div className="flex w-full">
+                                <div className="relative w-16 h-20">
+                                  <Image
+                                    src={character.node.image.medium || ""}
+                                    alt={`${character.node.name.full} image`}
+                                    layout="fill"
+                                    objectFit="cover"
+                                  />
+                                </div>
+
+                                <div className="w-auto p-2 pr-0">
+                                  <div>{character.node.name.full}</div>
+                                  <div className="text-white/60 capitalize">
+                                    {character.role}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex w-full justify-end">
+                                <div className="w-auto p-2 pl-0 text-end">
+                                  <div>{voiceActor.name.full}</div>
+                                  <div className="text-white/60">
+                                    {voiceActor.languageV2}
+                                  </div>
+                                </div>
+                                <div className="relative w-16 h-20">
+                                  <Image
+                                    src={voiceActor.image.medium || ""}
+                                    alt={`${voiceActor.name.full} image`}
+                                    layout="fill"
+                                    objectFit="cover"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </>
+                    );
+                  })}
+                </div>
               </>
             )}
           </div>
