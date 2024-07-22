@@ -12,6 +12,11 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Link from "next/link";
 import Thumbnail from "@/components/thumbnail";
 import AnimeSidebar from "@/components/anime/sidebar";
+import AnimeOverview from "@/components/anime/overview";
+import AnimeEpisodes from "@/components/anime/episodes";
+import AnimeCharacters from "@/components/anime/characters";
+import AnimeStaff from "@/components/anime/staff";
+import AnimeRecommendation from "@/components/anime/recommendation";
 
 const TABS: Array<string> = [
   "overview",
@@ -20,27 +25,6 @@ const TABS: Array<string> = [
   "staff",
   "recommendation",
 ];
-
-const addFavorite = async (
-  animeId: string | number,
-  remove: boolean = false
-) => {
-  const response = await fetch("/api/user/favorite", {
-    method: "PATCH",
-    body: JSON.stringify({ animeId, remove }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Something went wrong!");
-  }
-
-  return data;
-};
 
 const AnimeDetailPage = (props: any) => {
   const {
@@ -96,152 +80,25 @@ const AnimeDetailPage = (props: any) => {
               </ToggleGroup>
               {/* <span className="absolute bottom-0 left-0 h-px w-full bg-white/60" /> */}
             </div>
+
             {currentTab === "overview" && (
-              <div className="space-y-4">
-                <h1 className="font-space-grotesk text-3xl text-medium-red-violet">
-                  {title.romaji}
-                </h1>
-                <div
-                  className="text-white/60"
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
-                {trailer?.id && (
-                  <>
-                    <iframe
-                      className="w-full h-auto aspect-video"
-                      width="auto"
-                      height="auto"
-                      src={`https://www.youtube.com/embed/${trailer.id}`}
-                      title="Anime trailer"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                      allowFullScreen
-                    ></iframe>
-                  </>
-                )}
-              </div>
+              <AnimeOverview anime={props.animeDetails} />
             )}
 
             {currentTab === "episodes" && (
-              <>
-                {/* <ScrollArea className="h-72 rounded-md border p-1"> */}
-                <div className="grid grid-cols-3 gap-4">
-                  {streamingEpisodes?.map((episode: any, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className="relative h-24 rounded-sm overflow-hidden"
-                        onClick={() => router.push(episode.url)}
-                      >
-                        <Image
-                          src={episode.thumbnail}
-                          alt={`thumb nail`}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
-                          {episode.title}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                {/* </ScrollArea> */}
-              </>
+              <AnimeEpisodes anime={props.animeDetails} />
             )}
 
             {currentTab === "characters" && (
-              <>
-                <div className="grid grid-cols-2 gap-4">
-                  {characters.edges.map((character) => {
-                    return (
-                      <>
-                        {character.voiceActors.map((voiceActor) => {
-                          return (
-                            <div
-                              className="flex justify-between font-rajdhani"
-                              key={character.id}
-                            >
-                              <div className="flex w-full">
-                                <div className="relative w-16 h-20">
-                                  <Image
-                                    src={character.node.image.medium || ""}
-                                    alt={`${character.node.name.full} image`}
-                                    layout="fill"
-                                    objectFit="cover"
-                                  />
-                                </div>
-
-                                <div className="w-auto p-2 pr-0">
-                                  <div>{character.node.name.full}</div>
-                                  <div className="text-white/60 capitalize">
-                                    {character.role}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex w-full justify-end">
-                                <div className="w-auto p-2 pl-0 text-end">
-                                  <div>{voiceActor.name.full}</div>
-                                  <div className="text-white/60">
-                                    {voiceActor.languageV2}
-                                  </div>
-                                </div>
-                                <div className="relative w-16 h-20">
-                                  <Image
-                                    src={voiceActor.image.medium || ""}
-                                    alt={`${voiceActor.name.full} image`}
-                                    layout="fill"
-                                    objectFit="cover"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </>
-                    );
-                  })}
-                </div>
-              </>
+              <AnimeCharacters anime={props.animeDetails} />
             )}
 
             {currentTab === "staff" && (
-              <>
-                <div className="grid grid-cols-2 gap-4">
-                  {staffs.edges.map((staff) => {
-                    return (
-                      <div className="flex justify-between" key={staff.id}>
-                        <div className="relative w-16 h-20">
-                          <Image
-                            src={staff.node.image.medium || ""}
-                            alt={`${staff.node.name.full} image`}
-                            layout="fill"
-                            objectFit="cover"
-                          />
-                        </div>
-                        <div className="text-end">
-                          <div>{staff.node.name.full}</div>
-                          <div className="text-white/60">{staff.role}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
+              <AnimeStaff anime={props.animeDetails} />
             )}
 
             {currentTab === "recommendation" && (
-              <>
-                <div className="grid grid-cols-5 gap-4">
-                  {recommendations.nodes.map((recommendation) => {
-                    return (
-                      <>
-                        <Thumbnail anime={recommendation.mediaRecommendation} />
-                      </>
-                    );
-                  })}
-                </div>
-              </>
+              <AnimeRecommendation anime={props.animeDetails} />
             )}
           </div>
         </div>
