@@ -258,16 +258,22 @@ const AnimeDetailPage = (props: any) => {
               <ToggleGroupItem value="staff">Staff</ToggleGroupItem>
               <ToggleGroupItem value="reviews">Reviews</ToggleGroupItem>
             </ToggleGroup>
+
             {currentTab === "overview" && (
-              <>
-                <h1>{title.romaji}</h1>
-                <div dangerouslySetInnerHTML={{ __html: description }} />
+              <div className="space-y-4">
+                <h1 className="font-space-grotesk text-3xl text-medium-red-violet">
+                  {title.romaji}
+                </h1>
+                <div
+                  className="text-white/60"
+                  dangerouslySetInnerHTML={{ __html: description }}
+                />
                 {trailer?.id && (
                   <>
-                    <div>TRAILER</div>
                     <iframe
-                      width="560"
-                      height="315"
+                      className="w-full h-auto aspect-video"
+                      width="auto"
+                      height="auto"
                       src={`https://www.youtube.com/embed/${trailer.id}`}
                       title="Anime trailer"
                       frameBorder="0"
@@ -277,7 +283,7 @@ const AnimeDetailPage = (props: any) => {
                   </>
                 )}
                 <div className="text-green-500">RECOMMENDATIONS</div>
-              </>
+              </div>
             )}
 
             {currentTab === "episodes" && (
