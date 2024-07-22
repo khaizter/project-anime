@@ -27,19 +27,8 @@ const TABS: Array<string> = [
 ];
 
 const AnimeDetailPage = (props: any) => {
-  const {
-    title,
-    description,
-    trailer,
-    bannerImage,
-    streamingEpisodes,
-    recommendations,
-    characters,
-    staff: staffs,
-  }: AnimeType = props.animeDetails;
-
-  const router = useRouter();
-
+  const [anime, setAnime] = useState<AnimeType>(props.animeDetails);
+  const { title, bannerImage } = anime;
   const [currentTab, setCurrentTab] = useState("overview");
 
   return (
@@ -56,7 +45,7 @@ const AnimeDetailPage = (props: any) => {
       </div>
       <Wrapper>
         <div className="flex">
-          <AnimeSidebar anime={props.animeDetails} />
+          <AnimeSidebar anime={anime} />
           <div className="p-4 w-3/4 grow">
             <div className="w-max mb-6 relative">
               <ToggleGroup
@@ -78,27 +67,20 @@ const AnimeDetailPage = (props: any) => {
                   );
                 })}
               </ToggleGroup>
-              {/* <span className="absolute bottom-0 left-0 h-px w-full bg-white/60" /> */}
             </div>
 
-            {currentTab === "overview" && (
-              <AnimeOverview anime={props.animeDetails} />
-            )}
+            {currentTab === "overview" && <AnimeOverview anime={anime} />}
 
             {currentTab === "episodes" && (
-              <AnimeEpisodes anime={props.animeDetails} />
+              <AnimeEpisodes anime={anime} setAnime={setAnime} />
             )}
 
-            {currentTab === "characters" && (
-              <AnimeCharacters anime={props.animeDetails} />
-            )}
+            {currentTab === "characters" && <AnimeCharacters anime={anime} />}
 
-            {currentTab === "staff" && (
-              <AnimeStaff anime={props.animeDetails} />
-            )}
+            {currentTab === "staff" && <AnimeStaff anime={anime} />}
 
             {currentTab === "recommendation" && (
-              <AnimeRecommendation anime={props.animeDetails} />
+              <AnimeRecommendation anime={anime} />
             )}
           </div>
         </div>

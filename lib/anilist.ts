@@ -424,12 +424,6 @@ export const getAnimeDetails = async (animeId: number) => {
           isMain
         }
       }
-      streamingEpisodes{
-        title
-        thumbnail
-        url
-        site
-      }
       episodes
       season
       seasonYear

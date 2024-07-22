@@ -1,15 +1,37 @@
 import { AnimeType } from "@/lib/types";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { getAnimeEpisodes } from "@/lib/anilist";
 
 interface AnimeEpisodesProps {
   anime: AnimeType;
+  setAnime: React.Dispatch<React.SetStateAction<AnimeType>>;
 }
 
 const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
-  const { streamingEpisodes } = props.anime;
+  const { setAnime } = props;
+  const { id: animeId, streamingEpisodes } = props.anime;
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchEpisodes = async () => {
+      setIsLoading(true);
+      const media = await getAnimeEpisodes(animeId);
+      const newStreamingEpisodes = media.streamingEpisodes;
+      setAnime((prevState) => {
+        return { ...prevState, streamingEpisodes: newStreamingEpisodes };
+      });
+      setIsLoading(false);
+    };
+    fetchEpisodes();
+  }, [animeId, setAnime]);
+
+  if (isLoading) {
+    return <div>Loading data...</div>;
+  }
+
   return (
     <div className="grid grid-cols-3 gap-4">
       {streamingEpisodes?.map((episode: any, index: number) => {
