@@ -517,6 +517,162 @@ export const getAnimeDetails = async (animeId: number) => {
   return data.Media;
 };
 
+export const getAnimeEpisodes = async (animeId: number) => {
+  const query = `
+   query($id: Int){
+    Media (id: $id) {
+      streamingEpisodes{
+        title
+        thumbnail
+        url
+        site
+      }
+    }
+  }
+`;
+  const variables = {
+    id: animeId,
+  };
+  const data = await queryAnilist(query, variables);
+  return data.Media;
+};
+
+export const getAnimeCharacters = async (
+  animeId: number,
+  language: string,
+  page: number = 1,
+  perPage: number = 20
+) => {
+  const query = `
+  query($id: Int, $page : Int, $perPage : Int, $language : String){
+   Media (id: $id) {
+    characters(sort: FAVOURITES_DESC, page: $page, perPage:$perPage ) {
+      edges{
+        id
+        node {
+          id
+          name {
+            full
+          }
+          image {
+            medium
+          }
+        }
+        role
+        voiceActors(language : $language, sort : RELEVANCE){
+          id
+          name {
+            full
+          }
+          languageV2
+          image{
+            medium
+          }
+        }
+      }
+      pageInfo {
+        total
+        currentPage
+        lastPage
+        hasNextPage
+        perPage
+      }
+    }
+   }
+ }
+`;
+  const variables = {
+    id: animeId,
+    page: page,
+    perPage: perPage,
+    language: language,
+  };
+  const data = await queryAnilist(query, variables);
+  return data.Media;
+};
+
+export const getAnimeStaffs = async (
+  animeId: number,
+  page: number = 1,
+  perPage: number = 20
+) => {
+  const query = `
+  query($id: Int, $page : Int, $perPage : Int){
+   Media (id: $id) {
+    staff(sort :RELEVANCE, page: $page, perPage: $perPage) {
+      	edges{
+          id
+          node {
+            id
+            name {
+              full
+            }
+            image {
+              medium
+            }
+          }
+          role
+        }
+         pageInfo {
+          total
+          currentPage
+          lastPage
+          hasNextPage
+          perPage
+        }
+      }
+   }
+ }
+`;
+  const variables = {
+    id: animeId,
+    page: page,
+    perPage: perPage,
+  };
+  const data = await queryAnilist(query, variables);
+  return data.Media;
+};
+
+export const getAnimeRecommendation = async (
+  animeId: number,
+  page: number = 1,
+  perPage: number = 20
+) => {
+  const query = `
+  query($id: Int, $page : Int, $perPage : Int){
+   Media (id: $id) {
+     recommendations(sort:RATING_DESC , page:$page, perPage:$perPage ){
+        nodes{
+          mediaRecommendation{
+            id
+            title {
+              romaji
+            }
+            coverImage {
+              large
+            }
+          }
+        }
+        pageInfo {
+          total
+          currentPage
+          lastPage
+          hasNextPage
+          perPage
+        }
+      }
+   }
+ }
+`;
+  const variables = {
+    id: animeId,
+    page: page,
+    perPage: perPage,
+  };
+  const data = await queryAnilist(query, variables);
+  return data.Media;
+};
+
 export const getAnimeHoverDetails = async (animeId: number) => {
   const query = `
   query($id: Int){
