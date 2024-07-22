@@ -447,28 +447,6 @@ export const getAnimeDetails = async (animeId: number) => {
           perPage
         }
       }
-      staff(sort :RELEVANCE, page:1, perPage: 20) {
-      	edges{
-          id
-          node {
-            id
-            name {
-              full
-            }
-            image {
-              medium
-            }
-          }
-          role
-        }
-         pageInfo {
-          total
-          currentPage
-          lastPage
-          hasNextPage
-          perPage
-        }
-      }
     }
   }
 `;

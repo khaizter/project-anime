@@ -79,7 +79,9 @@ const AnimeDetailPage = (props: any) => {
               <AnimeCharacters anime={anime} setAnime={setAnime} />
             )}
 
-            {currentTab === "staff" && <AnimeStaff anime={anime} />}
+            {currentTab === "staff" && (
+              <AnimeStaff anime={anime} setAnime={setAnime} />
+            )}
 
             {currentTab === "recommendation" && (
               <AnimeRecommendation anime={anime} />
