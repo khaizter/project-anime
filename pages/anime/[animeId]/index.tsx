@@ -52,8 +52,9 @@ const AnimeDetailPage = (props: any) => {
     seasonYear,
     recommendations,
     characters,
+    staff: staffs,
   }: AnimeType = props.animeDetails;
-  console.log(props.animeDetails);
+
   const router = useRouter();
   const { status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -375,6 +376,31 @@ const AnimeDetailPage = (props: any) => {
                           );
                         })}
                       </>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {currentTab === "staff" && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  {staffs.edges.map((staff) => {
+                    return (
+                      <div className="flex justify-between" key={staff.id}>
+                        <div className="relative w-16 h-20">
+                          <Image
+                            src={staff.node.image.medium || ""}
+                            alt={`${staff.node.name.full} image`}
+                            layout="fill"
+                            objectFit="cover"
+                          />
+                        </div>
+                        <div className="text-end">
+                          <div>{staff.node.name.full}</div>
+                          <div className="text-white/60">{staff.role}</div>
+                        </div>
+                      </div>
                     );
                   })}
                 </div>

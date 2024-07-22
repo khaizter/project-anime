@@ -92,6 +92,35 @@ export type AnimeType = {
         };
       }>;
     }>;
+    pageInfo: {
+      currentPage: number;
+      hasNextPage: number;
+      lastPage: number;
+      perPage: number;
+      total: number;
+    };
+  };
+  staff: {
+    edges: Array<{
+      id: number;
+      node: {
+        id: number;
+        name: {
+          full: string;
+        };
+        image: {
+          medium: string;
+        };
+      };
+      role: string;
+    }>;
+    pageInfo: {
+      currentPage: number;
+      hasNextPage: number;
+      lastPage: number;
+      perPage: number;
+      total: number;
+    };
   };
 };
 // detailed Media type
