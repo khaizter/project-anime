@@ -14,7 +14,7 @@ const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchEpisodes = async () => {
+    const fetchCharacters = async () => {
       setIsLoading(true);
       const media = await getAnimeCharacters(animeId, "JAPANESE");
       const newCharacters = media.characters;
@@ -23,7 +23,9 @@ const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
       });
       setIsLoading(false);
     };
-    fetchEpisodes();
+    if (!characters) {
+      fetchCharacters();
+    }
   }, [animeId, setAnime]);
 
   if (isLoading) {

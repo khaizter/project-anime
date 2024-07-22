@@ -427,26 +427,6 @@ export const getAnimeDetails = async (animeId: number) => {
       episodes
       season
       seasonYear
-      recommendations(sort:RATING_DESC , page:1, perPage:20 ){
-        nodes{
-          mediaRecommendation{
-            id
-            title {
-              romaji
-            }
-            coverImage {
-              large
-            }
-          }
-        }
-        pageInfo {
-          total
-          currentPage
-          lastPage
-          hasNextPage
-          perPage
-        }
-      }
     }
   }
 `;

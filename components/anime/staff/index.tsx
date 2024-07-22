@@ -14,7 +14,7 @@ const AnimeStaff: React.FC<AnimeCharactersProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchEpisodes = async () => {
+    const fetchStaffs = async () => {
       setIsLoading(true);
       const media = await getAnimeStaffs(animeId);
       const newStaff = media.staff;
@@ -23,7 +23,9 @@ const AnimeStaff: React.FC<AnimeCharactersProps> = (props) => {
       });
       setIsLoading(false);
     };
-    fetchEpisodes();
+    if (!staffs) {
+      fetchStaffs();
+    }
   }, [animeId, setAnime]);
 
   if (isLoading) {

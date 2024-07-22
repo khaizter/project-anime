@@ -84,7 +84,7 @@ const AnimeDetailPage = (props: any) => {
             )}
 
             {currentTab === "recommendation" && (
-              <AnimeRecommendation anime={anime} />
+              <AnimeRecommendation anime={anime} setAnime={setAnime} />
             )}
           </div>
         </div>

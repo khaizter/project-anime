@@ -25,7 +25,9 @@ const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
       });
       setIsLoading(false);
     };
-    fetchEpisodes();
+    if (!streamingEpisodes) {
+      fetchEpisodes();
+    }
   }, [animeId, setAnime]);
 
   if (isLoading) {
