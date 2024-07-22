@@ -447,38 +447,6 @@ export const getAnimeDetails = async (animeId: number) => {
           perPage
         }
       }
-      characters(sort: FAVOURITES_DESC, page:1, perPage:20 ) {
-      	edges{
-          id
-          node {
-            id
-            name {
-              full
-            }
-            image {
-              medium
-            }
-          }
-          role
-          voiceActors(language :JAPANESE, sort : RELEVANCE){
-            id
-            name {
-              full
-            }
-            languageV2
-            image{
-              medium
-            }
-          }
-        }
-        pageInfo {
-          total
-          currentPage
-          lastPage
-          hasNextPage
-          perPage
-        }
-    	}
       staff(sort :RELEVANCE, page:1, perPage: 20) {
       	edges{
           id
@@ -538,7 +506,7 @@ export const getAnimeCharacters = async (
   perPage: number = 20
 ) => {
   const query = `
-  query($id: Int, $page : Int, $perPage : Int, $language : String){
+  query($id: Int, $page : Int, $perPage : Int, $language : StaffLanguage){
    Media (id: $id) {
     characters(sort: FAVOURITES_DESC, page: $page, perPage:$perPage ) {
       edges{

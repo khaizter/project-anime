@@ -1,16 +1,38 @@
 import { AnimeType } from "@/lib/types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { getAnimeCharacters } from "@/lib/anilist";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
+  setAnime: React.Dispatch<React.SetStateAction<AnimeType>>;
 }
 
 const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
-  const { characters } = props.anime;
+  const { setAnime } = props;
+  const { id: animeId, characters } = props.anime;
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchEpisodes = async () => {
+      setIsLoading(true);
+      const media = await getAnimeCharacters(animeId, "JAPANESE");
+      const newCharacters = media.characters;
+      setAnime((prevState) => {
+        return { ...prevState, characters: newCharacters };
+      });
+      setIsLoading(false);
+    };
+    fetchEpisodes();
+  }, [animeId, setAnime]);
+
+  if (isLoading) {
+    return <div>Loading data...</div>;
+  }
+
   return (
     <div className="grid grid-cols-2 gap-4">
-      {characters.edges.map((character) => {
+      {characters?.edges.map((character) => {
         return (
           <>
             {character.voiceActors.map((voiceActor) => {
