@@ -12,6 +12,14 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Link from "next/link";
 import Thumbnail from "@/components/thumbnail";
 
+const TABS: Array<string> = [
+  "overview",
+  "episodes",
+  "characters",
+  "staff",
+  "recommendation",
+];
+
 const addFavorite = async (
   animeId: string | number,
   remove: boolean = false
@@ -251,18 +259,28 @@ const AnimeDetailPage = (props: any) => {
             </div>
           </div>
           <div className="p-4 w-3/4 grow">
-            <ToggleGroup
-              type="single"
-              defaultValue="overview"
-              onValueChange={(value) => setCurrentTab(value)}
-            >
-              <ToggleGroupItem value="overview">Overview</ToggleGroupItem>
-              <ToggleGroupItem value="episodes">Episodes</ToggleGroupItem>
-              <ToggleGroupItem value="characters">Characters</ToggleGroupItem>
-              <ToggleGroupItem value="staff">Staff</ToggleGroupItem>
-              <ToggleGroupItem value="reviews">Reviews</ToggleGroupItem>
-            </ToggleGroup>
-
+            <div className="w-max mb-6 relative">
+              <ToggleGroup
+                className="justify-start"
+                type="single"
+                defaultValue="overview"
+                onValueChange={(value) => setCurrentTab(value)}
+              >
+                {TABS.map((tab) => {
+                  return (
+                    <ToggleGroupItem
+                      className="group relative"
+                      key={tab}
+                      value={tab}
+                    >
+                      <span className="capitalize">{tab}</span>
+                      <span className="absolute z-10 bottom-0 left-0 h-1 w-full bg-transparent group-data-[state=on]:bg-medium-red-violet" />
+                    </ToggleGroupItem>
+                  );
+                })}
+              </ToggleGroup>
+              {/* <span className="absolute bottom-0 left-0 h-px w-full bg-white/60" /> */}
+            </div>
             {currentTab === "overview" && (
               <div className="space-y-4">
                 <h1 className="font-space-grotesk text-3xl text-medium-red-violet">
@@ -286,16 +304,6 @@ const AnimeDetailPage = (props: any) => {
                     ></iframe>
                   </>
                 )}
-                <div className="text-green-500">RECOMMENDATIONS</div>
-                <div className="grid grid-cols-5 gap-4">
-                  {recommendations.nodes.map((recommendation) => {
-                    return (
-                      <>
-                        <Thumbnail anime={recommendation.mediaRecommendation} />
-                      </>
-                    );
-                  })}
-                </div>
               </div>
             )}
 
@@ -401,6 +409,20 @@ const AnimeDetailPage = (props: any) => {
                           <div className="text-white/60">{staff.role}</div>
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {currentTab === "recommendation" && (
+              <>
+                <div className="grid grid-cols-5 gap-4">
+                  {recommendations.nodes.map((recommendation) => {
+                    return (
+                      <>
+                        <Thumbnail anime={recommendation.mediaRecommendation} />
+                      </>
                     );
                   })}
                 </div>
