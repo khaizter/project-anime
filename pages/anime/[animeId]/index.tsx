@@ -1,16 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Wrapper from "@/components/wrapper";
 import { getAnimeDetails } from "@/lib/anilist";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { AnimeType } from "@/lib/types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import Link from "next/link";
-import Thumbnail from "@/components/thumbnail";
 import AnimeSidebar from "@/components/anime/sidebar";
 import AnimeOverview from "@/components/anime/overview";
 import AnimeEpisodes from "@/components/anime/episodes";
@@ -30,6 +23,11 @@ const AnimeDetailPage = (props: any) => {
   const [anime, setAnime] = useState<AnimeType>(props.animeDetails);
   const { title, bannerImage } = anime;
   const [currentTab, setCurrentTab] = useState("overview");
+
+  useEffect(() => {
+    setAnime(props.animeDetails);
+    setCurrentTab("overview");
+  }, [props.animeDetails]);
 
   return (
     <>
@@ -51,7 +49,7 @@ const AnimeDetailPage = (props: any) => {
               <ToggleGroup
                 className="justify-start"
                 type="single"
-                defaultValue="overview"
+                value={currentTab}
                 onValueChange={(value) => setCurrentTab(value)}
               >
                 {TABS.map((tab) => {

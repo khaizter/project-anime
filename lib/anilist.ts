@@ -54,8 +54,12 @@ export const queryAnilist = async (query: String, variables: any) => {
 
     const json = await response.json();
     if (!response.ok) {
+      if (json.errors[0].message === "Too Many Requests.") {
+        console.log("FETCH COOLDOWN");
+      }
       throw new Error(json.errors[0].message);
     }
+
     return json.data;
   } catch (err) {
     console.log("ANILIST ERROR:", err);
