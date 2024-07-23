@@ -8,6 +8,8 @@ import { getServerSession } from "next-auth";
 import { getAnimeByIds } from "@/lib/anilist";
 import CustomPagination from "@/components/custom-pagination";
 import FavoriteThumbnail from "@/components/favorite-thumbnail";
+import Thumbnail from "@/components/thumbnail";
+import { Pen } from "lucide-react";
 
 const unfavorite = async (
   animeId: string | number,
@@ -46,26 +48,27 @@ const ProfilePage = () => {
     setLoadingAnimes(false);
   };
 
+  const fetchFavorites = async () => {
+    const response = await fetch("/api/user/favorite", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Something went wrong!");
+    }
+
+    setFavorites((_: Array<number>) => {
+      fetchAnimes(result.data, 1);
+      return result.data;
+    });
+  };
+
   useEffect(() => {
-    const fetchFavorites = async () => {
-      const response = await fetch("/api/user/favorite", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Something went wrong!");
-      }
-
-      setFavorites((_: Array<number>) => {
-        fetchAnimes(result.data, 1);
-        return result.data;
-      });
-    };
     fetchFavorites();
   }, []);
 
@@ -92,24 +95,30 @@ const ProfilePage = () => {
   };
 
   return (
-    <Wrapper>
-      <div className="flex">
-        <div>Username:</div>
-        <div>{session?.user!.name}</div>
-      </div>
-      <Link href={"/profile/change-password"}>Change Password</Link>
+    <Wrapper className="py-4 space-y-4">
       <div>
-        <div>My Favorites</div>
+        <span className="mr-2">Username:</span>
+        <span className="text-white/60">{session?.user!.name}</span>
+      </div>
+      <div>
+        <Link className="flex items-center" href={"/profile/change-password"}>
+          Change Password
+          <Pen className="w-4 h-4 ml-2" />
+        </Link>
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-space-grotesk text-medium-red-violet">
+          My Favorites
+        </h2>
         {!loadingAnimes ? (
           <ul className="grid grid-cols-6 gap-4">
-            {animes.map((anime: any) => {
+            {animes.map((anime: any, index: number) => {
               return (
-                <FavoriteThumbnail
+                <Thumbnail
                   key={anime.id}
-                  id={anime.id}
-                  title={anime.title.romaji}
-                  coverImage={anime.coverImage.large}
-                  onUnfavorite={unfavoriteHandler}
+                  anime={anime}
+                  index={index}
+                  totalColumn={6}
                 />
               );
             })}
@@ -117,11 +126,13 @@ const ProfilePage = () => {
         ) : (
           <div>Loading animes...</div>
         )}
-        <CustomPagination
-          currentPage={+currentPage}
-          lastPage={+lastPage}
-          onPageChanged={pageChangedHandler}
-        />
+        {!loadingAnimes && (
+          <CustomPagination
+            currentPage={+currentPage}
+            lastPage={+lastPage}
+            onPageChanged={pageChangedHandler}
+          />
+        )}
       </div>
     </Wrapper>
   );

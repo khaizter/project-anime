@@ -643,64 +643,29 @@ export const getAnimeByIds = async (
   animeIds: Array<number>
 ) => {
   const query = `
-  query($page :Int, $perPage:Int,$ids: [Int]){
+ query($page :Int, $perPage:Int,$ids: [Int]){
   Page (page: $page, perPage: $perPage) {
-  pageInfo {
-        total
-        currentPage
-        lastPage
-        hasNextPage
-        perPage
-      }
-    media (id_in: $ids) {
-      id
-			title {
-        romaji
-        english
-      }
-      description(asHtml : true)
-      startDate {
-        year
-        month
-        day
-      }
-      endDate {
-        year
-        month
-        day
-      }
-      trailer {
-        id
-        site
-        thumbnail
-      }
-      coverImage {
-        extraLarge
-        large
-        medium
-        color
-      }
-      bannerImage
-      genres
-      tags {
-        id
-      }
-      studios(sort : FAVOURITES_DESC ,isMain : true) {
-        nodes : {
-          id
-          name
+    pageInfo {
+          total
+          currentPage
+          lastPage
+          hasNextPage
+          perPage
         }
-      }
-      streamingEpisodes{
-        title
-        thumbnail
-        url
-        site
-      }
-      siteUrl
+      media (id_in: $ids) {
+         id
+          title {
+            romaji
+          }
+          coverImage {
+            large
+          }
+          description
+          bannerImage
     }
+	}
 }
-  }
+
 `;
   const variables = {
     page: page,
