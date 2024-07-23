@@ -97,7 +97,7 @@ const AnimeSidebar: React.FC<AnimeSideBarProps> = (props) => {
   };
 
   return (
-    <div className="w-1/4 max-w-52 space-y-6 py-4">
+    <div className="w-1/4 max-w-52 space-y-6 pb-4 relative -translate-y-12">
       <div className="space-y-4">
         <Image
           src={coverImage.large || ""}

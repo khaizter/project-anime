@@ -10,6 +10,7 @@ import Link from "next/link";
 import React from "react";
 import HeroCarousel from "@/components/hero-carousel";
 import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 const HomePage = (props: any) => {
   const {
     popularAnimes,
@@ -25,6 +26,7 @@ const HomePage = (props: any) => {
           <div className="flex items-center justify-between">
             <h2 className="font-space-grotesk text-2xl">Popular This Season</h2>
             <Link
+              className="flex items-center"
               href={{
                 pathname: "/anime",
                 query: {
@@ -33,6 +35,7 @@ const HomePage = (props: any) => {
               }}
             >
               View More
+              <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
           <div className="grid grid-cols-6 gap-4">
@@ -52,6 +55,7 @@ const HomePage = (props: any) => {
           <div className="flex items-center justify-between">
             <h2 className="font-space-grotesk text-2xl">Trending</h2>
             <Link
+              className="flex items-center"
               href={{
                 pathname: "/anime",
                 query: {
@@ -60,6 +64,7 @@ const HomePage = (props: any) => {
               }}
             >
               View More
+              <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
           <div className="grid grid-cols-6 gap-4">
@@ -80,6 +85,7 @@ const HomePage = (props: any) => {
           <div className="flex items-center justify-between">
             <h2 className="font-space-grotesk text-2xl">All Time Popular</h2>
             <Link
+              className="flex items-center"
               href={{
                 pathname: "/anime",
                 query: {
@@ -88,6 +94,7 @@ const HomePage = (props: any) => {
               }}
             >
               View More
+              <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
           <div className="grid grid-cols-6 gap-4">
@@ -109,6 +116,7 @@ const HomePage = (props: any) => {
               Upcoming Next Season
             </h2>
             <Link
+              className="flex items-center"
               href={{
                 pathname: "/anime",
                 query: {
@@ -117,6 +125,7 @@ const HomePage = (props: any) => {
               }}
             >
               View More
+              <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
           <div className="grid grid-cols-6 gap-4">

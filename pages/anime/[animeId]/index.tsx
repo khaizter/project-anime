@@ -44,8 +44,8 @@ const AnimeDetailPage = (props: any) => {
       <Wrapper>
         <div className="flex">
           <AnimeSidebar anime={anime} />
-          <div className="p-4 w-3/4 grow">
-            <div className="w-max mb-6 relative">
+          <div className="p-4 w-3/4 grow relative">
+            <div className="w-max mb-6 absolute left-4 -top-12">
               <ToggleGroup
                 className="justify-start"
                 type="single"
