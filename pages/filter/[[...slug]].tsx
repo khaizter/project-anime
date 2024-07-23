@@ -107,7 +107,7 @@ const FilterPage = (props: any) => {
           <div>Loading genres...</div>
         )}
       </div>
-      <div className="p-4 w-3/4 grow">
+      <div className="p-4 w-3/4 grow space-y-4">
         {!loadingAnimes ? (
           <ul className="grid grid-cols-5 gap-4">
             {animes.map((anime: any, index) => {

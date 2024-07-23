@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import React from "react";
 import HeroCarousel from "@/components/hero-carousel";
+import { Button } from "@/components/ui/button";
 const HomePage = (props: any) => {
   const {
     popularAnimes,
@@ -21,7 +22,19 @@ const HomePage = (props: any) => {
       <HeroCarousel animes={trendingAnimes} />
       <Wrapper className="space-y-10 py-10">
         <div className="space-y-4">
-          <h2 className="font-space-grotesk text-2xl">Popular This Season</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-space-grotesk text-2xl">Popular This Season</h2>
+            <Link
+              href={{
+                pathname: "/anime",
+                query: {
+                  sort: "popular",
+                },
+              }}
+            >
+              View More
+            </Link>
+          </div>
           <div className="grid grid-cols-6 gap-4">
             {popularAnimesThisSeason.map((anime: any, index: number) => {
               return (
@@ -36,7 +49,19 @@ const HomePage = (props: any) => {
           </div>
         </div>
         <div className="space-y-4">
-          <h2 className="font-space-grotesk text-2xl">Trending</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-space-grotesk text-2xl">Trending</h2>
+            <Link
+              href={{
+                pathname: "/anime",
+                query: {
+                  sort: "trending",
+                },
+              }}
+            >
+              View More
+            </Link>
+          </div>
           <div className="grid grid-cols-6 gap-4">
             {trendingAnimes.map((anime: any, index: number) => {
               return (
@@ -52,7 +77,19 @@ const HomePage = (props: any) => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="font-space-grotesk text-2xl">All Time Popular</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-space-grotesk text-2xl">All Time Popular</h2>
+            <Link
+              href={{
+                pathname: "/anime",
+                query: {
+                  sort: "alltimepopular",
+                },
+              }}
+            >
+              View More
+            </Link>
+          </div>
           <div className="grid grid-cols-6 gap-4">
             {popularAnimes.map((anime: any, index: number) => {
               return (
@@ -67,7 +104,21 @@ const HomePage = (props: any) => {
           </div>
         </div>
         <div className="space-y-4">
-          <h2 className="font-space-grotesk text-2xl">Upcoming Next Season</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-space-grotesk text-2xl">
+              Upcoming Next Season
+            </h2>
+            <Link
+              href={{
+                pathname: "/anime",
+                query: {
+                  sort: "upcoming",
+                },
+              }}
+            >
+              View More
+            </Link>
+          </div>
           <div className="grid grid-cols-6 gap-4">
             {popularAnimesNextSeason.map((anime: any, index: number) => {
               return (
@@ -81,12 +132,6 @@ const HomePage = (props: any) => {
             })}
           </div>
         </div>
-        <Link
-          className="block text-center text-2xl font-space-grotesk"
-          href={"/anime"}
-        >
-          VIEW MORE
-        </Link>
       </Wrapper>
     </>
   );

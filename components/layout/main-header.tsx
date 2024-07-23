@@ -63,23 +63,78 @@ const MainHeader = () => {
               </Button>
             </SheetTrigger>
             <SheetContent
-              className="flex flex-col bg-kingfisher-daisy text-white border-none pt-16 px-0 gap-0"
+              className="flex flex-col bg-kingfisher-daisy text-white border-none pt-8 px-0 gap-0"
               side="left"
             >
-              <ul className="font-space-grotesk text-2xl text-white">
+              <div className="font-major-mono-display text-3xl pl-3">
+                Project<span className="text-lavender-rose">Anime</span>
+              </div>
+              <ul className="font-space-grotesk text-2xl text-white mt-8">
                 <li className="py-3 px-3 border-b-2 border-kingfisher-daisy-800/25">
                   <SheetClose asChild>
-                    <Link href={"/home"}>Home</Link>
+                    <Link
+                      href={{
+                        pathname: "/anime",
+                        query: {
+                          sort: "popular",
+                        },
+                      }}
+                    >
+                      Popular this season
+                    </Link>
                   </SheetClose>
                 </li>
                 <li className="py-3 px-3 border-b-2 border-kingfisher-daisy-800/25">
                   <SheetClose asChild>
-                    <Link href={"/popular"}>Popular</Link>
+                    <Link
+                      href={{
+                        pathname: "/anime",
+                        query: {
+                          sort: "trending",
+                        },
+                      }}
+                    >
+                      Trending
+                    </Link>
                   </SheetClose>
                 </li>
                 <li className="py-3 px-3 border-b-2 border-kingfisher-daisy-800/25">
                   <SheetClose asChild>
-                    <Link href={"/trending"}>Trending</Link>
+                    <Link
+                      href={{
+                        pathname: "/anime",
+                        query: {
+                          sort: "alltimepopular",
+                        },
+                      }}
+                    >
+                      All time popular
+                    </Link>
+                  </SheetClose>
+                </li>
+                <li className="py-3 px-3 border-b-2 border-kingfisher-daisy-800/25">
+                  <SheetClose asChild>
+                    <Link
+                      href={{
+                        pathname: "/anime",
+                        query: {
+                          sort: "upcoming",
+                        },
+                      }}
+                    >
+                      Upcoming next season
+                    </Link>
+                  </SheetClose>
+                </li>
+                <li className="py-3 px-3 border-b-2 border-kingfisher-daisy-800/25">
+                  <SheetClose asChild>
+                    <Link
+                      href={{
+                        pathname: "/anime",
+                      }}
+                    >
+                      A to Z
+                    </Link>
                   </SheetClose>
                 </li>
               </ul>
@@ -127,7 +182,13 @@ const MainHeader = () => {
                 <Search className="h-4 w-4" color="#3B0086" />
               </button>
               <div className="bg-kingfisher-daisy rounded-md">
-                <Button size="sm">Filter</Button>
+                <Link
+                  href={{
+                    pathname: "/filter",
+                  }}
+                >
+                  <Button size="sm">Filter</Button>
+                </Link>
               </div>
             </div>
           )}
