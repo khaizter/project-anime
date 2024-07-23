@@ -56,8 +56,7 @@ const MainHeader = () => {
           <Sheet>
             <SheetTrigger asChild>
               <Button
-                className="hover:text-kingfisher-daisy"
-                variant="ghost"
+                className="bg-transparent hover:bg-transparent"
                 size="icon"
               >
                 <Menu className="h-8 w-8" />
