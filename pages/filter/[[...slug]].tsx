@@ -5,6 +5,7 @@ import { ToggleGroupItem } from "@/components/ui/toggle-group";
 import Wrapper from "@/components/wrapper";
 import { getAnimesWithFilter, getGenres } from "@/lib/anilist";
 import { ToggleGroup } from "@radix-ui/react-toggle-group";
+import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 type FilterType = {
@@ -63,47 +64,65 @@ const FilterPage = (props: any) => {
   }, [keyword]);
 
   return (
-    <Wrapper>
-      <div className="flex">
-        <Input
-          placeholder="keyword"
-          value={keyword || ""}
-          onChange={(e: any) => setKeyword(e.target.value)}
+    <Wrapper className="flex">
+      <div className="w-1/4 max-w-52 py-4 space-y-4">
+        <div className="text-2xl font-space-grotesk text-medium-red-violet">
+          Search
+        </div>
+        <div className="flex items-center bg-white p-2 rounded-sm">
+          <Search className="h-4 w-4 mr-2" color="#3B0086" />
+          <input
+            className="text-kingfisher-daisy-800 focus:outline-none grow"
+            type="text"
+            placeholder="keyword"
+            value={keyword || ""}
+            onChange={(e: any) => setKeyword(e.target.value)}
+          />
+        </div>
+        {genres ? (
+          <>
+            <div className="text-2xl font-space-grotesk text-medium-red-violet">
+              Genres
+            </div>
+            <ToggleGroup
+              className="grid grid-cols-2"
+              type="multiple"
+              value={genresSelected}
+              onValueChange={genresChangedHandler}
+            >
+              {genres.map((genre: any) => {
+                return (
+                  <ToggleGroupItem
+                    key={genre}
+                    value={genre}
+                    className="block text-start px-0 font-rajdhani"
+                  >
+                    {genre}
+                  </ToggleGroupItem>
+                );
+              })}
+            </ToggleGroup>
+          </>
+        ) : (
+          <div>Loading genres...</div>
+        )}
+      </div>
+      <div className="p-4 w-3/4 grow">
+        {!loadingAnimes ? (
+          <ul className="grid grid-cols-6 gap-4">
+            {animes.map((anime: any) => {
+              return <Thumbnail key={anime.id} anime={anime} />;
+            })}
+          </ul>
+        ) : (
+          <div>Loading animes...</div>
+        )}
+        <CustomPagination
+          currentPage={+currentPage}
+          lastPage={+lastPage}
+          onPageChanged={pageChangedHandler}
         />
       </div>
-
-      {genres ? (
-        <ToggleGroup
-          className="flex flex-wrap"
-          type="multiple"
-          value={genresSelected}
-          onValueChange={genresChangedHandler}
-        >
-          {genres.map((genre: any) => {
-            return (
-              <ToggleGroupItem key={genre} value={genre}>
-                {genre}
-              </ToggleGroupItem>
-            );
-          })}
-        </ToggleGroup>
-      ) : (
-        <div>Loading genres...</div>
-      )}
-      {!loadingAnimes ? (
-        <ul className="grid grid-cols-6 gap-4">
-          {animes.map((anime: any) => {
-            return <Thumbnail key={anime.id} anime={anime} />;
-          })}
-        </ul>
-      ) : (
-        <div>Loading animes...</div>
-      )}
-      <CustomPagination
-        currentPage={+currentPage}
-        lastPage={+lastPage}
-        onPageChanged={pageChangedHandler}
-      />
     </Wrapper>
   );
 };
