@@ -10,6 +10,7 @@ interface HoverDetailsProps {
   isFavorite: boolean;
   isLoadingFavorite: boolean;
   favoriteHandler: React.MouseEventHandler;
+  isLastinRow: boolean;
 }
 
 const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
@@ -24,8 +25,13 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
     genres,
   }: AnimeType = props.anime;
 
-  const { isFetchingDetails, isFavorite, isLoadingFavorite, favoriteHandler } =
-    props;
+  const {
+    isFetchingDetails,
+    isFavorite,
+    isLoadingFavorite,
+    favoriteHandler,
+    isLastinRow,
+  } = props;
 
   const aired = startDate
     ? new Date(
@@ -36,7 +42,11 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
     : "processing date";
 
   return (
-    <div className="absolute top-1/2 left-1/2 group-last:left-auto group-last:right-1/2 w-64 h-fit bg-jacaranda z-10 p-4 rounded-md shadow-lg shadow-lavender-magenta/25 space-y-4">
+    <div
+      className={`absolute top-1/2 ${
+        isLastinRow ? "right-1/2" : "left-1/2"
+      } w-64 h-fit bg-jacaranda z-10 p-4 rounded-md shadow-lg shadow-lavender-magenta/25 space-y-4`}
+    >
       {isFetchingDetails ? (
         <div>LOADING...</div>
       ) : (

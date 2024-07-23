@@ -25,7 +25,14 @@ const AnimePage = (props: any) => {
       <div>FILTERS</div>
       <ul className="grid grid-cols-6 gap-4">
         {animes.map((anime: any, index: number) => {
-          return <Thumbnail key={anime.id} anime={anime} />;
+          return (
+            <Thumbnail
+              key={anime.id}
+              anime={anime}
+              index={index}
+              totalColumn={6}
+            />
+          );
         })}
       </ul>
 

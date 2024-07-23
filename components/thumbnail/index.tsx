@@ -31,9 +31,12 @@ const addFavorite = async (
 
 interface ThumbnailProps {
   anime: any;
+  totalColumn: number;
+  index: number;
 }
 
 const Thumbnail: React.FC<ThumbnailProps> = (props) => {
+  const { totalColumn, index } = props;
   const [anime, setAnime] = useState<any>(props.anime);
   const [showDetails, setShowDetails] = useState(false);
   const [isFetchingDetails, setIsFetchingDetails] = useState(false);
@@ -138,6 +141,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
           isFavorite={isFavorite}
           isLoadingFavorite={isLoadingFavorite}
           favoriteHandler={favoriteHandler}
+          isLastinRow={(index + 1) % totalColumn == 0}
         />
       )}
     </div>

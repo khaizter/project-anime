@@ -109,19 +109,28 @@ const FilterPage = (props: any) => {
       </div>
       <div className="p-4 w-3/4 grow">
         {!loadingAnimes ? (
-          <ul className="grid grid-cols-6 gap-4">
-            {animes.map((anime: any) => {
-              return <Thumbnail key={anime.id} anime={anime} />;
+          <ul className="grid grid-cols-5 gap-4">
+            {animes.map((anime: any, index) => {
+              return (
+                <Thumbnail
+                  key={anime.id}
+                  anime={anime}
+                  index={index}
+                  totalColumn={5}
+                />
+              );
             })}
           </ul>
         ) : (
           <div>Loading animes...</div>
         )}
-        <CustomPagination
-          currentPage={+currentPage}
-          lastPage={+lastPage}
-          onPageChanged={pageChangedHandler}
-        />
+        {!loadingAnimes && (
+          <CustomPagination
+            currentPage={+currentPage}
+            lastPage={+lastPage}
+            onPageChanged={pageChangedHandler}
+          />
+        )}
       </div>
     </Wrapper>
   );
