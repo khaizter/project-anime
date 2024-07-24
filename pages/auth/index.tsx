@@ -11,22 +11,9 @@ const AuthPage = () => {
   const [currentTab, setCurrentTab] = useState<"signin" | "signup">("signin");
   return (
     <Wrapper>
-      <Tabs value={currentTab} className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="signin" onClick={() => setCurrentTab("signin")}>
-            Sign In
-          </TabsTrigger>
-          <TabsTrigger value="signup" onClick={() => setCurrentTab("signup")}>
-            Sign Up
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="signin">
-          <SignInForm />
-        </TabsContent>
-        <TabsContent value="signup">
-          <SignUpForm setCurrentTab={setCurrentTab} />
-        </TabsContent>
-      </Tabs>
+      <div className="w-[400px] mx-auto py-24">
+        <SignInForm />
+      </div>
     </Wrapper>
   );
 };

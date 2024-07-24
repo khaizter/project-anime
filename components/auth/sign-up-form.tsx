@@ -22,6 +22,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const createUser = async (
   username: string,
@@ -47,23 +49,31 @@ const createUser = async (
 
 const formSchema = z
   .object({
-    username: z.string().min(6).max(50).regex(/^\w+$/, {
-      message: "Contains alpha numeric characters and underscore only.",
-    }),
-    password: z.string().min(6).max(50),
-    confirmPassword: z.string().min(6).max(50),
+    username: z
+      .string()
+      .min(6, "Username must contain at least 6 characters")
+      .max(50)
+      .regex(/^\w+$/, {
+        message: "Contains alpha numeric characters and underscore only.",
+      }),
+    password: z
+      .string()
+      .min(6, "Password must contain at least 6 characters")
+      .max(50),
+    confirmPassword: z
+      .string()
+      .min(6, "Password must contain at least 6 characters")
+      .max(50),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match!",
     path: ["confirmPassword"],
   });
 
-interface SignUpFormProps {
-  setCurrentTab: (value: "signin" | "signup") => void;
-}
+interface SignUpFormProps {}
 
 const SignUpForm: React.FC<SignUpFormProps> = (props) => {
-  const { setCurrentTab } = props;
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -84,7 +94,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
       );
       //  redirect to login
       console.log(result);
-      setCurrentTab("signin");
+      router.push("/auth");
     } catch (err) {
       //  stay in form
       console.log(err);
@@ -92,64 +102,73 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Sign Up</CardTitle>
-        <CardDescription>Create an Account</CardDescription>
+    <Card className="bg-kingfisher-daisy/60 border-0 text-white rounded">
+      <CardHeader className="text-center">
+        <CardTitle className="font-space-grotesk text-3xl">Sign Up</CardTitle>
+        <CardDescription className="text-white/60 text-base">
+          Create an Account
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(submitHandler)}
-            className="space-y-4"
+            className="space-y-8"
           >
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" />
-                  </FormControl>
-                  <FormDescription>
-                    Password must be greater or equal 6 characters.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" />
-                  </FormControl>
-                  <FormDescription>Enter your password again.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" disabled={isSubmitting}>
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="font-space-grotesk text-base">
+                      Username
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="font-space-grotesk text-base">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="font-space-grotesk text-base">
+                      Confirm Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button
+              className="block w-full"
+              type="submit"
+              disabled={isSubmitting}
+            >
               {isSubmitting && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
@@ -157,6 +176,15 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
             </Button>
           </form>
         </Form>
+        <div className="text-center mt-6 ">
+          Already have an account?{" "}
+          <Link
+            className="text-medium-red-violet hover:text-lavender-magenta"
+            href="/auth"
+          >
+            Login
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

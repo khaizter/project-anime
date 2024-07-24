@@ -195,9 +195,17 @@ const MainHeader = () => {
         </div>
         <div className="flex items-center space-x-6">
           {status === "unauthenticated" && (
-            <Link href={"/auth"}>
-              <Button>Sign In</Button>
-            </Link>
+            <>
+              <Link
+                className="text-white hover:text-lavender-magenta"
+                href={"/auth/signup"}
+              >
+                Sign Up
+              </Link>
+              <Link href={"/auth"}>
+                <Button>Sign In</Button>
+              </Link>
+            </>
           )}
           {status === "authenticated" && (
             <>
