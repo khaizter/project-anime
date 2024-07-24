@@ -7,6 +7,7 @@ import { getAnimeHoverDetails } from "@/lib/anilist";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AnimeType } from "@/lib/types";
+import { sleep } from "@/lib/utils";
 
 const addFavorite = async (
   animeId: string | number,
@@ -53,31 +54,44 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
 
     const fetchMoreDetails = async () => {
       console.log("fetch more details");
-      setIsFetchingDetails(true);
-      const fetchedAnime = await getAnimeHoverDetails(anime.id);
-      setAnime(fetchedAnime);
-      setIsFetchedAlready(true);
-      setIsFetchingDetails(false);
+      try {
+        setIsFetchingDetails(true);
+        const fetchedAnime = await getAnimeHoverDetails(anime.id);
+        setAnime(fetchedAnime);
+        setIsFetchedAlready(true);
+        setIsFetchingDetails(false);
+      } catch (err) {
+        console.log(err);
+        setIsFetchingDetails(false);
+        // wait 20 seconds then fetch again
+        await sleep(20000);
+        fetchMoreDetails();
+      }
     };
 
     const fetchFavorites = async () => {
-      setIsLoadingFavorite(true);
-      const response = await fetch("/api/user/favorite", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      try {
+        setIsLoadingFavorite(true);
+        const response = await fetch("/api/user/favorite", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.message || "Something went wrong!");
+        if (!response.ok) {
+          throw new Error(result.message || "Something went wrong!");
+        }
+
+        const favorites = result.data;
+        setIsFavorite(favorites.find((item: number) => item === anime.id));
+        setIsLoadingFavorite(false);
+      } catch (err) {
+        console.log(err);
+        setIsLoadingFavorite(false);
       }
-
-      const favorites = result.data;
-      setIsFavorite(favorites.find((item: number) => item === anime.id));
-      setIsLoadingFavorite(false);
     };
 
     const timeOutId = setTimeout(() => {

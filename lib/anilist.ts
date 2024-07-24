@@ -1,4 +1,5 @@
 import { FilterType } from "@/lib/types";
+import { sleep } from "@/lib/utils";
 
 const SEASON: {
   [key: string]: Array<number>;
@@ -36,7 +37,10 @@ export const getNextSeason = (): string => {
   }
 };
 
-export const queryAnilist = async (query: String, variables: any) => {
+export const queryAnilist = async (
+  query: String,
+  variables: any
+): Promise<any> => {
   try {
     const url = "https://graphql.anilist.co",
       options = {
@@ -51,11 +55,16 @@ export const queryAnilist = async (query: String, variables: any) => {
         }),
       };
     const response = await fetch(url, options);
-
     const json = await response.json();
+
     if (!response.ok) {
-      if (json.errors[0].message === "Too Many Requests.") {
+      if (
+        json.errors[0].message === "Too Many Requests." ||
+        response.status === 429
+      ) {
         console.log("FETCH COOLDOWN");
+        await sleep(10000);
+        return queryAnilist(query, variables);
       }
       throw new Error(json.errors[0].message);
     }
