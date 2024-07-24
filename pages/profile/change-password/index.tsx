@@ -8,8 +8,9 @@ import React from "react";
 const ChangePasswordPage = () => {
   return (
     <Wrapper>
-      <h1>ChangePasswordPage</h1>
-      <ChangePasswordForm />
+      <div className="w-[400px] mx-auto py-24">
+        <ChangePasswordForm />
+      </div>
     </Wrapper>
   );
 };

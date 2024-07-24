@@ -110,7 +110,7 @@ const SignInForm = () => {
               />
             </div>
             <Button
-              className="block w-full"
+              className="w-full flex items-center"
               type="submit"
               disabled={isSubmitting}
             >

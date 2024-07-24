@@ -165,7 +165,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
               />
             </div>
             <Button
-              className="block w-full"
+              className="w-full flex items-center"
               type="submit"
               disabled={isSubmitting}
             >

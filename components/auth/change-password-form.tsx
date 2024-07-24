@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
+import { Loader2 } from "lucide-react";
 
 const changePassword = async (
   oldPassword: string,
@@ -39,9 +40,18 @@ const changePassword = async (
 
 const formSchema = z
   .object({
-    oldPassword: z.string().min(6).max(50),
-    newPassword: z.string().min(6).max(50),
-    confirmPassword: z.string().min(6).max(50),
+    oldPassword: z
+      .string()
+      .min(6, "Password must contain at least 6 characters")
+      .max(50),
+    newPassword: z
+      .string()
+      .min(6, "Password must contain at least 6 characters")
+      .max(50),
+    confirmPassword: z
+      .string()
+      .min(6, "Password must contain at least 6 characters")
+      .max(50),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match!",
@@ -58,6 +68,8 @@ const ChangePasswordForm: React.FC = () => {
       confirmPassword: "",
     },
   });
+
+  const isSubmitting = form.formState.isSubmitting;
 
   const submitHandler = async (values: z.infer<typeof formSchema>) => {
     const { oldPassword, newPassword, confirmPassword } = values;
@@ -77,56 +89,71 @@ const ChangePasswordForm: React.FC = () => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Change Password</CardTitle>
+    <Card className="bg-kingfisher-daisy/60 border-0 text-white rounded">
+      <CardHeader className="text-center">
+        <CardTitle className="font-space-grotesk text-3xl">
+          Change Password
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(submitHandler)}
-            className="space-y-4"
+            className="space-y-8"
           >
-            <FormField
-              control={form.control}
-              name="oldPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Old Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="oldPassword"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="font-space-grotesk text-base">
+                      Old Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="newPassword"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="font-space-grotesk text-base">
+                      New Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="font-space-grotesk text-base">
+                      Confirm Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button className="w-full flex items-center" type="submit">
+              {isSubmitting && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-            />
-            <FormField
-              control={form.control}
-              name="newPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Save</Button>
+              Save
+            </Button>
           </form>
         </Form>
       </CardContent>
