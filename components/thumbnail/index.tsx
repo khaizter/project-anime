@@ -124,25 +124,26 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
 
   return (
     <div className="h-full group flex flex-col bg-jacaranda relative overflow-visible">
-      <Link
-        className="grow relative"
-        href={`/anime/${id}`}
+      <div
+        className="grow relative flex flex-col"
         onMouseEnter={() => setShowDetails(true)}
         onMouseLeave={() => setShowDetails(false)}
       >
-        <Image
-          src={coverImage.large || ""}
-          alt={`${title} cover image`}
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="w-full h-full opacity-100"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-jacaranda to-transparent to-30% group-hover:to-jacaranda/50" />
-        <Eye
-          className="absolute hidden group-hover:block left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 w-10 h-10"
-          color="#EA7AF4"
-        />
+        <Link className="grow relative" href={`/anime/${id}`}>
+          <Image
+            src={coverImage.large || ""}
+            alt={`${title} cover image`}
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="w-full h-full opacity-100"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-jacaranda to-transparent to-30% group-hover:to-jacaranda/50" />
+          <Eye
+            className="absolute hidden group-hover:block left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 w-10 h-10"
+            color="#EA7AF4"
+          />
+        </Link>
         {showDetails && (
           <HoverDetails
             anime={anime}
@@ -153,7 +154,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
             isLastinRow={(index + 1) % totalColumn == 0}
           />
         )}
-      </Link>
+      </div>
       <div className="h-20 p-3">
         <div className="line-clamp-2 font-space-grotesk min-h-12">
           {title.romaji}
