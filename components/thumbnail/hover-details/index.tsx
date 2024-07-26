@@ -45,7 +45,7 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
     <div
       className={`absolute top-1/2 ${
         isLastinRow ? "right-1/2" : "left-1/2"
-      } w-64 h-fit bg-jacaranda z-10 p-4 rounded-md shadow-lg shadow-lavender-magenta/25 space-y-4`}
+      } w-80 h-fit bg-jacaranda z-50 p-4 rounded-md shadow-lg shadow-lavender-magenta/25 space-y-4`}
     >
       {isFetchingDetails ? (
         <div>LOADING...</div>

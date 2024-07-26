@@ -124,7 +124,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
 
   return (
     <div
-      className="group flex flex-col bg-jacaranda relative overflow-visible"
+      className="h-full group flex flex-col bg-jacaranda relative overflow-visible"
       onMouseEnter={() => setShowDetails(true)}
       onMouseLeave={() => setShowDetails(false)}
     >
