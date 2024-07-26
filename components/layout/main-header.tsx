@@ -50,7 +50,7 @@ const MainHeader = () => {
   };
 
   return (
-    <header className=" bg-kingfisher-daisy text-slate-100">
+    <header className=" bg-kingfisher-daisy text-slate-100 sticky top-0 z-50">
       <Wrapper className="py-4 flex items-center justify-between">
         <div className="flex items-center space-x-6">
           <Sheet>

@@ -6,14 +6,14 @@ import MainFooter from "@/components/layout/main-footer";
 
 const Layout = (props: any) => {
   return (
-    <div
-      className={`${spaceGrotesk} ${rajdhani} ${majorMonoDisplay} w-screen overflow-hidden`}
-    >
+    <div className={`relative ${spaceGrotesk} ${rajdhani} ${majorMonoDisplay}`}>
       <MainHeader />
-      <main className="font-rajdhani text-slate-100 bg-gradient-to-b from-jacaranda to-jacaranda">
-        {props.children}
-      </main>
-      <MainFooter />
+      <div className="w-screen overflow-hidden">
+        <main className="font-rajdhani text-slate-100 bg-gradient-to-b from-jacaranda to-jacaranda">
+          {props.children}
+        </main>
+        <MainFooter />
+      </div>
     </div>
   );
 };
