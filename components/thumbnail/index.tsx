@@ -123,12 +123,13 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
   };
 
   return (
-    <div
-      className="h-full group flex flex-col bg-jacaranda relative overflow-visible"
-      onMouseEnter={() => setShowDetails(true)}
-      onMouseLeave={() => setShowDetails(false)}
-    >
-      <Link className="grow relative" href={`/anime/${id}`}>
+    <div className="h-full group flex flex-col bg-jacaranda relative overflow-visible">
+      <Link
+        className="grow relative"
+        href={`/anime/${id}`}
+        onMouseEnter={() => setShowDetails(true)}
+        onMouseLeave={() => setShowDetails(false)}
+      >
         <Image
           src={coverImage.large || ""}
           alt={`${title} cover image`}
@@ -142,22 +143,22 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
           className="absolute hidden group-hover:block left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 w-10 h-10"
           color="#EA7AF4"
         />
+        {showDetails && (
+          <HoverDetails
+            anime={anime}
+            isFetchingDetails={isFetchingDetails}
+            isFavorite={isFavorite}
+            isLoadingFavorite={isLoadingFavorite}
+            favoriteHandler={favoriteHandler}
+            isLastinRow={(index + 1) % totalColumn == 0}
+          />
+        )}
       </Link>
       <div className="h-20 p-3">
         <div className="line-clamp-2 font-space-grotesk min-h-12">
           {title.romaji}
         </div>
       </div>
-      {showDetails && (
-        <HoverDetails
-          anime={anime}
-          isFetchingDetails={isFetchingDetails}
-          isFavorite={isFavorite}
-          isLoadingFavorite={isLoadingFavorite}
-          favoriteHandler={favoriteHandler}
-          isLastinRow={(index + 1) % totalColumn == 0}
-        />
-      )}
     </div>
   );
 };

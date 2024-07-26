@@ -57,10 +57,10 @@ const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
         })}
       </CarouselContent>
       {current > 1 && (
-        <CarouselPrevious className="left-0 bg-gradient-to-r from-jacaranda to-transparent w-[5%] h-full rounded-none border-0" />
+        <CarouselPrevious className="left-0 bg-gradient-to-r from-jacaranda to-transparent hover:to-jacaranda/50 w-[5%] h-full rounded-none border-0" />
       )}
       {current < count && (
-        <CarouselNext className="right-0 bg-gradient-to-l from-jacaranda to-transparent w-[5%] h-full rounded-none border-0" />
+        <CarouselNext className="right-0 bg-gradient-to-l from-jacaranda to-transparent hover:to-jacaranda/50 w-[5%] h-full rounded-none border-0" />
       )}
     </Carousel>
   );
