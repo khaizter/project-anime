@@ -10,7 +10,7 @@ const Layout = (props: any) => {
       className={`${spaceGrotesk} ${rajdhani} ${majorMonoDisplay} w-screen overflow-hidden`}
     >
       <MainHeader />
-      <main className="font-rajdhani text-slate-100 bg-gradient-to-b from-jacaranda to-black">
+      <main className="font-rajdhani text-slate-100 bg-gradient-to-b from-jacaranda to-jacaranda">
         {props.children}
       </main>
       <MainFooter />

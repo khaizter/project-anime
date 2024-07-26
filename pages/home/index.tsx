@@ -22,24 +22,8 @@ const HomePage = (props: any) => {
   return (
     <div>
       <HeroCarousel animes={trendingAnimes} />
-
-      <div className="flex items-center justify-between px-[calc(5%+8px)] mb-20">
-        <h2 className="font-space-grotesk text-2xl">Popular This Season</h2>
-        <Link
-          className="flex items-center"
-          href={{
-            pathname: "/anime",
-            query: {
-              sort: "popular",
-            },
-          }}
-        >
-          View More
-          <ChevronRight className="w-4 h-4 ml-1" />
-        </Link>
-      </div>
       <NetflixCarousel animes={popularAnimesThisSeason} />
-      <div className="flex items-center justify-between px-[calc(5%+8px)] my-20">
+      <div className="flex items-center justify-between px-[calc(5%+8px)] mb-8 mt-20">
         <h2 className="font-space-grotesk text-2xl">Trending</h2>
         <Link
           className="flex items-center"
@@ -55,7 +39,7 @@ const HomePage = (props: any) => {
         </Link>
       </div>
       <NetflixCarousel animes={trendingAnimes} />
-      <div className="flex items-center justify-between px-[calc(5%+8px)] my-20">
+      <div className="flex items-center justify-between px-[calc(5%+8px)] mb-8 mt-20">
         <h2 className="font-space-grotesk text-2xl">All Time Popular</h2>
         <Link
           className="flex items-center"
@@ -71,7 +55,7 @@ const HomePage = (props: any) => {
         </Link>
       </div>
       <NetflixCarousel animes={popularAnimes} />
-      <div className="flex items-center justify-between px-[calc(5%+8px)] my-20">
+      <div className="flex items-center justify-between px-[calc(5%+8px)] mb-8 mt-20">
         <h2 className="font-space-grotesk text-2xl">Upcoming Next Season</h2>
         <Link
           className="flex items-center"
