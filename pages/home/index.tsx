@@ -1,4 +1,3 @@
-import Wrapper from "@/components/wrapper";
 import {
   getPopularAnimes,
   getPopularAnimesThisSeason,
@@ -11,6 +10,7 @@ import HeroCarousel from "@/components/hero-carousel";
 import NetflixCarousel from "@/components/netflix-carousel";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+
 const HomePage = (props: any) => {
   const {
     popularAnimes,

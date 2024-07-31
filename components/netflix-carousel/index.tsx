@@ -37,7 +37,7 @@ const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
     <Carousel
       opts={{
         align: "start",
-        slidesToScroll: 5,
+        slidesToScroll: 1,
       }}
       className="w-full p-0"
       setApi={setApi}
@@ -45,7 +45,10 @@ const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
       <CarouselContent className="ml-[5%] pr-[5%]">
         {animes.map((anime, index: number) => {
           return (
-            <CarouselItem key={index} className="basis-[20%] p-2 last:mr-[5%]">
+            <CarouselItem
+              key={index}
+              className="basis-[50%] md:basis-[25%] lg:basis-[20%] p-2 last:mr-[5%]"
+            >
               <Thumbnail
                 key={anime.id}
                 anime={anime}

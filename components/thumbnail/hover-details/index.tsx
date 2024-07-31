@@ -43,9 +43,10 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
 
   return (
     <div
-      className={`absolute top-1/2 ${
-        isLastinRow ? "right-1/2" : "left-1/2"
-      } w-80 h-fit bg-jacaranda z-50 p-4 rounded-md shadow-lg shadow-lavender-magenta/25 space-y-4`}
+      // className={`absolute top-1/2 ${
+      //   isLastinRow ? "right-1/2" : "left-1/2"
+      // } w-80 h-fit bg-jacaranda z-50 p-4 rounded-md shadow-lg shadow-lavender-magenta/25 space-y-4`}
+      className={`relative w-80 h-fit bg-jacaranda z-50 p-4 rounded-md shadow-lg shadow-lavender-magenta/25 space-y-4 text-white`}
     >
       {isFetchingDetails ? (
         <div>LOADING...</div>
@@ -53,20 +54,24 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
         <>
           <div className="font-space-grotesk">{title.romaji}</div>
           <div
-            className="line-clamp-3 text-white/60"
+            className="line-clamp-2 text-white/60"
             dangerouslySetInnerHTML={{ __html: description }}
           />
           <div>
             {title.native && (
               <div>
                 <span className="mr-2">Japanese:</span>
-                <span className="text-white/60">{title.native}</span>
+                <span className="text-white/60 line-clamp-2">
+                  {title.native}
+                </span>
               </div>
             )}
             {synonyms?.[0] && (
               <div>
                 <span className="mr-2">Synonyms:</span>
-                <span className="text-white/60">{synonyms?.[0]}</span>
+                <span className="text-white/60 line-clamp-2">
+                  {synonyms?.[0]}
+                </span>
               </div>
             )}
             {aired && (

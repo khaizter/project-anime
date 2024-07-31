@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { CalendarDays, Eye } from "lucide-react";
 import HoverDetails from "@/components/thumbnail/hover-details";
 import { getAnimeHoverDetails } from "@/lib/anilist";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AnimeType } from "@/lib/types";
 import { sleep } from "@/lib/utils";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const addFavorite = async (
   animeId: string | number,
@@ -124,36 +129,44 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
 
   return (
     <div className="h-full group flex flex-col bg-jacaranda relative overflow-visible">
-      <div
-        className="grow relative flex flex-col"
-        onMouseEnter={() => setShowDetails(true)}
-        onMouseLeave={() => setShowDetails(false)}
-      >
-        <Link className="grow relative" href={`/anime/${id}`}>
-          <Image
-            src={coverImage.large || ""}
-            alt={`${title} cover image`}
-            width={0}
-            height={0}
-            sizes="100vw"
-            className="w-full h-full opacity-100"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-jacaranda to-transparent to-30% group-hover:to-jacaranda/50" />
-          <Eye
-            className="absolute hidden group-hover:block left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 w-10 h-10"
-            color="#EA7AF4"
-          />
-        </Link>
-        {showDetails && (
-          <HoverDetails
-            anime={anime}
-            isFetchingDetails={isFetchingDetails}
-            isFavorite={isFavorite}
-            isLoadingFavorite={isLoadingFavorite}
-            favoriteHandler={favoriteHandler}
-            isLastinRow={(index + 1) % totalColumn == 0}
-          />
-        )}
+      <div className="grow relative flex flex-col">
+        <HoverCard onOpenChange={(value) => setShowDetails(value)}>
+          <HoverCardTrigger asChild>
+            <Link className="grow relative" href={`/anime/${id}`}>
+              <Image
+                src={coverImage.large || ""}
+                alt={`${title} cover image`}
+                width={0}
+                height={0}
+                sizes="100vw"
+                className="w-full h-full opacity-100"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-jacaranda to-transparent to-30% group-hover:to-jacaranda/50" />
+              <Eye
+                className="absolute hidden group-hover:block left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 w-10 h-10"
+                color="#EA7AF4"
+              />
+            </Link>
+          </HoverCardTrigger>
+          <HoverCardContent
+            className="w-80 bg-transparent border-transparent"
+            side="right"
+            sideOffset={-100}
+            align="start"
+            alignOffset={180}
+          >
+            {showDetails && (
+              <HoverDetails
+                anime={anime}
+                isFetchingDetails={isFetchingDetails}
+                isFavorite={isFavorite}
+                isLoadingFavorite={isLoadingFavorite}
+                favoriteHandler={favoriteHandler}
+                isLastinRow={(index + 1) % totalColumn == 0}
+              />
+            )}
+          </HoverCardContent>
+        </HoverCard>
       </div>
       <div className="h-20 p-3">
         <div className="line-clamp-2 font-space-grotesk min-h-12">
