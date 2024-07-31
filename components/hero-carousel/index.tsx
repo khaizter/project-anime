@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import Wrapper from "@/components/wrapper";
-import { ChevronRight, Circle, Play } from "lucide-react";
+import { ChevronRight, Circle, Diamond, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -53,26 +53,36 @@ const HeroCarousel: React.FC<HeroCarouselProps> = (props) => {
                   src={anime?.bannerImage || ""}
                   fill
                   priority
-                  className="object-cover"
+                  className="object-cover hidden md:block"
+                  alt={`banner image`}
+                />
+                <Image
+                  src={anime?.coverImage.large || ""}
+                  fill
+                  priority
+                  className="object-cover block md:hidden"
                   alt={`banner image`}
                 />
                 <div className="absolute z-10 inset-0 bg-gradient-to-r from-jacaranda/85 from-0% via-transparent via-70% to-jacaranda/85 to-100%"></div>
                 <div className="absolute z-10 inset-0 bg-gradient-to-b from-transparent to-jacaranda"></div>
 
-                <div className="absolute z-20 inset-x-0 bottom-40 px-[calc(5%+8px)] py-4 space-y-4">
+                <div className="absolute z-20 inset-x-0 bottom-0 md:bottom-40 px-[calc(5%+8px)] py-4 space-y-4 flex flex-col items-center md:items-start text-center md:text-start">
                   <div className="text-xl font-space-grotesk text-lavender-magenta">{`#${
                     index + 1
                   } Trending`}</div>
                   <div className="text-4xl font-space-grotesk line-clamp-2 max-w-96">
                     {anime?.title?.romaji}
                   </div>
-                  <div
-                    className="line-clamp-2 font-rajdhani text-white/90"
-                    dangerouslySetInnerHTML={{
-                      __html: anime?.description || "",
-                    }}
-                  />
-                  <Button>
+                  <div className="hidden md:block">
+                    <div
+                      className="line-clamp-3 font-rajdhani text-white/90 max-w-lg"
+                      dangerouslySetInnerHTML={{
+                        __html: anime?.description || "",
+                      }}
+                    />
+                  </div>
+
+                  <Button className="w-max">
                     <Play className="w-4 h-4 mr-2" fill="#FFF" />
                     More details
                   </Button>
@@ -82,23 +92,19 @@ const HeroCarousel: React.FC<HeroCarouselProps> = (props) => {
           );
         })}
       </CarouselContent>
-      <div className="absolute z-20 top-60 right-[calc(5%+8px)] space-y-2">
-        {animes.map((item: any, slide_index: number) => {
+      <div className="absolute z-20 bottom-16 md:bottom-36 left-1/2 md:left-[calc(5%+8px)] -translate-x-1/2 md:translate-x-0 space-x-2 flex items-center">
+        {animes.map((_, slide_index: number) => {
           return (
-            <Circle
+            <Diamond
               key={slide_index}
-              className="w-1.5 h-1.5"
-              color="rgba(255, 255, 255, 0.8)"
-              fill={
-                current >= slide_index
-                  ? "rgba(255, 255, 255, 0.8)"
-                  : "transparent"
-              }
+              className="w-3 h-3 m-0"
+              color="#B43E8F"
+              fill={current >= slide_index ? "#B43E8F" : "transparent"}
             />
           );
         })}
       </div>
-      <div className="flex items-center justify-between px-[calc(5%+8px)] mb-8 w-full absolute left-0 bottom-0">
+      <div className="flex items-center justify-between px-[calc(5%+8px)] mb-8 w-full static md:absolute left-0 bottom-0 mt-16">
         <h2 className="font-space-grotesk text-2xl">Popular This Season</h2>
         <Link
           className="flex items-center"
