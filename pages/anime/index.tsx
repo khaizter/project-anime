@@ -46,16 +46,9 @@ const AnimePage = (props: any) => {
       <div className="text-2xl font-space-grotesk text-medium-red-violet">
         {title}
       </div>
-      <ul className="grid grid-cols-6 gap-4">
+      <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {animes.map((anime: any, index: number) => {
-          return (
-            <Thumbnail
-              key={anime.id}
-              anime={anime}
-              index={index}
-              totalColumn={6}
-            />
-          );
+          return <Thumbnail key={index} anime={anime} />;
         })}
       </ul>
       <CustomPagination

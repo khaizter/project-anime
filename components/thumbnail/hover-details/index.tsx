@@ -10,7 +10,6 @@ interface HoverDetailsProps {
   isFavorite: boolean;
   isLoadingFavorite: boolean;
   favoriteHandler: React.MouseEventHandler;
-  isLastinRow: boolean;
 }
 
 const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
@@ -25,13 +24,8 @@ const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
     genres,
   }: AnimeType = props.anime;
 
-  const {
-    isFetchingDetails,
-    isFavorite,
-    isLoadingFavorite,
-    favoriteHandler,
-    isLastinRow,
-  } = props;
+  const { isFetchingDetails, isFavorite, isLoadingFavorite, favoriteHandler } =
+    props;
 
   const aired = startDate
     ? new Date(
