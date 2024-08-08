@@ -33,7 +33,7 @@ const AnimeStaff: React.FC<AnimeCharactersProps> = (props) => {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {staffs?.edges.map((staff) => {
         return (
           <div className="flex justify-between" key={staff.id}>

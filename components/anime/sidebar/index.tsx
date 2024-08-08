@@ -36,6 +36,7 @@ const AnimeSidebar: React.FC<AnimeSideBarProps> = (props) => {
   const {
     id: animeId,
     title,
+    description,
     coverImage,
     episodes,
     status: animeStatus,
@@ -97,30 +98,44 @@ const AnimeSidebar: React.FC<AnimeSideBarProps> = (props) => {
   };
 
   return (
-    <div className="w-1/4 max-w-52 space-y-6 pb-4 relative -translate-y-12">
-      <div className="space-y-4">
-        <Image
-          src={coverImage.large || ""}
-          alt={`${title.romaji} cover image`}
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="w-full h-auto"
-        />
-        <Button
-          className="w-full"
-          onClick={favoriteHandler}
-          disabled={isLoading || status === "loading"}
-        >
-          <Heart
-            className="mr-2 h-4 w-4"
-            color={isFavorite ? "#ff0000" : "#ff0000"}
-            fill={isFavorite ? "#ff0000" : "transparent"}
+    <div className="space-y-6 pb-4 relative md:-translate-y-12">
+      <div className="flex pt-4 md:pt-0 ">
+        <div className="block w-52md:block md:w-full md:min-w-max space-y-4">
+          <Image
+            src={coverImage.large || ""}
+            alt={`${title.romaji} cover image`}
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="w-full h-auto"
           />
-          Add to Favorites
-        </Button>
+          <Button
+            className="w-full"
+            onClick={favoriteHandler}
+            disabled={isLoading || status === "loading"}
+          >
+            <Heart
+              className="mr-2 h-4 w-4"
+              color={isFavorite ? "#ff0000" : "#ff0000"}
+              fill={isFavorite ? "#ff0000" : "transparent"}
+            />
+            Add to Favorites
+          </Button>
+        </div>
+        <div className="block md:hidden grow ml-4">
+          <h1 className="font-space-grotesk text-3xl text-medium-red-violet">
+            {title.romaji}
+          </h1>
+          <div className="max-h-48 overflow-y-scroll mt-4">
+            <div
+              className="text-white/60"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          </div>
+        </div>
       </div>
-      <div className="space-y-2">
+
+      <div className="hidden md:block space-y-2">
         {episodes && (
           <div>
             <span className="mr-2">Episodes:</span>
@@ -152,36 +167,42 @@ const AnimeSidebar: React.FC<AnimeSideBarProps> = (props) => {
           </div>
         )}
         {mainStudios && mainStudios.length > 0 && (
-          <div>
-            <span>Studios:</span>
+          <div className="flex flex-wrap md:block">
+            <span className="mr-2">Studios:</span>
             {mainStudios.map((studio) => {
               return (
-                <div className="text-white/60" key={studio.node.id}>
+                <div className="text-white/60 group" key={studio.node.id}>
                   {studio.node.name}
+                  <span className="inline md:hidden group-[:last-child]:hidden mr-2">
+                    ,
+                  </span>
                 </div>
               );
             })}
           </div>
         )}
         {producers && producers.length > 0 && (
-          <div>
-            <span>Producers:</span>
+          <div className="flex flex-wrap md:block">
+            <span className="mr-2">Producers:</span>
             {producers.map((studio) => {
               return (
-                <div className="text-white/60" key={studio.node.id}>
+                <div className="text-white/60 group" key={studio.node.id}>
                   {studio.node.name}
+                  <span className="inline md:hidden group-[:last-child]:hidden mr-2">
+                    ,
+                  </span>
                 </div>
               );
             })}
           </div>
         )}
         {genres && genres.length > 0 && (
-          <div>
-            <span>Genre:</span>
+          <div className="flex flex-wrap md:block">
+            <span className="mr-2">Genre:</span>
             {genres.map((genre, index) => {
               return (
                 <Link
-                  className="block text-white/60 hover:text-medium-red-violet"
+                  className="block text-white/60 hover:text-medium-red-violet group"
                   key={index}
                   href={{
                     pathname: "/filter",
@@ -191,6 +212,9 @@ const AnimeSidebar: React.FC<AnimeSideBarProps> = (props) => {
                   }}
                 >
                   {genre}
+                  <span className="inline md:hidden group-[:last-child]:hidden mr-2">
+                    ,
+                  </span>
                 </Link>
               );
             })}
@@ -215,12 +239,15 @@ const AnimeSidebar: React.FC<AnimeSideBarProps> = (props) => {
           </div>
         )}
         {synonyms && synonyms.length > 0 && (
-          <div>
-            <span>Synonyms:</span>
+          <div className="flex flex-wrap md:block">
+            <span className="mr-2">Synonyms:</span>
             {synonyms?.map((synonym, index) => {
               return (
-                <div className="text-white/60" key={index}>
+                <div className="text-white/60 group" key={index}>
                   {synonym}
+                  <span className="inline md:hidden group-[:last-child]:hidden mr-2">
+                    ,
+                  </span>
                 </div>
               );
             })}

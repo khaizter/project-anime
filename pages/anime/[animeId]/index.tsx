@@ -31,7 +31,7 @@ const AnimeDetailPage = (props: any) => {
 
   return (
     <>
-      <div className="relative w-full h-96">
+      <div className="relative w-full h-48 md:h-96">
         <Image
           src={bannerImage}
           fill
@@ -42,10 +42,10 @@ const AnimeDetailPage = (props: any) => {
         <div className="absolute w-full h-full bg-gradient-to-t from-black to-transparent"></div>
       </div>
       <Wrapper>
-        <div className="flex">
+        <div className="grid grid-cols-1 md:grid-cols-4">
           <AnimeSidebar anime={anime} />
-          <div className="p-4 w-3/4 grow relative">
-            <div className="w-max mb-6 absolute left-4 -top-12">
+          <div className="pb-4 md:p-4 col-span-3 grow relative">
+            <div className="mb-6 block md:absolute left-4 -top-12 w-full overflow-x-scroll md:overflow-auto">
               <ToggleGroup
                 className="justify-start"
                 type="single"

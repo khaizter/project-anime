@@ -35,7 +35,7 @@ const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
       {streamingEpisodes?.map((episode: any, index: number) => {
         return (
           <div

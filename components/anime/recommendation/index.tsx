@@ -34,14 +34,12 @@ const AnimeRecommendation: React.FC<AnimeCharactersProps> = (props) => {
   }
 
   return (
-    <div className="grid grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
       {recommendations?.nodes.map((recommendation, index) => {
         return (
           <Thumbnail
             key={recommendation.mediaRecommendation.id}
             anime={recommendation.mediaRecommendation}
-            totalColumn={5}
-            index={index}
           />
         );
       })}
