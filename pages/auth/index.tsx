@@ -10,11 +10,9 @@ import { authOptions } from "../api/auth/[...nextauth]";
 const AuthPage = () => {
   const [currentTab, setCurrentTab] = useState<"signin" | "signup">("signin");
   return (
-    <Wrapper>
-      <div className="w-[400px] mx-auto py-24">
-        <SignInForm />
-      </div>
-    </Wrapper>
+    <div className="w-[350px] sm:w-[400px] mx-auto py-24">
+      <SignInForm />
+    </div>
   );
 };
 
