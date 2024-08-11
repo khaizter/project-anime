@@ -125,8 +125,8 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
   };
 
   return (
-    <div className="h-full group flex flex-col bg-jacaranda relative overflow-visible">
-      <div className="grow relative flex flex-col">
+    <div className="h-full group flex flex-col bg-jacaranda">
+      <div className="grow flex flex-col">
         <HoverCard onOpenChange={(value) => setShowDetails(value)}>
           <HoverCardTrigger asChild>
             <Link className="grow relative" href={`/anime/${id}`}>
@@ -136,7 +136,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
                 width={0}
                 height={0}
                 sizes="100vw"
-                className="w-full h-full opacity-100"
+                className="w-full h-full"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-jacaranda to-transparent to-30% group-hover:to-jacaranda/50" />
               <Eye
@@ -146,11 +146,11 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
             </Link>
           </HoverCardTrigger>
           <HoverCardContent
-            className="w-80 bg-transparent border-transparent"
+            className="w-80 bg-transparent border-transparent relative z-50"
+            align="start"
             side="right"
             sideOffset={-100}
-            align="start"
-            alignOffset={180}
+            alignOffset={50}
           >
             {showDetails && (
               <HoverDetails

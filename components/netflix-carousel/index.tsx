@@ -47,7 +47,7 @@ const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
           return (
             <CarouselItem
               key={index}
-              className="basis-[50%] md:basis-[25%] lg:basis-[20%] p-2 last:mr-[5%]"
+              className="basis-[50%] sm:basis-1/3 md:basis-[25%] lg:basis-[20%] p-2 last:mr-[5%]"
             >
               <Thumbnail key={anime.id} anime={anime} />
             </CarouselItem>

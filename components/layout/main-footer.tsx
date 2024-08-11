@@ -3,10 +3,10 @@ import React from "react";
 
 const MainFooter = () => {
   return (
-    <footer className="bg-black p-8 text-white grid grid-cols-2 gap-4">
+    <footer className="bg-black p-8 text-white grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-4">
         <div className="font-space-grotesk text-xl">Links</div>
-        <ul className="text-white/60 grid grid-cols-2 gap-1">
+        <ul className="text-white/60 grid grid-cols-1 sm:grid-cols-2 gap-1">
           <li>
             <Link
               className="block font-rajdhani hover:text-medium-red-violet text-lg"
