@@ -59,7 +59,7 @@ const MainHeader = () => {
   return (
     <header className=" bg-kingfisher-daisy text-slate-100 sticky top-0 z-50">
       <div className="px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-2 sm:space-x-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -206,7 +206,10 @@ const MainHeader = () => {
             </SheetContent>
           </Sheet>
 
-          <Link className="font-major-mono-display text-3xl" href={"/home"}>
+          <Link
+            className="font-major-mono-display text-2xl sm:text-3xl"
+            href={"/home"}
+          >
             Project<span className="text-lavender-rose">Anime</span>
           </Link>
           {router.pathname !== "/" && (
