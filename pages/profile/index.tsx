@@ -7,7 +7,6 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { getAnimeByIds } from "@/lib/anilist";
 import CustomPagination from "@/components/custom-pagination";
-import FavoriteThumbnail from "@/components/favorite-thumbnail";
 import Thumbnail from "@/components/thumbnail";
 import { Pen } from "lucide-react";
 
@@ -111,16 +110,9 @@ const ProfilePage = () => {
           My Favorites
         </h2>
         {!loadingAnimes ? (
-          <ul className="grid grid-cols-6 gap-4">
+          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {animes.map((anime: any, index: number) => {
-              return (
-                <Thumbnail
-                  key={anime.id}
-                  anime={anime}
-                  index={index}
-                  totalColumn={6}
-                />
-              );
+              return <Thumbnail key={anime.id} anime={anime} />;
             })}
           </ul>
         ) : (
