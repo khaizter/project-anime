@@ -26,6 +26,23 @@ const MainHeader = () => {
   const [genres, setGenres] = useState<Array<string>>([]);
   const { data: session, status } = useSession();
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [transparentHeader, setTransparentHeader] = useState(true);
+
+  const scrollHandler = (e: Event) => {
+    console.log(window.scrollY);
+    if (window.scrollY > 80) {
+      setTransparentHeader(false);
+    } else {
+      setTransparentHeader(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHandler);
+    return () => {
+      window.removeEventListener("scroll", scrollHandler);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -57,7 +74,11 @@ const MainHeader = () => {
   };
 
   return (
-    <header className=" bg-kingfisher-daisy text-slate-100 sticky top-0 z-50">
+    <header
+      className={`${
+        transparentHeader ? "bg-kingfisher-daisy/80" : "bg-kingfisher-daisy"
+      } text-slate-100 fixed top-0 w-full z-50`}
+    >
       <div className="px-8 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-6">
           <Sheet>

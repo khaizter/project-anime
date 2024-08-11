@@ -57,7 +57,7 @@ const HeroCarousel: React.FC<HeroCarouselProps> = (props) => {
                   alt={`banner image`}
                 />
                 <Image
-                  src={anime?.coverImage.large || ""}
+                  src={anime?.coverImage.extraLarge || ""}
                   fill
                   priority
                   className="object-cover block md:hidden"

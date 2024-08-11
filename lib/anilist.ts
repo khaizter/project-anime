@@ -308,6 +308,7 @@ export const getTrendingAnimes = async (
         }
         coverImage {
           large
+          extraLarge
         }
         description
         bannerImage
