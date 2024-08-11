@@ -94,7 +94,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <Wrapper className="py-4 space-y-4">
+    <Wrapper className="py-24 space-y-4">
       <div>
         <span className="mr-2">Username:</span>
         <span className="text-white/60">{session?.user!.name}</span>

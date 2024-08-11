@@ -29,7 +29,6 @@ const MainHeader = () => {
   const [transparentHeader, setTransparentHeader] = useState(true);
 
   const scrollHandler = (e: Event) => {
-    console.log(window.scrollY);
     if (window.scrollY > 80) {
       setTransparentHeader(false);
     } else {
