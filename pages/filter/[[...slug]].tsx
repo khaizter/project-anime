@@ -71,7 +71,7 @@ const FilterPage = (props: any) => {
   }, [keyword]);
 
   return (
-    <Wrapper className="py-20 grid grid-cols-1 lg:grid-cols-4">
+    <Wrapper className="py-8 md:py-20 grid grid-cols-1 lg:grid-cols-4">
       <div className="py-4 space-y-4">
         <div className="text-2xl font-space-grotesk text-medium-red-violet">
           Search

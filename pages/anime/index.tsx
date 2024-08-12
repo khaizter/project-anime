@@ -77,7 +77,7 @@ const AnimePage = (props: any) => {
   };
 
   return (
-    <Wrapper className="py-24 space-y-4">
+    <Wrapper className="py-10 md:py-24 space-y-4">
       <div className="text-2xl font-space-grotesk text-medium-red-violet">
         {title}
       </div>

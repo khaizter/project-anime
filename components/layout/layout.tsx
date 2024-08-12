@@ -3,6 +3,7 @@ import MainHeader from "@/components/layout/main-header";
 
 import { spaceGrotesk, rajdhani, majorMonoDisplay } from "@/lib/fonts";
 import MainFooter from "@/components/layout/main-footer";
+import MobileMenu from "@/components/layout/mobile-menu";
 
 const Layout = (props: any) => {
   return (
@@ -14,6 +15,7 @@ const Layout = (props: any) => {
         </main>
         <MainFooter />
       </div>
+      <MobileMenu />
     </div>
   );
 };

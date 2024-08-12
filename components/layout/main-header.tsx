@@ -73,187 +73,249 @@ const MainHeader = () => {
   };
 
   return (
-    <header
-      className={`${
-        transparentHeader ? "bg-kingfisher-daisy/80" : "bg-kingfisher-daisy"
-      } text-slate-100 fixed top-0 w-full z-50`}
-    >
-      <div className="px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-2 sm:space-x-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                className="bg-transparent hover:bg-transparent"
-                size="icon"
+    <>
+      <header
+        className={`${
+          transparentHeader ? "bg-kingfisher-daisy/80" : "bg-kingfisher-daisy"
+        } text-slate-100 fixed top-0 w-full z-50 hidden md:block`}
+      >
+        <div className="px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2 sm:space-x-6">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  className="bg-transparent hover:bg-transparent"
+                  size="icon"
+                >
+                  <Menu className="h-8 w-8" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                className="flex flex-col bg-kingfisher-daisy text-white border-none pt-8 px-0 gap-0 overflow-y-scroll"
+                side="left"
               >
-                <Menu className="h-8 w-8" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              className="flex flex-col bg-kingfisher-daisy text-white border-none pt-8 px-0 gap-0 overflow-y-scroll"
-              side="left"
+                <div className="font-major-mono-display text-3xl pl-3">
+                  Project<span className="text-lavender-rose">Anime</span>
+                </div>
+
+                <Accordion type="single" collapsible className="w-full mt-8">
+                  <AccordionItem
+                    value="item-1"
+                    className="border-b-2 border-kingfisher-daisy-800/25"
+                  >
+                    <AccordionTrigger className="p-3 font-space-grotesk text-2xl text-lavender-magenta hover:no-underline">
+                      Categories
+                    </AccordionTrigger>
+                    <AccordionContent className="p-3 pt-0">
+                      <SheetClose asChild>
+                        <Link
+                          className="block font-rajdhani hover:text-medium-red-violet text-lg"
+                          href={{
+                            pathname: "/anime",
+                            query: {
+                              sort: "popular",
+                            },
+                          }}
+                        >
+                          Popular this season
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          className="block font-rajdhani hover:text-medium-red-violet text-lg"
+                          href={{
+                            pathname: "/anime",
+                            query: {
+                              sort: "trending",
+                            },
+                          }}
+                        >
+                          Trending
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          className="block font-rajdhani hover:text-medium-red-violet text-lg"
+                          href={{
+                            pathname: "/anime",
+                            query: {
+                              sort: "alltimepopular",
+                            },
+                          }}
+                        >
+                          All time popular
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          className="block font-rajdhani hover:text-medium-red-violet text-lg"
+                          href={{
+                            pathname: "/anime",
+                            query: {
+                              sort: "upcoming",
+                            },
+                          }}
+                        >
+                          Upcoming next season
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          className="block font-rajdhani hover:text-medium-red-violet text-lg"
+                          href={{
+                            pathname: "/anime",
+                          }}
+                        >
+                          A to Z
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link
+                          className="block font-rajdhani hover:text-medium-red-violet text-lg"
+                          href={{
+                            pathname: "/filter",
+                          }}
+                        >
+                          Filter
+                        </Link>
+                      </SheetClose>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem
+                    value="item-2"
+                    className="border-b-2 border-kingfisher-daisy-800/25"
+                  >
+                    <AccordionTrigger className="p-3 font-space-grotesk text-2xl text-lavender-magenta hover:no-underline">
+                      Genres
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="grid grid-cols-2 text-lg p-3 pt-0">
+                        {genres.map((item: string, index: number) => {
+                          return (
+                            <li key={index}>
+                              <SheetClose asChild>
+                                <Link
+                                  className="font-rajdhani hover:text-medium-red-violet"
+                                  href={{
+                                    pathname: "/filter",
+                                    query: {
+                                      genres: [item],
+                                    },
+                                  }}
+                                >
+                                  {item}
+                                </Link>
+                              </SheetClose>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+                <div className="flex items-center justify-end space-x-6 p-3">
+                  {status === "unauthenticated" && (
+                    <>
+                      <Link
+                        className="text-white hover:text-lavender-magenta"
+                        href={"/auth/signup"}
+                      >
+                        Sign Up
+                      </Link>
+                      <Link href={"/auth"}>
+                        <Button>Sign In</Button>
+                      </Link>
+                    </>
+                  )}
+                  {status === "authenticated" && (
+                    <>
+                      <Link
+                        className="text-white hover:text-lavender-magenta"
+                        href={"/profile"}
+                      >
+                        {session?.user!.name}
+                      </Link>
+
+                      <Button type="button" onClick={logoutHandler}>
+                        Log out
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+
+            <Link
+              className="font-major-mono-display text-2xl sm:text-3xl"
+              href={"/home"}
             >
-              <div className="font-major-mono-display text-3xl pl-3">
-                Project<span className="text-lavender-rose">Anime</span>
-              </div>
-
-              <Accordion type="single" collapsible className="w-full mt-8">
-                <AccordionItem
-                  value="item-1"
-                  className="border-b-2 border-kingfisher-daisy-800/25"
+              Project<span className="text-lavender-rose">Anime</span>
+            </Link>
+            {router.pathname !== "/" && (
+              <div className="hidden lg:flex items-stretch bg-white p-1">
+                <input
+                  className="text-kingfisher-daisy-800 focus:outline-none pl-3"
+                  type="text"
+                  ref={inputRef}
+                />
+                <button
+                  className="bg-transparent py-2 px-4 font-space-grotesk"
+                  onClick={searchHandler}
                 >
-                  <AccordionTrigger className="p-3 font-space-grotesk text-2xl text-lavender-magenta hover:no-underline">
-                    Categories
-                  </AccordionTrigger>
-                  <AccordionContent className="p-3 pt-0">
-                    <SheetClose asChild>
-                      <Link
-                        className="block font-rajdhani hover:text-medium-red-violet text-lg"
-                        href={{
-                          pathname: "/anime",
-                          query: {
-                            sort: "popular",
-                          },
-                        }}
-                      >
-                        Popular this season
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Link
-                        className="block font-rajdhani hover:text-medium-red-violet text-lg"
-                        href={{
-                          pathname: "/anime",
-                          query: {
-                            sort: "trending",
-                          },
-                        }}
-                      >
-                        Trending
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Link
-                        className="block font-rajdhani hover:text-medium-red-violet text-lg"
-                        href={{
-                          pathname: "/anime",
-                          query: {
-                            sort: "alltimepopular",
-                          },
-                        }}
-                      >
-                        All time popular
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Link
-                        className="block font-rajdhani hover:text-medium-red-violet text-lg"
-                        href={{
-                          pathname: "/anime",
-                          query: {
-                            sort: "upcoming",
-                          },
-                        }}
-                      >
-                        Upcoming next season
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Link
-                        className="block font-rajdhani hover:text-medium-red-violet text-lg"
-                        href={{
-                          pathname: "/anime",
-                        }}
-                      >
-                        A to Z
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Link
-                        className="block font-rajdhani hover:text-medium-red-violet text-lg"
-                        href={{
-                          pathname: "/filter",
-                        }}
-                      >
-                        Filter
-                      </Link>
-                    </SheetClose>
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem
-                  value="item-2"
-                  className="border-b-2 border-kingfisher-daisy-800/25"
-                >
-                  <AccordionTrigger className="p-3 font-space-grotesk text-2xl text-lavender-magenta hover:no-underline">
-                    Genres
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <ul className="grid grid-cols-2 text-lg p-3 pt-0">
-                      {genres.map((item: string, index: number) => {
-                        return (
-                          <li key={index}>
-                            <SheetClose asChild>
-                              <Link
-                                className="font-rajdhani hover:text-medium-red-violet"
-                                href={{
-                                  pathname: "/filter",
-                                  query: {
-                                    genres: [item],
-                                  },
-                                }}
-                              >
-                                {item}
-                              </Link>
-                            </SheetClose>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-              <div className="flex items-center justify-end space-x-6 p-3">
-                {status === "unauthenticated" && (
-                  <>
-                    <Link
-                      className="text-white hover:text-lavender-magenta"
-                      href={"/auth/signup"}
-                    >
-                      Sign Up
-                    </Link>
-                    <Link href={"/auth"}>
-                      <Button>Sign In</Button>
-                    </Link>
-                  </>
-                )}
-                {status === "authenticated" && (
-                  <>
-                    <Link
-                      className="text-white hover:text-lavender-magenta"
-                      href={"/profile"}
-                    >
-                      {session?.user!.name}
-                    </Link>
-
-                    <Button type="button" onClick={logoutHandler}>
-                      Log out
-                    </Button>
-                  </>
-                )}
+                  <Search className="h-4 w-4" color="#3B0086" />
+                </button>
+                <div className="bg-kingfisher-daisy rounded-md">
+                  <Link
+                    href={{
+                      pathname: "/filter",
+                    }}
+                  >
+                    <Button size="sm">Filter</Button>
+                  </Link>
+                </div>
               </div>
-            </SheetContent>
-          </Sheet>
-
-          <Link
-            className="font-major-mono-display text-2xl sm:text-3xl"
-            href={"/home"}
-          >
-            Project<span className="text-lavender-rose">Anime</span>
-          </Link>
+            )}
+          </div>
           {router.pathname !== "/" && (
-            <div className="hidden lg:flex items-stretch bg-white p-1">
+            <Button
+              className="px-4 block lg:hidden bg-transparent hover:bg-transparent mr-0 sm:mr-auto"
+              size="icon"
+              onClick={() => setShowSearchBar((prevState) => !prevState)}
+            >
+              <Search className="h-6 w-6" />
+            </Button>
+          )}
+          <div className="hidden sm:flex items-center space-x-6 ">
+            {status === "unauthenticated" && (
+              <>
+                <Link
+                  className="text-white hover:text-lavender-magenta"
+                  href={"/auth/signup"}
+                >
+                  Sign Up
+                </Link>
+                <Link href={"/auth"}>
+                  <Button>Sign In</Button>
+                </Link>
+              </>
+            )}
+            {status === "authenticated" && (
+              <>
+                <Link className="font-space-grotesk" href={"/profile"}>
+                  {session?.user!.name}
+                </Link>
+                <Button type="button" onClick={logoutHandler}>
+                  Log out
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+        {showSearchBar && (
+          <div className="block lg:hidden px-8 py-4">
+            <div className="flex w-full tems-stretch bg-white p-1">
               <input
-                className="text-kingfisher-daisy-800 focus:outline-none pl-3"
+                className="grow text-kingfisher-daisy-800 focus:outline-none pl-3"
                 type="text"
                 ref={inputRef}
               />
@@ -273,70 +335,10 @@ const MainHeader = () => {
                 </Link>
               </div>
             </div>
-          )}
-        </div>
-        {router.pathname !== "/" && (
-          <Button
-            className="px-4 block lg:hidden bg-transparent hover:bg-transparent mr-0 sm:mr-auto"
-            size="icon"
-            onClick={() => setShowSearchBar((prevState) => !prevState)}
-          >
-            <Search className="h-6 w-6" />
-          </Button>
-        )}
-        <div className="hidden sm:flex items-center space-x-6 ">
-          {status === "unauthenticated" && (
-            <>
-              <Link
-                className="text-white hover:text-lavender-magenta"
-                href={"/auth/signup"}
-              >
-                Sign Up
-              </Link>
-              <Link href={"/auth"}>
-                <Button>Sign In</Button>
-              </Link>
-            </>
-          )}
-          {status === "authenticated" && (
-            <>
-              <Link className="font-space-grotesk" href={"/profile"}>
-                {session?.user!.name}
-              </Link>
-              <Button type="button" onClick={logoutHandler}>
-                Log out
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
-      {showSearchBar && (
-        <div className="block lg:hidden px-8 py-4">
-          <div className="flex w-full tems-stretch bg-white p-1">
-            <input
-              className="grow text-kingfisher-daisy-800 focus:outline-none pl-3"
-              type="text"
-              ref={inputRef}
-            />
-            <button
-              className="bg-transparent py-2 px-4 font-space-grotesk"
-              onClick={searchHandler}
-            >
-              <Search className="h-4 w-4" color="#3B0086" />
-            </button>
-            <div className="bg-kingfisher-daisy rounded-md">
-              <Link
-                href={{
-                  pathname: "/filter",
-                }}
-              >
-                <Button size="sm">Filter</Button>
-              </Link>
-            </div>
           </div>
-        </div>
-      )}
-    </header>
+        )}
+      </header>
+    </>
   );
 };
 
