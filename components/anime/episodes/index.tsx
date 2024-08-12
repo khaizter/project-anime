@@ -38,9 +38,9 @@ const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
           return (
-            <div key={item} className="space-y-2">
+            <li key={item} className="space-y-2">
               <Skeleton className="h-[96px] w-full rounded-xl" />
-            </div>
+            </li>
           );
         })}
       </ul>
@@ -48,10 +48,10 @@ const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {streamingEpisodes?.map((episode: any, index: number) => {
         return (
-          <div
+          <li
             key={index}
             className="relative h-24 rounded-sm overflow-hidden"
             onClick={() => router.push(episode.url)}
@@ -65,10 +65,10 @@ const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
             <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
               {episode.title}
             </div>
-          </div>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 };
 

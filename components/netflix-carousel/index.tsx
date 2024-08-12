@@ -7,20 +7,66 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { AnimeType } from "@/lib/types";
-import React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  getAnimes,
+  getPopularAnimes,
+  getPopularAnimesNextSeason,
+  getPopularAnimesThisSeason,
+  getTrendingAnimes,
+} from "@/lib/anilist";
+import { AnimeType, SortType } from "@/lib/types";
+import React, { useEffect, useState } from "react";
 
 interface NetflixCarouselProps {
-  animes: Array<AnimeType>;
+  sort: SortType;
 }
 
-const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
-  const { animes } = props;
-  const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+const NUMBER_OF_CELLS = 5;
 
-  React.useEffect(() => {
+const getAnimeCategory = async (
+  currentPage: number,
+  perPage: number,
+  sort: SortType
+) => {
+  switch (sort) {
+    case "popular":
+      return await getPopularAnimesThisSeason(currentPage, perPage);
+    case "trending":
+      return await getTrendingAnimes(currentPage, perPage);
+    case "alltimepopular":
+      return await getPopularAnimes(currentPage, perPage);
+    case "upcoming":
+      return await getPopularAnimesNextSeason(currentPage, perPage);
+    default:
+      return await getAnimes(currentPage, perPage);
+  }
+};
+
+const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
+  const { sort } = props;
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+  const [animes, setAnimes] = useState<Array<AnimeType>>([]);
+  const [loadingAnimes, setLoadingAnimes] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchAnimes = async () => {
+      setLoadingAnimes(true);
+      try {
+        const { animeList } = await getAnimeCategory(1, NUMBER_OF_CELLS, sort);
+        setAnimes(animeList);
+        setLoadingAnimes(false);
+      } catch (err) {
+        setLoadingAnimes(false);
+        console.log(err);
+      }
+    };
+    fetchAnimes();
+  }, [sort]);
+
+  useEffect(() => {
     if (!api) {
       return;
     }
@@ -32,6 +78,24 @@ const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
+
+  if (loadingAnimes) {
+    return (
+      <ul className="w-full px-[5%] grid grid-flow-col-dense grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
+          return (
+            <div key={item} className="space-y-2 p-2">
+              <Skeleton className="h-[250px] w-full rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          );
+        })}
+      </ul>
+    );
+  }
 
   return (
     <Carousel

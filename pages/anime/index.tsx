@@ -11,7 +11,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 import CustomPagination from "@/components/custom-pagination";
-import { AnimeType } from "@/lib/types";
+import { AnimeType, SortType } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const NUMBER_OF_CELLS = 24;
@@ -24,7 +24,7 @@ const AnimePage = (props: any) => {
   const [animes, setAnimes] = useState<Array<AnimeType>>([]);
   const [loadingAnimes, setLoadingAnimes] = useState<boolean>(true);
 
-  const fetchAnimes = useCallback(async (page: number, sort: string) => {
+  const fetchAnimes = useCallback(async (page: number, sort: SortType) => {
     setLoadingAnimes(true);
     try {
       console.log("try");
@@ -57,7 +57,6 @@ const AnimePage = (props: any) => {
   }, [currentPage, sort, fetchAnimes]);
 
   let title = "A to Z";
-
   switch (sort) {
     case "popular":
       title = "Popular This Season";

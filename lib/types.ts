@@ -124,3 +124,5 @@ export type AnimeType = {
   };
 };
 // detailed Media type
+
+export type SortType = "popular" | "trending" | "alltimepopular" | "upcoming";
