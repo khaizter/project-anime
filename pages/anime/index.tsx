@@ -14,7 +14,7 @@ import CustomPagination from "@/components/custom-pagination";
 import { AnimeType } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const NUMBER_OF_ITEMS = 24;
+const NUMBER_OF_CELLS = 24;
 
 const AnimePage = (props: any) => {
   const router = useRouter();
@@ -30,7 +30,7 @@ const AnimePage = (props: any) => {
       console.log("try");
       const { pageInfo, animeList } = await getAnimeCategory(
         page,
-        NUMBER_OF_ITEMS,
+        NUMBER_OF_CELLS,
         sort
       );
       setAnimes(animeList);
@@ -83,8 +83,8 @@ const AnimePage = (props: any) => {
         {title}
       </div>
       {loadingAnimes ? (
-        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {Array.from(Array(NUMBER_OF_ITEMS).keys()).map((item) => {
+        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
             return (
               <div key={item} className="space-y-2">
                 <Skeleton className="h-[250px] w-full rounded-xl" />
@@ -98,7 +98,7 @@ const AnimePage = (props: any) => {
         </ul>
       ) : (
         <>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {animes.map((anime: any, index: number) => {
               return <Thumbnail key={index} anime={anime} />;
             })}

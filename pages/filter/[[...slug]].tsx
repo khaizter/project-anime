@@ -1,6 +1,7 @@
 import CustomPagination from "@/components/custom-pagination";
 import Thumbnail from "@/components/thumbnail";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ToggleGroupItem } from "@/components/ui/toggle-group";
 import Wrapper from "@/components/wrapper";
 import { getAnimesWithFilter, getGenres } from "@/lib/anilist";
@@ -12,6 +13,8 @@ type FilterType = {
   keyword?: string | null;
   genres?: Array<string> | null;
 };
+
+const NUMBER_OF_CELLS = 24;
 
 const FilterPage = (props: any) => {
   const { genres, initialKeyword, initialGenresSelected } = props;
@@ -28,7 +31,11 @@ const FilterPage = (props: any) => {
     console.log("fetch Data", filter);
     console.log("on page", page);
     setLoadingAnimes(true);
-    const { pageInfo, animeList } = await getAnimesWithFilter(page, 24, filter);
+    const { pageInfo, animeList } = await getAnimesWithFilter(
+      page,
+      NUMBER_OF_CELLS,
+      filter
+    );
     setLastPage(pageInfo.lastPage);
     setAnimes(animeList);
     setLoadingAnimes(false);
@@ -109,20 +116,32 @@ const FilterPage = (props: any) => {
       </div>
       <div className="py-4 lg:p-4 space-y-4 col-span-3">
         {!loadingAnimes ? (
+          <>
+            <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {animes.map((anime: any, index) => {
+                return <Thumbnail key={anime.id} anime={anime} />;
+              })}
+            </ul>
+            <CustomPagination
+              currentPage={+currentPage}
+              lastPage={+lastPage}
+              onPageChanged={pageChangedHandler}
+            />
+          </>
+        ) : (
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {animes.map((anime: any, index) => {
-              return <Thumbnail key={anime.id} anime={anime} />;
+            {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
+              return (
+                <div key={item} className="space-y-2">
+                  <Skeleton className="h-[250px] w-full rounded-xl" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                </div>
+              );
             })}
           </ul>
-        ) : (
-          <div>Loading animes...</div>
-        )}
-        {!loadingAnimes && (
-          <CustomPagination
-            currentPage={+currentPage}
-            lastPage={+lastPage}
-            onPageChanged={pageChangedHandler}
-          />
         )}
       </div>
     </Wrapper>
