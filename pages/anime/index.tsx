@@ -7,15 +7,57 @@ import {
   getPopularAnimesThisSeason,
   getTrendingAnimes,
 } from "@/lib/anilist";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 import CustomPagination from "@/components/custom-pagination";
+import { AnimeType } from "@/lib/types";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const NUMBER_OF_ITEMS = 24;
 
 const AnimePage = (props: any) => {
-  const { animes, currentPage, lastPage, sort } = props;
   const router = useRouter();
+  const { currentPage: initialCurrentPage, sort } = props;
+  const [currentPage, setCurrentPage] = useState<number>(initialCurrentPage);
+  const [lastPage, setLastPage] = useState<number>(1);
+  const [animes, setAnimes] = useState<Array<AnimeType>>([]);
+  const [loadingAnimes, setLoadingAnimes] = useState<boolean>(true);
+
+  const fetchAnimes = useCallback(async (page: number, sort: string) => {
+    setLoadingAnimes(true);
+    try {
+      console.log("try");
+      const { pageInfo, animeList } = await getAnimeCategory(
+        page,
+        NUMBER_OF_ITEMS,
+        sort
+      );
+      setAnimes(animeList);
+      setLastPage(pageInfo.lastPage);
+      setCurrentPage(pageInfo.currentPage);
+      router.push({
+        pathname: "/anime",
+        query: {
+          page: pageInfo.currentPage,
+          sort: sort,
+        },
+      });
+      setLoadingAnimes(false);
+    } catch (err) {
+      setLoadingAnimes(false);
+      console.log("error:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("fetch currentpage:", currentPage);
+    console.log("fetch sort:", sort);
+    fetchAnimes(currentPage, sort);
+  }, [currentPage, sort, fetchAnimes]);
+
   let title = "A to Z";
+
   switch (sort) {
     case "popular":
       title = "Popular This Season";
@@ -31,14 +73,8 @@ const AnimePage = (props: any) => {
       break;
   }
 
-  const pageChangedHandler = (page: number) => {
-    router.push({
-      pathname: "/anime",
-      query: {
-        page: page,
-        sort: sort,
-      },
-    });
+  const pageChangedHandler = async (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -46,16 +82,34 @@ const AnimePage = (props: any) => {
       <div className="text-2xl font-space-grotesk text-medium-red-violet">
         {title}
       </div>
-      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {animes.map((anime: any, index: number) => {
-          return <Thumbnail key={index} anime={anime} />;
-        })}
-      </ul>
-      <CustomPagination
-        currentPage={parseInt(currentPage)}
-        lastPage={parseInt(lastPage)}
-        onPageChanged={pageChangedHandler}
-      />
+      {loadingAnimes ? (
+        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {Array.from(Array(NUMBER_OF_ITEMS).keys()).map((item) => {
+            return (
+              <div key={item} className="space-y-2">
+                <Skeleton className="h-[250px] w-full rounded-xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              </div>
+            );
+          })}
+        </ul>
+      ) : (
+        <>
+          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {animes.map((anime: any, index: number) => {
+              return <Thumbnail key={index} anime={anime} />;
+            })}
+          </ul>
+          <CustomPagination
+            currentPage={currentPage}
+            lastPage={lastPage}
+            onPageChanged={pageChangedHandler}
+          />
+        </>
+      )}
     </Wrapper>
   );
 };
@@ -83,20 +137,9 @@ export const getServerSideProps = async (context: any) => {
   try {
     const currentPage = context.query?.page || 1;
     const sort = context.query?.sort || null;
-
-    const { pageInfo, animeList } = await getAnimeCategory(
-      currentPage,
-      24,
-      sort
-    );
-
-    const { lastPage } = pageInfo;
-
     return {
       props: {
-        animes: animeList,
         currentPage: currentPage,
-        lastPage: lastPage,
         sort: sort,
       },
     };
