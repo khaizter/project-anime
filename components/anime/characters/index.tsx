@@ -2,11 +2,14 @@ import { AnimeType } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getAnimeCharacters } from "@/lib/anilist";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
   setAnime: React.Dispatch<React.SetStateAction<AnimeType>>;
 }
+
+const NUMBER_OF_CELLS = 7;
 
 const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
   const { setAnime } = props;
@@ -29,17 +32,40 @@ const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
   }, [animeId, setAnime]);
 
   if (isLoading) {
-    return <div>Loading data...</div>;
+    return (
+      <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
+          return (
+            <li key={item} className="flex items-stretch space-x-4">
+              <div className="h-[80px] w-full flex space-x-2">
+                <Skeleton className="h-[80px] w-1/2 rounded-xl" />
+                <div className="h-[80px] w-1/2 space-y-2 mt-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-10/12" />
+                </div>
+              </div>
+              <div className="h-[80px] w-full flex space-x-2">
+                <div className="h-[80px] w-1/2 space-y-2 mt-2 flex flex-col items-end">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-10/12" />
+                </div>
+                <Skeleton className="h-[80px] w-1/2 rounded-xl" />
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {characters?.edges.map((character) => {
         return (
           <>
             {character.voiceActors.map((voiceActor) => {
               return (
-                <div
+                <li
                   className="flex justify-between font-rajdhani"
                   key={character.id}
                 >
@@ -76,13 +102,13 @@ const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
                       />
                     </div>
                   </div>
-                </div>
+                </li>
               );
             })}
           </>
         );
       })}
-    </div>
+    </ul>
   );
 };
 

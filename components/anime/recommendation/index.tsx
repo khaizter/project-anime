@@ -3,11 +3,13 @@ import Image from "next/image";
 import { AnimeType } from "@/lib/types";
 import Thumbnail from "@/components/thumbnail";
 import { getAnimeRecommendation } from "@/lib/anilist";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
   setAnime: React.Dispatch<React.SetStateAction<AnimeType>>;
 }
+const NUMBER_OF_CELLS = 7;
 
 const AnimeRecommendation: React.FC<AnimeCharactersProps> = (props) => {
   const { setAnime } = props;
@@ -30,7 +32,21 @@ const AnimeRecommendation: React.FC<AnimeCharactersProps> = (props) => {
   }, [animeId, setAnime]);
 
   if (isLoading) {
-    return <div>Loading data...</div>;
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
+        {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
+          return (
+            <div key={item} className="space-y-2">
+              <Skeleton className="h-[250px] w-full rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 
   return (

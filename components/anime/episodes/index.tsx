@@ -3,11 +3,14 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getAnimeEpisodes } from "@/lib/anilist";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface AnimeEpisodesProps {
   anime: AnimeType;
   setAnime: React.Dispatch<React.SetStateAction<AnimeType>>;
 }
+
+const NUMBER_OF_CELLS = 8;
 
 const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
   const { setAnime } = props;
@@ -31,11 +34,21 @@ const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
   }, [animeId, setAnime]);
 
   if (isLoading) {
-    return <div>Loading data...</div>;
+    return (
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
+          return (
+            <div key={item} className="space-y-2">
+              <Skeleton className="h-[96px] w-full rounded-xl" />
+            </div>
+          );
+        })}
+      </ul>
+    );
   }
 
   return (
-    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {streamingEpisodes?.map((episode: any, index: number) => {
         return (
           <div

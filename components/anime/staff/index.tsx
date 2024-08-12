@@ -2,11 +2,14 @@ import { AnimeType } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getAnimeStaffs } from "@/lib/anilist";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
   setAnime: React.Dispatch<React.SetStateAction<AnimeType>>;
 }
+
+const NUMBER_OF_CELLS = 7;
 
 const AnimeStaff: React.FC<AnimeCharactersProps> = (props) => {
   const { setAnime } = props;
@@ -29,14 +32,31 @@ const AnimeStaff: React.FC<AnimeCharactersProps> = (props) => {
   }, [animeId, setAnime]);
 
   if (isLoading) {
-    return <div>Loading data...</div>;
+    return (
+      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
+          return (
+            <li
+              key={item}
+              className="flex items-stretch justify-between space-x-4"
+            >
+              <Skeleton className="h-[80px] w-1/4 rounded-xl" />
+              <div className="h-[80px] w-2/4 flex flex-col items-end space-y-2 mt-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-10/12" />
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {staffs?.edges.map((staff) => {
         return (
-          <div className="flex justify-between" key={staff.id}>
+          <li className="flex justify-between" key={staff.id}>
             <div className="relative w-16 h-20">
               <Image
                 src={staff.node.image.medium || ""}
@@ -49,10 +69,10 @@ const AnimeStaff: React.FC<AnimeCharactersProps> = (props) => {
               <div>{staff.node.name.full}</div>
               <div className="text-white/60">{staff.role}</div>
             </div>
-          </div>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 };
 
