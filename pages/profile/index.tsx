@@ -9,6 +9,9 @@ import { getAnimeByIds } from "@/lib/anilist";
 import CustomPagination from "@/components/custom-pagination";
 import Thumbnail from "@/components/thumbnail";
 import { Pen } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const NUMBER_OF_CELLS = 6;
 
 const unfavorite = async (
   animeId: string | number,
@@ -110,20 +113,32 @@ const ProfilePage = () => {
           My Favorites
         </h2>
         {!loadingAnimes ? (
-          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {animes.map((anime: any, index: number) => {
-              return <Thumbnail key={anime.id} anime={anime} />;
+          <>
+            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {animes.map((anime: any, index: number) => {
+                return <Thumbnail key={anime.id} anime={anime} />;
+              })}
+            </ul>
+            <CustomPagination
+              currentPage={+currentPage}
+              lastPage={+lastPage}
+              onPageChanged={pageChangedHandler}
+            />
+          </>
+        ) : (
+          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
+              return (
+                <div key={item} className="space-y-2">
+                  <Skeleton className="h-[250px] w-full rounded-xl" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                </div>
+              );
             })}
           </ul>
-        ) : (
-          <div>Loading animes...</div>
-        )}
-        {!loadingAnimes && (
-          <CustomPagination
-            currentPage={+currentPage}
-            lastPage={+lastPage}
-            onPageChanged={pageChangedHandler}
-          />
         )}
       </div>
     </Wrapper>
