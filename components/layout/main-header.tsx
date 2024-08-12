@@ -213,15 +213,33 @@ const MainHeader = () => {
                 </AccordionItem>
               </Accordion>
               <div className="flex items-center justify-end space-x-6 p-3">
-                <Link
-                  className="text-white hover:text-lavender-magenta"
-                  href={"/auth/signup"}
-                >
-                  Sign Up
-                </Link>
-                <Link href={"/auth"}>
-                  <Button>Sign In</Button>
-                </Link>
+                {status === "unauthenticated" && (
+                  <>
+                    <Link
+                      className="text-white hover:text-lavender-magenta"
+                      href={"/auth/signup"}
+                    >
+                      Sign Up
+                    </Link>
+                    <Link href={"/auth"}>
+                      <Button>Sign In</Button>
+                    </Link>
+                  </>
+                )}
+                {status === "authenticated" && (
+                  <>
+                    <Link
+                      className="text-white hover:text-lavender-magenta"
+                      href={"/profile"}
+                    >
+                      {session?.user!.name}
+                    </Link>
+
+                    <Button type="button" onClick={logoutHandler}>
+                      Log out
+                    </Button>
+                  </>
+                )}
               </div>
             </SheetContent>
           </Sheet>
