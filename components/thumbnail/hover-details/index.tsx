@@ -13,16 +13,8 @@ interface HoverDetailsProps {
 }
 
 const HoverDetails: React.FC<HoverDetailsProps> = (props) => {
-  const {
-    id,
-    title,
-    coverImage,
-    description,
-    synonyms,
-    startDate,
-    status,
-    genres,
-  }: AnimeType = props.anime;
+  const { title, description, synonyms, startDate, status, genres }: AnimeType =
+    props.anime;
 
   const { isFetchingDetails, isFavorite, isLoadingFavorite, favoriteHandler } =
     props;

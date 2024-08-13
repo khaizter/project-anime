@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, Eye } from "lucide-react";
@@ -13,6 +13,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useToast } from "@/components/ui/use-toast";
 
 const addFavorite = async (
   animeId: string | number,
@@ -48,64 +49,85 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const router = useRouter();
   const { status } = useSession();
-
+  const { toast } = useToast();
   const { id, title, coverImage }: AnimeType = anime;
+
+  const fetchMoreDetails = useCallback(async (id: number) => {
+    try {
+      console.log("fetch more details");
+      setIsFetchingDetails(true);
+      const fetchedAnime = await getAnimeHoverDetails(id);
+      setAnime(fetchedAnime);
+      setIsFetchedAlready(true);
+      setIsFetchingDetails(false);
+    } catch (err) {
+      setIsFetchingDetails(false);
+      // wait 20 seconds then fetch again
+      await sleep(20000);
+      await fetchMoreDetails(id);
+      throw new Error("Failed to fetch more details");
+    }
+  }, []);
+
+  const fetchFavorites = useCallback(async (id: number) => {
+    try {
+      setIsLoadingFavorite(true);
+      const response = await fetch("/api/user/favorite", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Something went wrong!");
+      }
+
+      const favorites = result.data;
+      setIsFavorite(favorites.find((item: number) => item === id));
+      setIsLoadingFavorite(false);
+    } catch (err) {
+      setIsLoadingFavorite(false);
+      throw new Error("Failed to fetch favorites data");
+    }
+  }, []);
 
   useEffect(() => {
     if (showDetails && !isFetchedAlready) setIsFetchingDetails(true);
 
-    const fetchMoreDetails = async () => {
-      console.log("fetch more details");
+    const asyncFunction = async () => {
       try {
-        setIsFetchingDetails(true);
-        const fetchedAnime = await getAnimeHoverDetails(anime.id);
-        setAnime(fetchedAnime);
-        setIsFetchedAlready(true);
-        setIsFetchingDetails(false);
-      } catch (err) {
-        console.log(err);
-        setIsFetchingDetails(false);
-        // wait 20 seconds then fetch again
-        await sleep(20000);
-        fetchMoreDetails();
-      }
-    };
-
-    const fetchFavorites = async () => {
-      try {
-        setIsLoadingFavorite(true);
-        const response = await fetch("/api/user/favorite", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.message || "Something went wrong!");
+        if (showDetails && !isFetchedAlready) {
+          await fetchMoreDetails(anime.id);
+          if (status === "authenticated") {
+            await fetchFavorites(anime.id);
+          }
         }
-
-        const favorites = result.data;
-        setIsFavorite(favorites.find((item: number) => item === anime.id));
-        setIsLoadingFavorite(false);
       } catch (err) {
-        console.log(err);
-        setIsLoadingFavorite(false);
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: (err as Error).message || "Something went wrong!",
+          description: "You may also refresh the page or try again later",
+        });
       }
     };
 
     const timeOutId = setTimeout(() => {
-      if (showDetails && !isFetchedAlready) {
-        fetchMoreDetails();
-        if (status === "authenticated") {
-          fetchFavorites();
-        }
-      }
+      asyncFunction();
     }, 150);
     return () => clearTimeout(timeOutId);
-  }, [showDetails, isFetchedAlready, anime.id, status]);
+  }, [
+    showDetails,
+    isFetchedAlready,
+    anime.id,
+    status,
+    fetchMoreDetails,
+    fetchFavorites,
+    toast,
+  ]);
 
   const favoriteHandler: React.MouseEventHandler = async (e) => {
     if (status === "unauthenticated") {
@@ -115,11 +137,15 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
     try {
       setIsLoadingFavorite(true);
       const result = await addFavorite(anime.id, isFavorite);
-      console.log(result);
       setIsLoadingFavorite(false);
     } catch (err) {
-      console.log(err);
       setIsLoadingFavorite(false);
+      toast({
+        duration: 3000,
+        variant: "destructive",
+        title: "Something went wrong while updating favorites!",
+        description: "You may also refresh the page or try again later",
+      });
     }
     setIsFavorite((prevState) => !prevState);
   };
