@@ -16,7 +16,7 @@ import {
   getTrendingAnimes,
 } from "@/lib/anilist";
 import { AnimeType, SortType } from "@/lib/types";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 interface NetflixCarouselProps {
   sort: SortType;
@@ -48,23 +48,31 @@ const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
-  const [animes, setAnimes] = useState<Array<AnimeType>>([]);
+  const [animes, setAnimes] = useState<Array<AnimeType> | null>(null);
   const [loadingAnimes, setLoadingAnimes] = useState<boolean>(true);
 
-  useEffect(() => {
-    const fetchAnimes = async () => {
-      setLoadingAnimes(true);
-      try {
-        const { animeList } = await getAnimeCategory(1, NUMBER_OF_CELLS, sort);
-        setAnimes(animeList);
+  const fetchAnimes = useCallback(
+    async (page: number, perPage: number, sortType: SortType) => {
+      const { animeList } = await getAnimeCategory(page, perPage, sortType);
+      setAnimes((_) => {
         setLoadingAnimes(false);
+        return animeList;
+      });
+    },
+    []
+  );
+
+  useEffect(() => {
+    const asyncFunction = async () => {
+      try {
+        setLoadingAnimes(true);
+        await fetchAnimes(1, NUMBER_OF_CELLS, sort);
       } catch (err) {
         setLoadingAnimes(false);
-        console.log(err);
       }
     };
-    fetchAnimes();
-  }, [sort]);
+    asyncFunction();
+  }, [sort, fetchAnimes]);
 
   useEffect(() => {
     if (!api) {
@@ -98,33 +106,39 @@ const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
   }
 
   return (
-    <Carousel
-      opts={{
-        align: "start",
-        slidesToScroll: 1,
-      }}
-      className="w-full p-0"
-      setApi={setApi}
-    >
-      <CarouselContent className="ml-[5%] pr-[5%]">
-        {animes.map((anime, index: number) => {
-          return (
-            <CarouselItem
-              key={index}
-              className="basis-[50%] sm:basis-1/3 md:basis-[25%] lg:basis-[20%] p-2 last:mr-[5%]"
-            >
-              <Thumbnail key={anime.id} anime={anime} />
-            </CarouselItem>
-          );
-        })}
-      </CarouselContent>
-      {current > 1 && (
-        <CarouselPrevious className="left-0 bg-gradient-to-r from-jacaranda to-transparent hover:to-jacaranda/50 w-[5%] h-full rounded-none border-0" />
+    <>
+      {animes ? (
+        <Carousel
+          opts={{
+            align: "start",
+            slidesToScroll: 1,
+          }}
+          className="w-full p-0"
+          setApi={setApi}
+        >
+          <CarouselContent className="ml-[5%] pr-[5%]">
+            {animes.map((anime, index: number) => {
+              return (
+                <CarouselItem
+                  key={index}
+                  className="basis-[50%] sm:basis-1/3 md:basis-[25%] lg:basis-[20%] p-2 last:mr-[5%]"
+                >
+                  <Thumbnail key={anime.id} anime={anime} />
+                </CarouselItem>
+              );
+            })}
+          </CarouselContent>
+          {current > 1 && (
+            <CarouselPrevious className="left-0 bg-gradient-to-r from-jacaranda to-transparent hover:to-jacaranda/50 w-[5%] h-full rounded-none border-0" />
+          )}
+          {current < count && (
+            <CarouselNext className="right-0 bg-gradient-to-l from-jacaranda to-transparent hover:to-jacaranda/50 w-[5%] h-full rounded-none border-0" />
+          )}
+        </Carousel>
+      ) : (
+        <div className="text-center">Failed to fetch anime datas</div>
       )}
-      {current < count && (
-        <CarouselNext className="right-0 bg-gradient-to-l from-jacaranda to-transparent hover:to-jacaranda/50 w-[5%] h-full rounded-none border-0" />
-      )}
-    </Carousel>
+    </>
   );
 };
 

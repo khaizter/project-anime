@@ -12,7 +12,7 @@ const HomePage = (props: any) => {
   useEffect(() => {}, []);
 
   return (
-    <div>
+    <div className="pb-16">
       <HeroCarousel animes={trendingAnimes} />
       <NetflixCarousel sort="popular" />
       <div className="flex items-center justify-between px-[calc(5%+8px)] mb-8 mt-12">
