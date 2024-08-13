@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimeType } from "@/lib/types";
 import Thumbnail from "@/components/thumbnail";
 import { getAnimeRecommendation } from "@/lib/anilist";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
@@ -15,21 +16,39 @@ const AnimeRecommendation: React.FC<AnimeCharactersProps> = (props) => {
   const { setAnime } = props;
   const { id: animeId, recommendations } = props.anime;
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchRecommendations = async () => {
-      setIsLoading(true);
-      const media = await getAnimeRecommendation(animeId);
+  const fetchRecommendations = useCallback(
+    async (id: number) => {
+      const media = await getAnimeRecommendation(id);
       const newRecommendations = media.recommendations;
       setAnime((prevState) => {
+        setIsLoading(false);
         return { ...prevState, recommendations: newRecommendations };
       });
-      setIsLoading(false);
+    },
+    [setAnime]
+  );
+
+  useEffect(() => {
+    const asyncFunction = async () => {
+      try {
+        if (!recommendations) {
+          setIsLoading(true);
+          await fetchRecommendations(animeId);
+        }
+      } catch (err) {
+        setIsLoading(false);
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: "Something went wrong!",
+          description: "You may also refresh the page or try again later",
+        });
+      }
     };
-    if (!recommendations) {
-      fetchRecommendations();
-    }
-  }, [animeId, setAnime]);
+    asyncFunction();
+  }, [animeId, recommendations, fetchRecommendations, toast]);
 
   if (isLoading) {
     return (
@@ -50,16 +69,22 @@ const AnimeRecommendation: React.FC<AnimeCharactersProps> = (props) => {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
-      {recommendations?.nodes.map((recommendation, index) => {
-        return (
-          <Thumbnail
-            key={recommendation.mediaRecommendation.id}
-            anime={recommendation.mediaRecommendation}
-          />
-        );
-      })}
-    </div>
+    <>
+      {recommendations ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
+          {recommendations.nodes.map((recommendation, index) => {
+            return (
+              <Thumbnail
+                key={recommendation.mediaRecommendation.id}
+                anime={recommendation.mediaRecommendation}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <div>Failed to fetch</div>
+      )}
+    </>
   );
 };
 
