@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import CustomPagination from "@/components/custom-pagination";
 import { AnimeType, SortType } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
 
 const NUMBER_OF_CELLS = 24;
 
@@ -21,40 +22,55 @@ const AnimePage = (props: any) => {
   const { currentPage: initialCurrentPage, sort } = props;
   const [currentPage, setCurrentPage] = useState<number>(initialCurrentPage);
   const [lastPage, setLastPage] = useState<number>(1);
-  const [animes, setAnimes] = useState<Array<AnimeType>>([]);
+  const [animes, setAnimes] = useState<Array<AnimeType> | null>(null);
   const [loadingAnimes, setLoadingAnimes] = useState<boolean>(true);
+  const { toast } = useToast();
 
   const fetchAnimes = useCallback(async (page: number, sort: SortType) => {
-    setLoadingAnimes(true);
-    try {
-      console.log("try");
-      const { pageInfo, animeList } = await getAnimeCategory(
-        page,
-        NUMBER_OF_CELLS,
-        sort
-      );
-      setAnimes(animeList);
-      setLastPage(pageInfo.lastPage);
-      setCurrentPage(pageInfo.currentPage);
-      router.push({
-        pathname: "/anime",
-        query: {
-          page: pageInfo.currentPage,
-          sort: sort,
-        },
-      });
+    const { pageInfo, animeList } = await getAnimeCategory(
+      page,
+      NUMBER_OF_CELLS,
+      sort
+    );
+    setLastPage(pageInfo.lastPage);
+    setCurrentPage(pageInfo.currentPage);
+    setAnimes((_) => {
       setLoadingAnimes(false);
-    } catch (err) {
-      setLoadingAnimes(false);
-      console.log("error:", err);
-    }
+      return animeList;
+    });
   }, []);
 
   useEffect(() => {
-    console.log("fetch currentpage:", currentPage);
-    console.log("fetch sort:", sort);
-    fetchAnimes(currentPage, sort);
-  }, [currentPage, sort, fetchAnimes]);
+    const asyncFunction = async () => {
+      try {
+        console.log("fetch anime:", currentPage, "-", sort);
+        setLoadingAnimes(true);
+        await fetchAnimes(currentPage, sort);
+      } catch (err) {
+        setLoadingAnimes(false);
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: "Something went wrong!",
+          description: "You may also refresh the page or try again later",
+        });
+      }
+    };
+    asyncFunction();
+  }, [currentPage, sort, fetchAnimes, toast]);
+
+  const pageChangedHandler = async (page: number) => {
+    setCurrentPage((_) => {
+      router.push({
+        pathname: "/anime",
+        query: {
+          page: page,
+          sort: sort,
+        },
+      });
+      return page;
+    });
+  };
 
   let title = "A to Z";
   switch (sort) {
@@ -71,10 +87,6 @@ const AnimePage = (props: any) => {
       title = "Upcoming Next Season";
       break;
   }
-
-  const pageChangedHandler = async (page: number) => {
-    setCurrentPage(page);
-  };
 
   return (
     <Wrapper className="py-10 md:py-24 space-y-4">
@@ -97,16 +109,22 @@ const AnimePage = (props: any) => {
         </ul>
       ) : (
         <>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {animes.map((anime: any, index: number) => {
-              return <Thumbnail key={index} anime={anime} />;
-            })}
-          </ul>
-          <CustomPagination
-            currentPage={currentPage}
-            lastPage={lastPage}
-            onPageChanged={pageChangedHandler}
-          />
+          {animes ? (
+            <>
+              <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {animes.map((anime: any, index: number) => {
+                  return <Thumbnail key={index} anime={anime} />;
+                })}
+              </ul>
+              <CustomPagination
+                currentPage={currentPage}
+                lastPage={lastPage}
+                onPageChanged={pageChangedHandler}
+              />
+            </>
+          ) : (
+            <div>Failed to fetch</div>
+          )}
         </>
       )}
     </Wrapper>
