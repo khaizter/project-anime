@@ -151,20 +151,14 @@ const getAnimeCategory = async (
 };
 
 export const getServerSideProps = async (context: any) => {
-  try {
-    const currentPage = context.query?.page || 1;
-    const sort = context.query?.sort || null;
-    return {
-      props: {
-        currentPage: currentPage,
-        sort: sort,
-      },
-    };
-  } catch (err) {
-    return {
-      notFound: true,
-    };
-  }
+  const currentPage = context.query?.page || 1;
+  const sort = context.query?.sort || null;
+  return {
+    props: {
+      currentPage: currentPage,
+      sort: sort,
+    },
+  };
 };
 
 export default AnimePage;

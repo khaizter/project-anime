@@ -3,11 +3,13 @@ import Thumbnail from "@/components/thumbnail";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useToast } from "@/components/ui/use-toast";
 import Wrapper from "@/components/wrapper";
 import { getAnimesWithFilter, getGenres } from "@/lib/anilist";
+import { AnimeType } from "@/lib/types";
 import { ToggleGroup } from "@radix-ui/react-toggle-group";
 import { Search } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 type FilterType = {
   keyword?: string | null;
@@ -22,28 +24,45 @@ const FilterPage = (props: any) => {
   const [lastPage, setLastPage] = useState<number>(20);
   const [keyword, setKeyword] = useState<string>(initialKeyword || "");
   const [genresSelected, setGenresSelected] = useState<Array<string>>(
-    initialGenresSelected || []
+    [initialGenresSelected] || []
   );
-  const [animes, setAnimes] = useState<Array<any>>([]);
-  const [loadingAnimes, setLoadingAnimes] = useState<boolean>(false);
+  const [animes, setAnimes] = useState<Array<AnimeType> | null>(null);
+  const [loadingAnimes, setLoadingAnimes] = useState<boolean>(true);
+  const { toast } = useToast();
 
-  const fetchData = async (filter: FilterType, page: number) => {
-    console.log("fetch Data", filter);
-    console.log("on page", page);
-    setLoadingAnimes(true);
-    const { pageInfo, animeList } = await getAnimesWithFilter(
-      page,
-      NUMBER_OF_CELLS,
-      filter
-    );
-    setLastPage(pageInfo.lastPage);
-    setAnimes(animeList);
-    setLoadingAnimes(false);
-  };
+  const fetchAnimes = useCallback(
+    async (filter: FilterType, page: number) => {
+      try {
+        console.log("fetch Data", filter);
+        console.log("on page", page);
+        setLoadingAnimes(true);
+        const { pageInfo, animeList } = await getAnimesWithFilter(
+          page,
+          NUMBER_OF_CELLS,
+          filter
+        );
+        setLastPage(pageInfo.lastPage);
+        setAnimes((_) => {
+          setLoadingAnimes(false);
+          return animeList;
+        });
+      } catch (err) {
+        setLoadingAnimes(false);
+        setAnimes(null);
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: "Something went wrong!",
+          description: "You may also refresh the page or try again later",
+        });
+      }
+    },
+    [toast]
+  );
 
-  const genresChangedHandler = (values: any) => {
+  const genresChangedHandler = async (values: any) => {
     setGenresSelected((_) => {
-      fetchData({ keyword, genres: values }, 1);
+      fetchAnimes({ keyword, genres: values }, 1);
       setCurrentPage(1);
       return values;
     });
@@ -51,14 +70,14 @@ const FilterPage = (props: any) => {
 
   const pageChangedHandler = (page: number) => {
     setCurrentPage((_) => {
-      fetchData({ keyword, genres: genresSelected }, page);
+      fetchAnimes({ keyword, genres: genresSelected }, page);
       return page;
     });
   };
 
   useEffect(() => {
     const timeOutId = setTimeout(() => {
-      fetchData(
+      fetchAnimes(
         {
           keyword,
           genres: genresSelected,
@@ -68,7 +87,7 @@ const FilterPage = (props: any) => {
       setCurrentPage(1);
     }, 300);
     return () => clearTimeout(timeOutId);
-  }, [keyword]);
+  }, [keyword, fetchAnimes]);
 
   return (
     <Wrapper className="py-8 md:py-20 grid grid-cols-1 lg:grid-cols-4">
@@ -115,20 +134,7 @@ const FilterPage = (props: any) => {
         )}
       </div>
       <div className="py-4 lg:p-4 space-y-4 col-span-3">
-        {!loadingAnimes ? (
-          <>
-            <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {animes.map((anime: any, index) => {
-                return <Thumbnail key={anime.id} anime={anime} />;
-              })}
-            </ul>
-            <CustomPagination
-              currentPage={+currentPage}
-              lastPage={+lastPage}
-              onPageChanged={pageChangedHandler}
-            />
-          </>
-        ) : (
+        {loadingAnimes && (
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
               return (
@@ -143,29 +149,38 @@ const FilterPage = (props: any) => {
             })}
           </ul>
         )}
+        {!loadingAnimes && animes ? (
+          <>
+            <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {animes.map((anime: any, index) => {
+                return <Thumbnail key={anime.id} anime={anime} />;
+              })}
+            </ul>
+            <CustomPagination
+              currentPage={+currentPage}
+              lastPage={+lastPage}
+              onPageChanged={pageChangedHandler}
+            />
+          </>
+        ) : (
+          <div>Failed to fetch</div>
+        )}
       </div>
     </Wrapper>
   );
 };
 
 export const getServerSideProps = async (context: any) => {
-  try {
-    const genresSelected = context.query?.genres || null;
-    const keyword = context.query?.keyword || null;
-    const genres = await getGenres();
-    return {
-      props: {
-        genres: genres,
-        initialKeyword: keyword,
-        initialGenresSelected: genresSelected,
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      notFound: true,
-    };
-  }
+  const genresSelected = context.query?.genres || null;
+  const keyword = context.query?.keyword || null;
+  const genres = await getGenres();
+  return {
+    props: {
+      genres: genres,
+      initialKeyword: keyword,
+      initialGenresSelected: genresSelected,
+    },
+  };
 };
 
 export default FilterPage;
