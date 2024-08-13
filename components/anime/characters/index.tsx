@@ -1,8 +1,9 @@
 import { AnimeType } from "@/lib/types";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { getAnimeCharacters } from "@/lib/anilist";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
@@ -15,21 +16,39 @@ const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
   const { setAnime } = props;
   const { id: animeId, characters } = props.anime;
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchCharacters = async () => {
-      setIsLoading(true);
-      const media = await getAnimeCharacters(animeId, "JAPANESE");
+  const fetchCharacters = useCallback(
+    async (id: number) => {
+      const media = await getAnimeCharacters(id, "JAPANESE");
       const newCharacters = media.characters;
       setAnime((prevState) => {
+        setIsLoading(false);
         return { ...prevState, characters: newCharacters };
       });
-      setIsLoading(false);
+    },
+    [setAnime]
+  );
+
+  useEffect(() => {
+    const asyncFunction = async () => {
+      try {
+        if (!characters) {
+          setIsLoading(true);
+          await fetchCharacters(animeId);
+        }
+      } catch (err) {
+        setIsLoading(false);
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: "Something went wrong!",
+          description: "You may also refresh the page or try again later",
+        });
+      }
     };
-    if (!characters) {
-      fetchCharacters();
-    }
-  }, [animeId, setAnime]);
+    asyncFunction();
+  }, [animeId, characters, fetchCharacters, toast]);
 
   if (isLoading) {
     return (
@@ -59,56 +78,62 @@ const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
   }
 
   return (
-    <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      {characters?.edges.map((character) => {
-        return (
-          <>
-            {character.voiceActors.map((voiceActor) => {
-              return (
-                <li
-                  className="flex justify-between font-rajdhani"
-                  key={character.id}
-                >
-                  <div className="flex w-full">
-                    <div className="relative w-16 h-20">
-                      <Image
-                        src={character.node.image.medium || ""}
-                        alt={`${character.node.name.full} image`}
-                        layout="fill"
-                        objectFit="cover"
-                      />
-                    </div>
+    <>
+      {characters ? (
+        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {characters.edges.map((character) => {
+            return (
+              <>
+                {character.voiceActors.map((voiceActor) => {
+                  return (
+                    <li
+                      className="flex justify-between font-rajdhani"
+                      key={character.id}
+                    >
+                      <div className="flex w-full">
+                        <div className="relative w-16 h-20">
+                          <Image
+                            src={character.node.image.medium || ""}
+                            alt={`${character.node.name.full} image`}
+                            layout="fill"
+                            objectFit="cover"
+                          />
+                        </div>
 
-                    <div className="w-auto p-2 pr-0">
-                      <div>{character.node.name.full}</div>
-                      <div className="text-white/60 capitalize">
-                        {character.role}
+                        <div className="w-auto p-2 pr-0">
+                          <div>{character.node.name.full}</div>
+                          <div className="text-white/60 capitalize">
+                            {character.role}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="flex w-full justify-end">
-                    <div className="w-auto p-2 pl-0 text-end">
-                      <div>{voiceActor.name.full}</div>
-                      <div className="text-white/60">
-                        {voiceActor.languageV2}
+                      <div className="flex w-full justify-end">
+                        <div className="w-auto p-2 pl-0 text-end">
+                          <div>{voiceActor.name.full}</div>
+                          <div className="text-white/60">
+                            {voiceActor.languageV2}
+                          </div>
+                        </div>
+                        <div className="relative w-16 h-20">
+                          <Image
+                            src={voiceActor.image.medium || ""}
+                            alt={`${voiceActor.name.full} image`}
+                            layout="fill"
+                            objectFit="cover"
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="relative w-16 h-20">
-                      <Image
-                        src={voiceActor.image.medium || ""}
-                        alt={`${voiceActor.name.full} image`}
-                        layout="fill"
-                        objectFit="cover"
-                      />
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </>
-        );
-      })}
-    </ul>
+                    </li>
+                  );
+                })}
+              </>
+            );
+          })}
+        </ul>
+      ) : (
+        <div>Failed to fetch</div>
+      )}
+    </>
   );
 };
 
