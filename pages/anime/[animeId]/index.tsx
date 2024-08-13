@@ -10,6 +10,7 @@ import AnimeEpisodes from "@/components/anime/episodes";
 import AnimeCharacters from "@/components/anime/characters";
 import AnimeStaff from "@/components/anime/staff";
 import AnimeRecommendation from "@/components/anime/recommendation";
+import { notFound } from "next/navigation";
 
 const TABS: Array<string> = [
   "overview",
@@ -92,7 +93,7 @@ const AnimeDetailPage = (props: any) => {
 };
 
 export const getServerSideProps = async (context: any) => {
-  const { params, req, res } = context;
+  const { params } = context;
   const { animeId } = params;
 
   const animeDetails = await getAnimeDetails(animeId);
