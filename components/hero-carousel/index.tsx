@@ -83,8 +83,8 @@ const HeroCarousel: React.FC<HeroCarouselProps> = (props) => {
                   </div>
 
                   <Button className="w-max">
-                    <Play className="w-4 h-4 mr-2" fill="#FFF" />
                     More details
+                    <Play className="w-4 h-4 ml-2" fill="#FFF" />
                   </Button>
                 </div>
               </div>

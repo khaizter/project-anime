@@ -64,19 +64,20 @@ export const queryAnilist = async (
       ) {
         console.log("FETCH COOLDOWN");
         await sleep(10000);
-        return queryAnilist(query, variables);
+        return await queryAnilist(query, variables);
       }
       throw new Error(json.errors[0].message);
     }
 
     return json.data;
   } catch (err) {
-    console.log("ANILIST ERROR:", err);
+    throw err;
   }
 };
 
 export const getAnimes = async (page: number = 1, perPage: number = 20) => {
-  const query = `
+  try {
+    const query = `
   query ($page : Int, $perPage : Int){
     Page (page: $page, perPage: $perPage) {
       pageInfo {
@@ -100,11 +101,11 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
     }
   }
 `;
-  const variables = {
-    page: page,
-    perPage: perPage,
-  };
-  try {
+    const variables = {
+      page: page,
+      perPage: perPage,
+    };
+
     const data = await queryAnilist(query, variables);
     const animeList = data.Page.media;
     const pageInfo = data.Page.pageInfo;
@@ -119,6 +120,7 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
       animeList,
     };
   } catch (err) {
+    console.log("ANILIST ERROR:", err);
     throw err;
   }
 };
@@ -127,7 +129,8 @@ export const getPopularAnimes = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  const query = `
+  try {
+    const query = `
     query ($page : Int, $perPage : Int){
       Page (page: $page, perPage: $perPage) {
         pageInfo {
@@ -150,11 +153,11 @@ export const getPopularAnimes = async (
       }
     }
 `;
-  const variables = {
-    page: page,
-    perPage: perPage,
-  };
-  try {
+    const variables = {
+      page: page,
+      perPage: perPage,
+    };
+
     const data = await queryAnilist(query, variables);
     const animeList = data.Page.media;
     const pageInfo = data.Page.pageInfo;
@@ -169,6 +172,7 @@ export const getPopularAnimes = async (
       animeList,
     };
   } catch (err) {
+    console.log("ANILIST ERROR:", err);
     throw err;
   }
 };
@@ -177,10 +181,11 @@ export const getPopularAnimesThisSeason = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  const currentDate = new Date();
-  const startingDate = `${currentDate.getFullYear()}0101`;
-  const currentSeason = getCurrentSeason();
-  const query = `
+  try {
+    const currentDate = new Date();
+    const startingDate = `${currentDate.getFullYear()}0101`;
+    const currentSeason = getCurrentSeason();
+    const query = `
     query ($page : Int, $perPage : Int, $startingDate : FuzzyDateInt, $currentSeason : MediaSeason){
       Page (page: $page, perPage: $perPage) {
         pageInfo {
@@ -203,13 +208,13 @@ export const getPopularAnimesThisSeason = async (
       }
     }
 `;
-  const variables = {
-    page,
-    perPage,
-    startingDate,
-    currentSeason,
-  };
-  try {
+    const variables = {
+      page,
+      perPage,
+      startingDate,
+      currentSeason,
+    };
+
     const data = await queryAnilist(query, variables);
     const animeList = data.Page.media;
     const pageInfo = data.Page.pageInfo;
@@ -224,6 +229,7 @@ export const getPopularAnimesThisSeason = async (
       animeList,
     };
   } catch (err) {
+    console.log("ANILIST ERROR:", err);
     throw err;
   }
 };
@@ -232,14 +238,15 @@ export const getPopularAnimesNextSeason = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  const currentDate = new Date();
-  const nextSeason = getNextSeason();
-  const startingDate = `${
-    nextSeason === "WINTER"
-      ? currentDate.getFullYear() + 1
-      : currentDate.getFullYear()
-  }0101`;
-  const query = `
+  try {
+    const currentDate = new Date();
+    const nextSeason = getNextSeason();
+    const startingDate = `${
+      nextSeason === "WINTER"
+        ? currentDate.getFullYear() + 1
+        : currentDate.getFullYear()
+    }0101`;
+    const query = `
     query ($page : Int, $perPage : Int, $startingDate : FuzzyDateInt, $nextSeason : MediaSeason){
       Page (page: $page, perPage: $perPage) {
         pageInfo {
@@ -262,13 +269,13 @@ export const getPopularAnimesNextSeason = async (
       }
     }
 `;
-  const variables = {
-    page: page,
-    perPage: perPage,
-    startingDate,
-    nextSeason,
-  };
-  try {
+    const variables = {
+      page: page,
+      perPage: perPage,
+      startingDate,
+      nextSeason,
+    };
+
     const data = await queryAnilist(query, variables);
     const animeList = data.Page.media;
     const pageInfo = data.Page.pageInfo;
@@ -283,6 +290,7 @@ export const getPopularAnimesNextSeason = async (
       animeList,
     };
   } catch (err) {
+    console.log("ANILIST ERROR:", err);
     throw err;
   }
 };
@@ -291,7 +299,8 @@ export const getTrendingAnimes = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  const query = `
+  try {
+    const query = `
   query ($page : Int, $perPage : Int){
     Page (page: $page, perPage: $perPage) {
       pageInfo {
@@ -316,11 +325,11 @@ export const getTrendingAnimes = async (
     }
   }
 `;
-  const variables = {
-    page: page,
-    perPage: perPage,
-  };
-  try {
+    const variables = {
+      page: page,
+      perPage: perPage,
+    };
+
     const data = await queryAnilist(query, variables);
     const animeList = data.Page.media;
     const pageInfo = data.Page.pageInfo;
@@ -335,6 +344,7 @@ export const getTrendingAnimes = async (
       animeList,
     };
   } catch (err) {
+    console.log("ANILIST ERROR:", err);
     throw err;
   }
 };
@@ -347,7 +357,8 @@ export const getAnimesWithFilter = async (
     genres: null,
   }
 ) => {
-  const query = ` query($page :Int, $perPage:Int,$keyword :String, $genres : [String]){
+  try {
+    const query = ` query($page :Int, $perPage:Int,$keyword :String, $genres : [String]){
     Page (page: $page, perPage: $perPage) {
       pageInfo {
         total
@@ -373,13 +384,13 @@ export const getAnimesWithFilter = async (
       }
     }
   }`;
-  const variables = {
-    page: page,
-    perPage: perPage,
-    keyword: filter.keyword || null,
-    genres: filter.genres?.length ? filter.genres : null,
-  };
-  try {
+    const variables = {
+      page: page,
+      perPage: perPage,
+      keyword: filter.keyword || null,
+      genres: filter.genres?.length ? filter.genres : null,
+    };
+
     const data = await queryAnilist(query, variables);
     const animeList = data.Page.media;
     const pageInfo = data.Page.pageInfo;
@@ -394,12 +405,14 @@ export const getAnimesWithFilter = async (
       animeList,
     };
   } catch (err) {
+    console.log("ANILIST ERROR:", err);
     throw err;
   }
 };
 
 export const getAnimeDetails = async (animeId: number) => {
-  const query = `
+  try {
+    const query = `
   query($id: Int){
     Media (id: $id) {
       id
@@ -444,15 +457,20 @@ export const getAnimeDetails = async (animeId: number) => {
     }
   }
 `;
-  const variables = {
-    id: animeId,
-  };
-  const data = await queryAnilist(query, variables);
-  return data.Media;
+    const variables = {
+      id: animeId,
+    };
+    const data = await queryAnilist(query, variables);
+    return data.Media;
+  } catch (err) {
+    console.log("ANILIST ERROR:", err);
+    throw err;
+  }
 };
 
 export const getAnimeEpisodes = async (animeId: number) => {
-  const query = `
+  try {
+    const query = `
    query($id: Int){
     Media (id: $id) {
       streamingEpisodes{
@@ -464,11 +482,15 @@ export const getAnimeEpisodes = async (animeId: number) => {
     }
   }
 `;
-  const variables = {
-    id: animeId,
-  };
-  const data = await queryAnilist(query, variables);
-  return data.Media;
+    const variables = {
+      id: animeId,
+    };
+    const data = await queryAnilist(query, variables);
+    return data.Media;
+  } catch (err) {
+    console.log("ANILIST ERROR:", err);
+    throw err;
+  }
 };
 
 export const getAnimeCharacters = async (
@@ -477,7 +499,8 @@ export const getAnimeCharacters = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  const query = `
+  try {
+    const query = `
   query($id: Int, $page : Int, $perPage : Int, $language : StaffLanguage){
    Media (id: $id) {
     characters(sort: FAVOURITES_DESC, page: $page, perPage:$perPage ) {
@@ -515,14 +538,18 @@ export const getAnimeCharacters = async (
    }
  }
 `;
-  const variables = {
-    id: animeId,
-    page: page,
-    perPage: perPage,
-    language: language,
-  };
-  const data = await queryAnilist(query, variables);
-  return data.Media;
+    const variables = {
+      id: animeId,
+      page: page,
+      perPage: perPage,
+      language: language,
+    };
+    const data = await queryAnilist(query, variables);
+    return data.Media;
+  } catch (err) {
+    console.log("ANILIST ERROR:", err);
+    throw err;
+  }
 };
 
 export const getAnimeStaffs = async (
@@ -530,7 +557,8 @@ export const getAnimeStaffs = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  const query = `
+  try {
+    const query = `
   query($id: Int, $page : Int, $perPage : Int){
    Media (id: $id) {
     staff(sort :RELEVANCE, page: $page, perPage: $perPage) {
@@ -558,13 +586,17 @@ export const getAnimeStaffs = async (
    }
  }
 `;
-  const variables = {
-    id: animeId,
-    page: page,
-    perPage: perPage,
-  };
-  const data = await queryAnilist(query, variables);
-  return data.Media;
+    const variables = {
+      id: animeId,
+      page: page,
+      perPage: perPage,
+    };
+    const data = await queryAnilist(query, variables);
+    return data.Media;
+  } catch (err) {
+    console.log("ANILIST ERROR:", err);
+    throw err;
+  }
 };
 
 export const getAnimeRecommendation = async (
@@ -572,7 +604,8 @@ export const getAnimeRecommendation = async (
   page: number = 1,
   perPage: number = 20
 ) => {
-  const query = `
+  try {
+    const query = `
   query($id: Int, $page : Int, $perPage : Int){
    Media (id: $id) {
      recommendations(sort:RATING_DESC , page:$page, perPage:$perPage ){
@@ -598,17 +631,22 @@ export const getAnimeRecommendation = async (
    }
  }
 `;
-  const variables = {
-    id: animeId,
-    page: page,
-    perPage: perPage,
-  };
-  const data = await queryAnilist(query, variables);
-  return data.Media;
+    const variables = {
+      id: animeId,
+      page: page,
+      perPage: perPage,
+    };
+    const data = await queryAnilist(query, variables);
+    return data.Media;
+  } catch (err) {
+    console.log("ANILIST ERROR:", err);
+    throw err;
+  }
 };
 
 export const getAnimeHoverDetails = async (animeId: number) => {
-  const query = `
+  try {
+    const query = `
   query($id: Int){
     Media (id: $id) {
       id
@@ -631,11 +669,15 @@ export const getAnimeHoverDetails = async (animeId: number) => {
     }
   }
 `;
-  const variables = {
-    id: animeId,
-  };
-  const data = await queryAnilist(query, variables);
-  return data.Media;
+    const variables = {
+      id: animeId,
+    };
+    const data = await queryAnilist(query, variables);
+    return data.Media;
+  } catch (err) {
+    console.log("ANILIST ERROR:", err);
+    throw err;
+  }
 };
 
 export const getGenres = async () => {
@@ -697,6 +739,7 @@ export const getAnimeByIds = async (
       animeList,
     };
   } catch (err) {
+    console.log("ANILIST ERROR:", err);
     throw err;
   }
 };

@@ -1,19 +1,35 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import MainHeader from "@/components/layout/main-header";
 
 import { spaceGrotesk, rajdhani, majorMonoDisplay } from "@/lib/fonts";
 import MainFooter from "@/components/layout/main-footer";
 import MobileMenu from "@/components/layout/mobile-menu";
+import { Toaster } from "@/components/ui/toaster";
 
 const Layout = (props: any) => {
+  useEffect(() => {
+    // window.onerror = function (message, file, line, col, error) {
+    //   alert("Error occurred: " + error?.message);
+    //   return false;
+    // };
+    // window.addEventListener("error", function (e) {
+    //   alert("Error occurred: " + e.error.message);
+    //   return false;
+    // });
+    // window.addEventListener("unhandledrejection", function (e) {
+    //   alert("Error occurred: " + e.reason.message);
+    //   return true;
+    // });
+  }, []);
   return (
     <div className={`relative ${spaceGrotesk} ${rajdhani} ${majorMonoDisplay}`}>
       <MainHeader />
       <div className="w-screen overflow-hidden">
-        <main className="font-rajdhani text-slate-100 bg-gradient-to-b from-jacaranda to-jacaranda">
+        <main className="font-rajdhani text-slate-100 bg-gradient-to-b from-jacaranda to-jacaranda min-h-[80vh]">
           {props.children}
         </main>
         <MainFooter />
+        <Toaster />
       </div>
       <MobileMenu />
     </div>

@@ -30,7 +30,11 @@ const MobileMenu = () => {
   return (
     <div className="block md:hidden fixed bottom-4 right-4 z-50">
       {!isOpen && (
-        <Button size="icon" onClick={() => setIsOpen(true)}>
+        <Button
+          className="bg-medium-red-violet"
+          size="icon"
+          onClick={() => setIsOpen(true)}
+        >
           <Menu className="h-8 w-8" />
         </Button>
       )}
