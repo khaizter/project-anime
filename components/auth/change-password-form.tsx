@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React from "react";
+import React, { useCallback } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 const changePassword = async (
   oldPassword: string,
@@ -59,6 +60,7 @@ const formSchema = z
   });
 
 const ChangePasswordForm: React.FC = () => {
+  const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,22 +73,32 @@ const ChangePasswordForm: React.FC = () => {
 
   const isSubmitting = form.formState.isSubmitting;
 
-  const submitHandler = async (values: z.infer<typeof formSchema>) => {
-    const { oldPassword, newPassword, confirmPassword } = values;
-    try {
-      const result = await changePassword(
-        oldPassword,
-        newPassword,
-        confirmPassword
-      );
-      // redirect to profile
-      console.log(result);
-      router.push("/profile");
-    } catch (err) {
-      // stay in form
-      console.log(err);
-    }
-  };
+  const submitHandler = useCallback(
+    async (values: z.infer<typeof formSchema>) => {
+      const { oldPassword, newPassword, confirmPassword } = values;
+      try {
+        const result = await changePassword(
+          oldPassword,
+          newPassword,
+          confirmPassword
+        );
+        console.log(result);
+        if (result!.error) {
+          throw new Error(result!.error);
+        }
+        router.push("/profile");
+      } catch (err) {
+        // stay in form
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: "Changing password failed!",
+          description: (err as Error).message,
+        });
+      }
+    },
+    [router, toast]
+  );
 
   return (
     <Card className="bg-kingfisher-daisy/60 border-0 text-white rounded">

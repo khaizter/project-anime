@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,7 @@ import {
 import { useRouter } from "next/router";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   username: z.string().min(6).max(50),
@@ -31,6 +32,7 @@ const formSchema = z.object({
 });
 
 const SignInForm = () => {
+  const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,27 +43,35 @@ const SignInForm = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const submitHandler = async (values: z.infer<typeof formSchema>) => {
-    setIsSubmitting(true);
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        username: values.username,
-        password: values.password,
-      });
-      if (result!.error) {
+  const submitHandler = useCallback(
+    async (values: z.infer<typeof formSchema>) => {
+      setIsSubmitting(true);
+      try {
+        const result = await signIn("credentials", {
+          redirect: false,
+          username: values.username,
+          password: values.password,
+        });
+        console.log(result);
+        if (result!.error) {
+          throw new Error(result!.error);
+        }
+        // successful login
+        // redirect to home
         setIsSubmitting(false);
-        throw new Error(result!.error);
+        router.replace("/home");
+      } catch (err) {
+        setIsSubmitting(false);
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: "Authentication failed!",
+          description: (err as Error).message,
+        });
       }
-      // successful login
-      // redirect to home
-      setIsSubmitting(false);
-      router.replace("/home");
-    } catch (err) {
-      setIsSubmitting(false);
-      console.log(err);
-    }
-  };
+    },
+    [router, toast]
+  );
 
   return (
     <Card className="bg-kingfisher-daisy/60 border-0 text-white rounded">

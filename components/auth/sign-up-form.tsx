@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React from "react";
+import React, { useCallback } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 
 const createUser = async (
   username: string,
@@ -73,6 +74,7 @@ const formSchema = z
 interface SignUpFormProps {}
 
 const SignUpForm: React.FC<SignUpFormProps> = (props) => {
+  const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,21 +87,32 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
 
   const isSubmitting = form.formState.isSubmitting;
 
-  const submitHandler = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const result = await createUser(
-        values.username,
-        values.password,
-        values.confirmPassword
-      );
-      //  redirect to login
-      console.log(result);
-      router.push("/auth");
-    } catch (err) {
-      //  stay in form
-      console.log(err);
-    }
-  };
+  const submitHandler = useCallback(
+    async (values: z.infer<typeof formSchema>) => {
+      try {
+        const result = await createUser(
+          values.username,
+          values.password,
+          values.confirmPassword
+        );
+        console.log(result);
+        if (result!.error) {
+          throw new Error(result!.error);
+        }
+        //  redirect to login
+        router.push("/auth");
+      } catch (err) {
+        //  stay in form
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: "Creating User failed!",
+          description: (err as Error).message,
+        });
+      }
+    },
+    [router, toast]
+  );
 
   return (
     <Card className="bg-kingfisher-daisy/60 border-0 text-white rounded">
