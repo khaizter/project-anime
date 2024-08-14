@@ -1,3 +1,4 @@
+import RobotError from "@/components/robot-error";
 import Thumbnail from "@/components/thumbnail";
 import {
   Carousel,
@@ -136,7 +137,7 @@ const NetflixCarousel: React.FC<NetflixCarouselProps> = (props) => {
           )}
         </Carousel>
       ) : (
-        <div className="text-center">Failed to fetch anime datas</div>
+        <RobotError />
       )}
     </>
   );

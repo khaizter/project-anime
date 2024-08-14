@@ -12,6 +12,8 @@ import { Pen } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { AnimeType } from "@/lib/types";
+import RobotError from "@/components/robot-error";
+import EmptyBox from "@/components/empty-box";
 
 const NUMBER_OF_CELLS = 6;
 
@@ -109,19 +111,25 @@ const ProfilePage = () => {
         )}
         {!loadingAnimes && animes ? (
           <>
-            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {animes.map((anime: any, index: number) => {
-                return <Thumbnail key={anime.id} anime={anime} />;
-              })}
-            </ul>
-            <CustomPagination
-              currentPage={+currentPage}
-              lastPage={+lastPage}
-              onPageChanged={pageChangedHandler}
-            />
+            {animes.length > 0 ? (
+              <>
+                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                  {animes.map((anime: any, index: number) => {
+                    return <Thumbnail key={anime.id} anime={anime} />;
+                  })}
+                </ul>
+                <CustomPagination
+                  currentPage={+currentPage}
+                  lastPage={+lastPage}
+                  onPageChanged={pageChangedHandler}
+                />
+              </>
+            ) : (
+              <EmptyBox />
+            )}
           </>
         ) : (
-          <div>Failed to fetch</div>
+          <RobotError />
         )}
       </div>
     </Wrapper>

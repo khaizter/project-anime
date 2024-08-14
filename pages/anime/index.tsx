@@ -14,6 +14,7 @@ import CustomPagination from "@/components/custom-pagination";
 import { AnimeType, SortType } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import RobotError from "@/components/robot-error";
 
 const NUMBER_OF_CELLS = 24;
 
@@ -123,7 +124,7 @@ const AnimePage = (props: any) => {
               />
             </>
           ) : (
-            <div>Failed to fetch</div>
+            <RobotError />
           )}
         </>
       )}

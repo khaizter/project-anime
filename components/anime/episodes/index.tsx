@@ -5,6 +5,8 @@ import Image from "next/image";
 import { getAnimeEpisodes } from "@/lib/anilist";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import RobotError from "@/components/robot-error";
+import EmptyBox from "@/components/empty-box";
 
 interface AnimeEpisodesProps {
   anime: AnimeType;
@@ -70,29 +72,35 @@ const AnimeEpisodes: React.FC<AnimeEpisodesProps> = (props) => {
   return (
     <>
       {streamingEpisodes ? (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {streamingEpisodes.map((episode: any, index: number) => {
-            return (
-              <li
-                key={index}
-                className="relative h-24 rounded-sm overflow-hidden"
-                onClick={() => router.push(episode.url)}
-              >
-                <Image
-                  src={episode.thumbnail}
-                  alt={`thumb nail`}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
-                  {episode.title}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          {streamingEpisodes.length > 0 ? (
+            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {streamingEpisodes.map((episode: any, index: number) => {
+                return (
+                  <li
+                    key={index}
+                    className="relative h-24 rounded-sm overflow-hidden"
+                    onClick={() => router.push(episode.url)}
+                  >
+                    <Image
+                      src={episode.thumbnail}
+                      alt={`thumb nail`}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute bottom-0 inset-x-0 overflow-hidden text-ellipsis whitespace-nowrap bg-black/60 p-1">
+                      {episode.title}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <EmptyBox />
+          )}
+        </>
       ) : (
-        <div>Failed to fetch</div>
+        <RobotError />
       )}
     </>
   );

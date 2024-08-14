@@ -4,6 +4,8 @@ import Image from "next/image";
 import { getAnimeStaffs } from "@/lib/anilist";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import RobotError from "@/components/robot-error";
+import EmptyBox from "@/components/empty-box";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
@@ -74,28 +76,34 @@ const AnimeStaff: React.FC<AnimeCharactersProps> = (props) => {
   return (
     <>
       {staffs ? (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {staffs.edges.map((staff) => {
-            return (
-              <li className="flex justify-between" key={staff.id}>
-                <div className="relative w-16 h-20">
-                  <Image
-                    src={staff.node.image.medium || ""}
-                    alt={`${staff.node.name.full} image`}
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                </div>
-                <div className="text-end">
-                  <div>{staff.node.name.full}</div>
-                  <div className="text-white/60">{staff.role}</div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          {staffs.edges.length > 0 ? (
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {staffs.edges.map((staff) => {
+                return (
+                  <li className="flex justify-between" key={staff.id}>
+                    <div className="relative w-16 h-20">
+                      <Image
+                        src={staff.node.image.medium || ""}
+                        alt={`${staff.node.name.full} image`}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    </div>
+                    <div className="text-end">
+                      <div>{staff.node.name.full}</div>
+                      <div className="text-white/60">{staff.role}</div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <EmptyBox />
+          )}
+        </>
       ) : (
-        <div>Failed to fetch</div>
+        <RobotError />
       )}
     </>
   );

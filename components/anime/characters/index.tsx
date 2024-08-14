@@ -4,6 +4,8 @@ import Image from "next/image";
 import { getAnimeCharacters } from "@/lib/anilist";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import RobotError from "@/components/robot-error";
+import EmptyBox from "@/components/empty-box";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
@@ -80,58 +82,64 @@ const AnimeCharacters: React.FC<AnimeCharactersProps> = (props) => {
   return (
     <>
       {characters ? (
-        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {characters.edges.map((character) => {
-            return (
-              <>
-                {character.voiceActors.map((voiceActor) => {
-                  return (
-                    <li
-                      className="flex justify-between font-rajdhani"
-                      key={character.id}
-                    >
-                      <div className="flex w-full">
-                        <div className="relative w-16 h-20">
-                          <Image
-                            src={character.node.image.medium || ""}
-                            alt={`${character.node.name.full} image`}
-                            layout="fill"
-                            objectFit="cover"
-                          />
-                        </div>
+        <>
+          {characters.edges.length > 0 ? (
+            <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {characters.edges.map((character) => {
+                return (
+                  <>
+                    {character.voiceActors.map((voiceActor) => {
+                      return (
+                        <li
+                          className="flex justify-between font-rajdhani"
+                          key={character.id}
+                        >
+                          <div className="flex w-full">
+                            <div className="relative w-16 h-20">
+                              <Image
+                                src={character.node.image.medium || ""}
+                                alt={`${character.node.name.full} image`}
+                                layout="fill"
+                                objectFit="cover"
+                              />
+                            </div>
 
-                        <div className="w-auto p-2 pr-0">
-                          <div>{character.node.name.full}</div>
-                          <div className="text-white/60 capitalize">
-                            {character.role}
+                            <div className="w-auto p-2 pr-0">
+                              <div>{character.node.name.full}</div>
+                              <div className="text-white/60 capitalize">
+                                {character.role}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="flex w-full justify-end">
-                        <div className="w-auto p-2 pl-0 text-end">
-                          <div>{voiceActor.name.full}</div>
-                          <div className="text-white/60">
-                            {voiceActor.languageV2}
+                          <div className="flex w-full justify-end">
+                            <div className="w-auto p-2 pl-0 text-end">
+                              <div>{voiceActor.name.full}</div>
+                              <div className="text-white/60">
+                                {voiceActor.languageV2}
+                              </div>
+                            </div>
+                            <div className="relative w-16 h-20">
+                              <Image
+                                src={voiceActor.image.medium || ""}
+                                alt={`${voiceActor.name.full} image`}
+                                layout="fill"
+                                objectFit="cover"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="relative w-16 h-20">
-                          <Image
-                            src={voiceActor.image.medium || ""}
-                            alt={`${voiceActor.name.full} image`}
-                            layout="fill"
-                            objectFit="cover"
-                          />
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </>
-            );
-          })}
-        </ul>
+                        </li>
+                      );
+                    })}
+                  </>
+                );
+              })}
+            </ul>
+          ) : (
+            <EmptyBox />
+          )}
+        </>
       ) : (
-        <div>Failed to fetch</div>
+        <RobotError />
       )}
     </>
   );

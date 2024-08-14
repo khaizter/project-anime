@@ -1,4 +1,6 @@
 import CustomPagination from "@/components/custom-pagination";
+import EmptyBox from "@/components/empty-box";
+import RobotError from "@/components/robot-error";
 import Thumbnail from "@/components/thumbnail";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,7 +10,7 @@ import Wrapper from "@/components/wrapper";
 import { getAnimesWithFilter, getGenres } from "@/lib/anilist";
 import { AnimeType } from "@/lib/types";
 import { ToggleGroup } from "@radix-ui/react-toggle-group";
-import { Search } from "lucide-react";
+import { Bot, Search } from "lucide-react";
 import React, { useEffect, useState, useCallback } from "react";
 
 type FilterType = {
@@ -24,7 +26,7 @@ const FilterPage = (props: any) => {
   const [lastPage, setLastPage] = useState<number>(20);
   const [keyword, setKeyword] = useState<string>(initialKeyword || "");
   const [genresSelected, setGenresSelected] = useState<Array<string>>(
-    [initialGenresSelected] || []
+    (initialGenresSelected && [initialGenresSelected]) || []
   );
   const [animes, setAnimes] = useState<Array<AnimeType> | null>(null);
   const [loadingAnimes, setLoadingAnimes] = useState<boolean>(true);
@@ -151,19 +153,25 @@ const FilterPage = (props: any) => {
         )}
         {!loadingAnimes && animes ? (
           <>
-            <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {animes.map((anime: any, index) => {
-                return <Thumbnail key={anime.id} anime={anime} />;
-              })}
-            </ul>
-            <CustomPagination
-              currentPage={+currentPage}
-              lastPage={+lastPage}
-              onPageChanged={pageChangedHandler}
-            />
+            {animes.length > 0 ? (
+              <>
+                <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {animes.map((anime: any, index) => {
+                    return <Thumbnail key={index} anime={anime} />;
+                  })}
+                </ul>
+                <CustomPagination
+                  currentPage={+currentPage}
+                  lastPage={+lastPage}
+                  onPageChanged={pageChangedHandler}
+                />
+              </>
+            ) : (
+              <EmptyBox />
+            )}
           </>
         ) : (
-          <div>Failed to fetch</div>
+          <RobotError />
         )}
       </div>
     </Wrapper>

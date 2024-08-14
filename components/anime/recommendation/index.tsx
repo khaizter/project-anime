@@ -5,6 +5,8 @@ import Thumbnail from "@/components/thumbnail";
 import { getAnimeRecommendation } from "@/lib/anilist";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import RobotError from "@/components/robot-error";
+import EmptyBox from "@/components/empty-box";
 
 interface AnimeCharactersProps {
   anime: AnimeType;
@@ -71,18 +73,24 @@ const AnimeRecommendation: React.FC<AnimeCharactersProps> = (props) => {
   return (
     <>
       {recommendations ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
-          {recommendations.nodes.map((recommendation, index) => {
-            return (
-              <Thumbnail
-                key={recommendation.mediaRecommendation.id}
-                anime={recommendation.mediaRecommendation}
-              />
-            );
-          })}
-        </div>
+        <>
+          {recommendations.nodes.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-4">
+              {recommendations.nodes.map((recommendation, index) => {
+                return (
+                  <Thumbnail
+                    key={recommendation.mediaRecommendation.id}
+                    anime={recommendation.mediaRecommendation}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyBox />
+          )}
+        </>
       ) : (
-        <div>Failed to fetch</div>
+        <RobotError />
       )}
     </>
   );
