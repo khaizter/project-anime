@@ -4,7 +4,7 @@ import Wrapper from "@/components/wrapper";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Menu, Search } from "lucide-react";
 import {
   Sheet,
@@ -19,6 +19,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useToast } from "@/components/ui/use-toast";
 
 const MainHeader = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,6 +28,7 @@ const MainHeader = () => {
   const { data: session, status } = useSession();
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [transparentHeader, setTransparentHeader] = useState(true);
+  const { toast } = useToast();
 
   const scrollHandler = (e: Event) => {
     if (window.scrollY > 80) {
@@ -43,17 +45,30 @@ const MainHeader = () => {
     };
   }, []);
 
+  const fetchGenres = useCallback(async () => {
+    try {
+      const genres = await getGenres();
+      setGenres(genres);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
   useEffect(() => {
-    const fetchGenres = async () => {
+    const asyncFunction = async () => {
       try {
-        const genres = await getGenres();
-        setGenres(genres);
+        await fetchGenres();
       } catch (err) {
-        console.log(err);
+        toast({
+          duration: 3000,
+          variant: "destructive",
+          title: "Authentication failed!",
+          description: (err as Error).message,
+        });
       }
     };
-    fetchGenres();
-  }, []);
+    asyncFunction();
+  }, [fetchGenres, toast]);
 
   const searchHandler = () => {
     if (!inputRef || !inputRef.current) {
