@@ -136,7 +136,7 @@ const FilterPage = (props: any) => {
         )}
       </div>
       <div className="py-4 lg:p-4 space-y-4 col-span-3">
-        {loadingAnimes && (
+        {loadingAnimes ? (
           <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
               return (
@@ -150,28 +150,31 @@ const FilterPage = (props: any) => {
               );
             })}
           </ul>
-        )}
-        {!loadingAnimes && animes ? (
+        ) : (
           <>
-            {animes.length > 0 ? (
+            {animes ? (
               <>
-                <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {animes.map((anime: any, index) => {
-                    return <Thumbnail key={index} anime={anime} />;
-                  })}
-                </ul>
-                <CustomPagination
-                  currentPage={+currentPage}
-                  lastPage={+lastPage}
-                  onPageChanged={pageChangedHandler}
-                />
+                {animes.length > 0 ? (
+                  <>
+                    <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {animes.map((anime: any, index) => {
+                        return <Thumbnail key={index} anime={anime} />;
+                      })}
+                    </ul>
+                    <CustomPagination
+                      currentPage={+currentPage}
+                      lastPage={+lastPage}
+                      onPageChanged={pageChangedHandler}
+                    />
+                  </>
+                ) : (
+                  <EmptyBox />
+                )}
               </>
             ) : (
-              <EmptyBox />
+              <RobotError />
             )}
           </>
-        ) : (
-          <RobotError />
         )}
       </div>
     </Wrapper>

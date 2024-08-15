@@ -94,7 +94,7 @@ const ProfilePage = () => {
         <h2 className="text-2xl font-space-grotesk text-medium-red-violet">
           My Favorites
         </h2>
-        {loadingAnimes && (
+        {loadingAnimes ? (
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {Array.from(Array(NUMBER_OF_CELLS).keys()).map((item) => {
               return (
@@ -108,28 +108,31 @@ const ProfilePage = () => {
               );
             })}
           </ul>
-        )}
-        {!loadingAnimes && animes ? (
+        ) : (
           <>
-            {animes.length > 0 ? (
+            {animes ? (
               <>
-                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                  {animes.map((anime: any, index: number) => {
-                    return <Thumbnail key={anime.id} anime={anime} />;
-                  })}
-                </ul>
-                <CustomPagination
-                  currentPage={+currentPage}
-                  lastPage={+lastPage}
-                  onPageChanged={pageChangedHandler}
-                />
+                {animes.length > 0 ? (
+                  <>
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                      {animes.map((anime: any, index: number) => {
+                        return <Thumbnail key={anime.id} anime={anime} />;
+                      })}
+                    </ul>
+                    <CustomPagination
+                      currentPage={+currentPage}
+                      lastPage={+lastPage}
+                      onPageChanged={pageChangedHandler}
+                    />
+                  </>
+                ) : (
+                  <EmptyBox />
+                )}
               </>
             ) : (
-              <EmptyBox />
+              <RobotError />
             )}
           </>
-        ) : (
-          <RobotError />
         )}
       </div>
     </Wrapper>
