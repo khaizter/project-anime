@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -58,8 +57,8 @@ const SignInForm = () => {
         }
         // successful login
         // redirect to home
-        setIsSubmitting(false);
-        router.replace("/home");
+        // setIsSubmitting(false);
+        router.push("/home");
       } catch (err) {
         setIsSubmitting(false);
         toast({

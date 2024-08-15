@@ -9,8 +9,6 @@ import { ChevronRight } from "lucide-react";
 const HomePage = (props: any) => {
   const { trendingAnimes } = props;
 
-  useEffect(() => {}, []);
-
   return (
     <div className="pb-16">
       <HeroCarousel animes={trendingAnimes} />

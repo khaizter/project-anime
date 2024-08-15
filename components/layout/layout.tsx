@@ -7,20 +7,6 @@ import MobileMenu from "@/components/layout/mobile-menu";
 import { Toaster } from "@/components/ui/toaster";
 
 const Layout = (props: any) => {
-  useEffect(() => {
-    // window.onerror = function (message, file, line, col, error) {
-    //   alert("Error occurred: " + error?.message);
-    //   return false;
-    // };
-    // window.addEventListener("error", function (e) {
-    //   alert("Error occurred: " + e.error.message);
-    //   return false;
-    // });
-    // window.addEventListener("unhandledrejection", function (e) {
-    //   alert("Error occurred: " + e.reason.message);
-    //   return true;
-    // });
-  }, []);
   return (
     <div className={`relative ${spaceGrotesk} ${rajdhani} ${majorMonoDisplay}`}>
       <Head>

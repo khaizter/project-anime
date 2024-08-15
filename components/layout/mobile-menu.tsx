@@ -6,25 +6,24 @@ import {
   Menu,
   Search,
   Star,
-  TrendingUp,
   UserRound,
   UserRoundPlus,
-  UserRoundPlusIcon,
   X,
 } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { status } = useSession();
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const router = useRouter();
 
-  const logoutHandler = () => {
-    console.log("logout");
-    signOut();
+  const logoutHandler = async () => {
+    setIsSigningOut(true);
+    await signOut();
+    setIsSigningOut(false);
   };
 
   return (
@@ -125,6 +124,7 @@ const MobileMenu = () => {
                   logoutHandler();
                   setIsOpen(false);
                 }}
+                disabled={isSigningOut}
               >
                 <LogOut className="h-6 w-6" />
                 <div className="text-xs">Log out</div>

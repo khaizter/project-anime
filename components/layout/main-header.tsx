@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Wrapper from "@/components/wrapper";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,6 +27,7 @@ const MainHeader = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [transparentHeader, setTransparentHeader] = useState(true);
   const { toast } = useToast();
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const scrollHandler = (e: Event) => {
     if (window.scrollY > 80) {
@@ -47,6 +46,7 @@ const MainHeader = () => {
 
   const fetchGenres = useCallback(async () => {
     try {
+      console.log("fetch genres for header");
       const genres = await getGenres();
       setGenres(genres);
     } catch (err) {
@@ -82,9 +82,10 @@ const MainHeader = () => {
     });
   };
 
-  const logoutHandler = () => {
-    console.log("logout");
-    signOut();
+  const logoutHandler = async () => {
+    setIsSigningOut(true);
+    await signOut();
+    setIsSigningOut(false);
   };
 
   return (
@@ -251,7 +252,11 @@ const MainHeader = () => {
                         {session?.user!.name}
                       </Link>
 
-                      <Button type="button" onClick={logoutHandler}>
+                      <Button
+                        type="button"
+                        onClick={logoutHandler}
+                        disabled={isSigningOut}
+                      >
                         Log out
                       </Button>
                     </>
@@ -319,7 +324,11 @@ const MainHeader = () => {
                 <Link className="font-space-grotesk" href={"/profile"}>
                   {session?.user!.name}
                 </Link>
-                <Button type="button" onClick={logoutHandler}>
+                <Button
+                  type="button"
+                  onClick={logoutHandler}
+                  disabled={isSigningOut}
+                >
                   Log out
                 </Button>
               </>
