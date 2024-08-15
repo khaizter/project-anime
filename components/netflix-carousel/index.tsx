@@ -23,7 +23,7 @@ interface NetflixCarouselProps {
   sort: SortType;
 }
 
-const NUMBER_OF_CELLS = 5;
+const NUMBER_OF_CELLS = 10;
 
 const getAnimeCategory = async (
   currentPage: number,
