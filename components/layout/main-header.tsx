@@ -107,7 +107,7 @@ const MainHeader = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent
-                className="flex flex-col bg-kingfisher-daisy text-white border-none pt-8 px-0 gap-0 overflow-y-scroll"
+                className="flex flex-col bg-kingfisher-daisy text-white border-none pt-8 px-0 gap-0"
                 side="left"
               >
                 <div className="font-major-mono-display text-3xl pl-3">
