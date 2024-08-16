@@ -157,7 +157,7 @@ const Thumbnail: React.FC<ThumbnailProps> = (props) => {
           <HoverCardTrigger asChild>
             <Link className="grow relative" href={`/anime/${id}`}>
               <Image
-                src={coverImage.large || ""}
+                src={coverImage.extraLarge || coverImage.large || ""}
                 alt={`${title} cover image`}
                 width={0}
                 height={0}

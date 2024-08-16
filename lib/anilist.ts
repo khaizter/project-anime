@@ -95,6 +95,7 @@ export const getAnimes = async (page: number = 1, perPage: number = 20) => {
          }
         coverImage {
           large
+          extraLarge
         }
         description
       }    	
@@ -147,6 +148,7 @@ export const getPopularAnimes = async (
           }
           coverImage {
             large
+            extraLarge
           }
           description
         }
@@ -202,6 +204,7 @@ export const getPopularAnimesThisSeason = async (
           }
           coverImage {
             large
+            extraLarge
           }
           description
         }
@@ -263,6 +266,7 @@ export const getPopularAnimesNextSeason = async (
           }
           coverImage {
             large
+            extraLarge
           }
           description
         }

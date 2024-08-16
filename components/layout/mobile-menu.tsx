@@ -9,6 +9,7 @@ import {
   UserRound,
   UserRoundPlus,
   X,
+  HomeIcon,
 } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -43,16 +44,13 @@ const MobileMenu = () => {
             className="w-full h-auto flex flex-col items-center bg-transparent p-2"
             onClick={() => {
               router.push({
-                pathname: "/anime",
-                query: {
-                  sort: "popular",
-                },
+                pathname: "/home",
               });
               setIsOpen(false);
             }}
           >
-            <Star className="h-6 w-6" />
-            <div className="text-xs">Popular</div>
+            <HomeIcon className="h-6 w-6" />
+            <div className="text-xs">Home</div>
           </Button>
           <Button
             className="h-auto flex flex-col items-center bg-transparent p-2"
